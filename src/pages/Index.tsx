@@ -9,7 +9,7 @@ import { Calculator, Euro, TrendingUp, Settings } from 'lucide-react';
 
 interface PricingData {
   saasFee: number;
-  transactionFeePercentage: number;
+  transactionFeeFixed: number; // Now fixed euro amount per return
   rdvPercentage: number;
   upsellingPercentage: number;
   name: string;
@@ -28,35 +28,43 @@ const Index = () => {
 
   const [customScenario, setCustomScenario] = useState<PricingData>({
     saasFee: 0,
-    transactionFeePercentage: 0,
+    transactionFeeFixed: 0,
     rdvPercentage: 0,
     upsellingPercentage: 0,
     name: "Scenario Personalizzato"
   });
 
-  const [predefinedScenarios] = useState<PricingData[]>([
+  const [predefinedScenarios, setPredefinedScenarios] = useState<PricingData[]>([
     {
-      saasFee: 299,
-      transactionFeePercentage: 2.5,
-      rdvPercentage: 15,
-      upsellingPercentage: 25,
+      saasFee: 199,
+      transactionFeeFixed: 1.50,
+      rdvPercentage: 0,
+      upsellingPercentage: 5,
       name: "Scenario Base"
     },
     {
-      saasFee: 499,
-      transactionFeePercentage: 2.0,
-      rdvPercentage: 12,
-      upsellingPercentage: 20,
+      saasFee: 299,
+      transactionFeeFixed: 1.20,
+      rdvPercentage: 2,
+      upsellingPercentage: 4,
       name: "Scenario Premium"
     },
     {
-      saasFee: 799,
-      transactionFeePercentage: 1.5,
-      rdvPercentage: 10,
-      upsellingPercentage: 18,
+      saasFee: 399,
+      transactionFeeFixed: 1.00,
+      rdvPercentage: 3,
+      upsellingPercentage: 3,
       name: "Scenario Enterprise"
     }
   ]);
+
+  const updatePredefinedScenario = (index: number, field: keyof PricingData, value: number) => {
+    setPredefinedScenarios(prev => 
+      prev.map((scenario, i) => 
+        i === index ? { ...scenario, [field]: value } : scenario
+      )
+    );
+  };
 
   const calculateScenario = (scenario: PricingData) => {
     if (!clientData.resiAnnuali || !clientData.carrelloMedio) {
@@ -74,15 +82,15 @@ const Index = () => {
 
     const resiMensili = clientData.resiAnnuali / 12;
     
-    // Calcolo Transaction Fee
-    const transactionFee = (resiMensili * clientData.carrelloMedio * scenario.transactionFeePercentage) / 100;
+    // Calcolo Transaction Fee (fixed amount per return)
+    const transactionFee = resiMensili * scenario.transactionFeeFixed;
     
     // Calcolo RDV (37% dei resi in un anno)
     const rdvAnnuali = clientData.resiAnnuali * 0.37;
     const rdvMensili = rdvAnnuali / 12;
     const rdvFee = (rdvMensili * clientData.carrelloMedio * scenario.rdvPercentage) / 100;
     
-    // Calcolo Upselling (3.78% dei resi in un anno con incremento del 30%)
+    // Calcolo Upselling (3.78% dei resi in un anno con incremento del carrello medio del 30%)
     const upsellingAnnuali = clientData.resiAnnuali * 0.0378;
     const upsellingMensili = upsellingAnnuali / 12;
     const incrementoCarrello = clientData.carrelloMedio * 0.3;
@@ -193,23 +201,46 @@ const Index = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      {/* Parametri */}
-                      <div className="bg-gray-50 p-3 rounded-lg space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span>SaaS Fee:</span>
-                          <span className="font-medium">{formatCurrency(scenario.saasFee)}</span>
+                      {/* Parametri Modificabili */}
+                      <div className="bg-gray-50 p-3 rounded-lg space-y-3 text-sm">
+                        <div className="space-y-1">
+                          <label className="text-xs text-gray-600">SaaS Fee (€/mese)</label>
+                          <Input
+                            type="number"
+                            value={scenario.saasFee}
+                            onChange={(e) => updatePredefinedScenario(index, 'saasFee', parseFloat(e.target.value) || 0)}
+                            className="h-8 text-sm"
+                          />
                         </div>
-                        <div className="flex justify-between">
-                          <span>Transaction Fee:</span>
-                          <span className="font-medium">{scenario.transactionFeePercentage}%</span>
+                        <div className="space-y-1">
+                          <label className="text-xs text-gray-600">Transaction Fee (€/reso)</label>
+                          <Input
+                            type="number"
+                            step="0.10"
+                            value={scenario.transactionFeeFixed}
+                            onChange={(e) => updatePredefinedScenario(index, 'transactionFeeFixed', parseFloat(e.target.value) || 0)}
+                            className="h-8 text-sm"
+                          />
                         </div>
-                        <div className="flex justify-between">
-                          <span>RDV Fee:</span>
-                          <span className="font-medium">{scenario.rdvPercentage}%</span>
+                        <div className="space-y-1">
+                          <label className="text-xs text-gray-600">RDV Fee (%)</label>
+                          <Input
+                            type="number"
+                            step="0.1"
+                            value={scenario.rdvPercentage}
+                            onChange={(e) => updatePredefinedScenario(index, 'rdvPercentage', parseFloat(e.target.value) || 0)}
+                            className="h-8 text-sm"
+                          />
                         </div>
-                        <div className="flex justify-between">
-                          <span>Upselling Fee:</span>
-                          <span className="font-medium">{scenario.upsellingPercentage}%</span>
+                        <div className="space-y-1">
+                          <label className="text-xs text-gray-600">Upselling Fee (%)</label>
+                          <Input
+                            type="number"
+                            step="0.1"
+                            value={scenario.upsellingPercentage}
+                            onChange={(e) => updatePredefinedScenario(index, 'upsellingPercentage', parseFloat(e.target.value) || 0)}
+                            className="h-8 text-sm"
+                          />
                         </div>
                       </div>
 
@@ -271,17 +302,17 @@ const Index = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="customTransactionFee">Transaction Fee (%)</Label>
+                    <Label htmlFor="customTransactionFee">Transaction Fee (€/reso)</Label>
                     <Input
                       id="customTransactionFee"
                       type="number"
-                      step="0.1"
-                      value={customScenario.transactionFeePercentage || ''}
+                      step="0.10"
+                      value={customScenario.transactionFeeFixed || ''}
                       onChange={(e) => setCustomScenario({
                         ...customScenario,
-                        transactionFeePercentage: parseFloat(e.target.value) || 0
+                        transactionFeeFixed: parseFloat(e.target.value) || 0
                       })}
-                      placeholder="0"
+                      placeholder="0.50"
                     />
                   </div>
                   <div className="space-y-2">
