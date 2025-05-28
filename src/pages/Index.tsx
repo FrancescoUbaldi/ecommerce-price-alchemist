@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -6,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calculator, Euro, TrendingUp, Settings } from 'lucide-react';
+import FeeDistributionChart from '@/components/FeeDistributionChart';
 
 interface PricingData {
   saasFee: number;
@@ -58,6 +58,11 @@ const Index = () => {
     }
   ]);
 
+  // Calculate GTV
+  const gtv = useMemo(() => {
+    return clientData.resiAnnuali * clientData.carrelloMedio;
+  }, [clientData.resiAnnuali, clientData.carrelloMedio]);
+
   const updatePredefinedScenario = (index: number, field: keyof PricingData, value: number) => {
     setPredefinedScenarios(prev => 
       prev.map((scenario, i) => 
@@ -99,10 +104,7 @@ const Index = () => {
     const totalMensile = scenario.saasFee + transactionFee + rdvFee + upsellingFee;
     const annualContractValue = totalMensile * 12;
     
-    // Calcolo GTV (Gross Transaction Value)
-    const gtv = clientData.resiAnnuali * clientData.carrelloMedio;
-    
-    // Calcolo Take Rate
+    // Calcolo Take Rate usando GTV
     const takeRate = gtv > 0 ? (annualContractValue / gtv) * 100 : 0;
 
     return {
@@ -150,7 +152,7 @@ const Index = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="resiAnnuali">Resi Annuali</Label>
                 <Input
@@ -176,6 +178,14 @@ const Index = () => {
                   })}
                   placeholder="Inserisci il carrello medio"
                 />
+              </div>
+              <div className="space-y-2">
+                <Label>GTV Annuale</Label>
+                <div className="p-3 bg-blue-50 rounded-md border">
+                  <span className="text-lg font-semibold text-blue-700">
+                    {formatCurrency(gtv)}
+                  </span>
+                </div>
               </div>
             </div>
           </CardContent>
@@ -243,6 +253,15 @@ const Index = () => {
                           />
                         </div>
                       </div>
+
+                      {/* Fee Distribution Chart */}
+                      <FeeDistributionChart
+                        saasFee={calculation.saasFee}
+                        transactionFee={calculation.transactionFee}
+                        rdvFee={calculation.rdvFee}
+                        upsellingFee={calculation.upsellingFee}
+                        totalMensile={calculation.totalMensile}
+                      />
 
                       {/* Calcoli */}
                       <div className="space-y-2 border-t pt-3">
@@ -351,6 +370,18 @@ const Index = () => {
                   return (
                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
                       <h3 className="text-lg font-semibold mb-4">Risultati Calcolo</h3>
+                      
+                      {/* Fee Distribution Chart */}
+                      <div className="mb-6">
+                        <FeeDistributionChart
+                          saasFee={calculation.saasFee}
+                          transactionFee={calculation.transactionFee}
+                          rdvFee={calculation.rdvFee}
+                          upsellingFee={calculation.upsellingFee}
+                          totalMensile={calculation.totalMensile}
+                        />
+                      </div>
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-3">
                           <div className="flex justify-between">
@@ -377,7 +408,7 @@ const Index = () => {
                         <div className="space-y-3">
                           <div className="flex justify-between">
                             <span>GTV Annuale:</span>
-                            <span className="font-medium">{formatCurrency(calculation.gtv)}</span>
+                            <span className="font-medium">{formatCurrency(gtv)}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>ACV Annuale:</span>
