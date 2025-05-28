@@ -51,7 +51,11 @@ export const translations = {
     duplicateCombo: "Duplica Combo",
     saveCombo: "Salva Combo",
     comboSaved: "Combo salvata!",
-    duplicatedCombo: "Combo duplicata - modificabile"
+    duplicatedCombo: "Combo duplicata - modificabile",
+    netRevenueGrowthTitle: 'Crescita del fatturato netto grazie a REVER',
+    netRevenuePreRever: 'Net Revenue Pre REVER',
+    netRevenueWithRever: 'Net Revenue con REVER',
+    growthIndicator: 'di crescita',
   },
   en: {
     title: "Price & Smile :)",
@@ -105,7 +109,11 @@ export const translations = {
     duplicateCombo: "Duplicate Combo",
     saveCombo: "Save Combo",
     comboSaved: "Combo saved!",
-    duplicatedCombo: "Duplicated combo - editable"
+    duplicatedCombo: "Duplicated combo - editable",
+    netRevenueGrowthTitle: 'Net Revenue Growth with REVER',
+    netRevenuePreRever: 'Net Revenue Pre REVER',
+    netRevenueWithRever: 'Net Revenue with REVER',
+    growthIndicator: 'growth',
   },
   es: {
     title: "Price & Smile :)",
@@ -159,7 +167,11 @@ export const translations = {
     duplicateCombo: "Duplicar Combo",
     saveCombo: "Guardar Combo",
     comboSaved: "¡Combo guardado!",
-    duplicatedCombo: "Combo duplicado - editable"
+    duplicatedCombo: "Combo duplicado - editable",
+    netRevenueGrowthTitle: 'Crecimiento de ingresos netos con REVER',
+    netRevenuePreRever: 'Ingresos Netos Pre REVER',
+    netRevenueWithRever: 'Ingresos Netos con REVER',
+    growthIndicator: 'de crecimiento',
   },
   fr: {
     title: "Price & Smile :)",
@@ -213,7 +225,11 @@ export const translations = {
     duplicateCombo: "Dupliquer Combo",
     saveCombo: "Sauvegarder Combo",
     comboSaved: "Combo sauvegardé !",
-    duplicatedCombo: "Combo dupliqué - modifiable"
+    duplicatedCombo: "Combo dupliqué - modifiable",
+    netRevenueGrowthTitle: 'Net Revenue Growth with REVER',
+    netRevenuePreRever: 'Net Revenue Pre REVER',
+    netRevenueWithRever: 'Net Revenue with REVER',
+    growthIndicator: 'growth',
   }
 };
 
