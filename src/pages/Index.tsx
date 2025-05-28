@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calculator, Euro, TrendingUp, Settings, FileText } from 'lucide-react';
+import { Calculator, Settings, FileText, RotateCcw } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
 import LanguageSelector from '@/components/LanguageSelector';
@@ -29,6 +29,7 @@ interface ClientData {
 
 const Index = () => {
   const [language, setLanguage] = useState<string>('it');
+  const [showScenarioNotification, setShowScenarioNotification] = useState(false);
   
   const [clientData, setClientData] = useState<ClientData>({
     resiAnnuali: 0,
@@ -54,21 +55,21 @@ const Index = () => {
       transactionFeeFixed: 1.50,
       rdvPercentage: 0,
       upsellingPercentage: 5,
-      name: "Scenario Base"
+      name: "ECO MODE"
     },
     {
       saasFee: 299,
       transactionFeeFixed: 1.20,
       rdvPercentage: 2,
       upsellingPercentage: 4,
-      name: "Scenario Premium"
+      name: "GAS"
     },
     {
       saasFee: 399,
       transactionFeeFixed: 1.00,
       rdvPercentage: 3,
       upsellingPercentage: 3,
-      name: "Scenario Enterprise"
+      name: "FULL GAS"
     }
   ]);
 
@@ -121,6 +122,28 @@ const Index = () => {
   const selectPredefinedScenario = (scenario: PricingData) => {
     setCustomScenario({
       ...scenario,
+      name: "Scenario Personalizzato"
+    });
+    
+    // Show notification
+    setShowScenarioNotification(true);
+    setTimeout(() => setShowScenarioNotification(false), 3000);
+  };
+
+  const resetData = () => {
+    setClientData({
+      resiAnnuali: 0,
+      resiMensili: 0,
+      carrelloMedio: 0,
+      totalOrdersAnnual: 0,
+      returnRatePercentage: 23.9
+    });
+    setClientName('');
+    setCustomScenario({
+      saasFee: 0,
+      transactionFeeFixed: 0,
+      rdvPercentage: 0,
+      upsellingPercentage: 0,
       name: "Scenario Personalizzato"
     });
   };
@@ -219,6 +242,11 @@ const Index = () => {
     return `${value.toFixed(2)}%`;
   };
 
+  const getScenarioEmoji = (index: number) => {
+    const emojis = ['🌱', '⚡', '🚀'];
+    return emojis[index] || '📊';
+  };
+
   return (
     <div className="min-h-screen bg-[#1790FF] p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -228,7 +256,7 @@ const Index = () => {
             <div className="flex-1"></div>
             <div className="flex items-center justify-center gap-2">
               <Calculator className="h-8 w-8 text-white" />
-              <h1 className="text-3xl font-bold text-white">{getTranslation(language, 'title')}</h1>
+              <h1 className="text-3xl font-bold text-white">Price & Smile :)</h1>
             </div>
             <div className="flex-1 flex justify-end">
               <LanguageSelector language={language} setLanguage={setLanguage} />
@@ -240,10 +268,21 @@ const Index = () => {
         {/* Dati Cliente */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="h-5 w-5" />
-              {getTranslation(language, 'clientData')}
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="h-5 w-5" />
+                {getTranslation(language, 'clientData')}
+              </CardTitle>
+              <Button 
+                onClick={resetData}
+                variant="outline" 
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <RotateCcw className="h-4 w-4" />
+                Reset
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
@@ -300,7 +339,7 @@ const Index = () => {
               </div>
               <div className="space-y-2">
                 <Label>{getTranslation(language, 'annualGTV')}</Label>
-                <div className="p-3 bg-[#1790FF] text-white rounded-md border">
+                <div className="p-3 bg-[#1790FF] text-white rounded-md border-2 border-[#1790FF] shadow-lg">
                   <span className="text-lg font-semibold">
                     {formatCurrency(gtv)}
                   </span>
@@ -312,10 +351,30 @@ const Index = () => {
 
         {/* Scenari di Pricing */}
         <Tabs defaultValue="predefiniti" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-white">
-            <TabsTrigger value="predefiniti">{getTranslation(language, 'predefinedScenarios')}</TabsTrigger>
-            <TabsTrigger value="personalizzato">{getTranslation(language, 'customScenario')}</TabsTrigger>
-            <TabsTrigger value="business-case">{getTranslation(language, 'businessCase')}</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 bg-white relative">
+            <TabsTrigger 
+              value="predefiniti"
+              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white transition-all duration-300"
+            >
+              {getTranslation(language, 'predefinedScenarios')}
+            </TabsTrigger>
+            <TabsTrigger 
+              value="personalizzato"
+              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white transition-all duration-300"
+            >
+              {getTranslation(language, 'customScenario')}
+              {showScenarioNotification && (
+                <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-xs px-2 py-1 rounded animate-fade-in">
+                  Scenario applicato!
+                </span>
+              )}
+            </TabsTrigger>
+            <TabsTrigger 
+              value="business-case"
+              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white transition-all duration-300"
+            >
+              {getTranslation(language, 'businessCase')}
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="predefiniti" className="space-y-6">
@@ -325,13 +384,14 @@ const Index = () => {
                 return (
                   <Card 
                     key={index} 
-                    className="border-2 hover:border-[#1790FF] transition-colors cursor-pointer"
-                    onClick={() => selectPredefinedScenario(scenario)}
+                    className="border-2 hover:border-[#1790FF] transition-colors"
                   >
                     <CardHeader>
                       <CardTitle className="text-lg flex items-center justify-between">
-                        {scenario.name}
-                        <Euro className="h-5 w-5 text-green-600" />
+                        <span className="flex items-center gap-2">
+                          <span className="text-2xl">{getScenarioEmoji(index)}</span>
+                          {scenario.name}
+                        </span>
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
@@ -344,7 +404,6 @@ const Index = () => {
                             value={scenario.saasFee}
                             onChange={(e) => updatePredefinedScenario(index, 'saasFee', parseFloat(e.target.value) || 0)}
                             className="h-8 text-sm"
-                            onClick={(e) => e.stopPropagation()}
                           />
                         </div>
                         <div className="space-y-1">
@@ -355,7 +414,6 @@ const Index = () => {
                             value={scenario.transactionFeeFixed}
                             onChange={(e) => updatePredefinedScenario(index, 'transactionFeeFixed', parseFloat(e.target.value) || 0)}
                             className="h-8 text-sm"
-                            onClick={(e) => e.stopPropagation()}
                           />
                         </div>
                         <div className="space-y-1">
@@ -366,7 +424,6 @@ const Index = () => {
                             value={scenario.rdvPercentage}
                             onChange={(e) => updatePredefinedScenario(index, 'rdvPercentage', parseFloat(e.target.value) || 0)}
                             className="h-8 text-sm"
-                            onClick={(e) => e.stopPropagation()}
                           />
                         </div>
                         <div className="space-y-1">
@@ -377,7 +434,6 @@ const Index = () => {
                             value={scenario.upsellingPercentage}
                             onChange={(e) => updatePredefinedScenario(index, 'upsellingPercentage', parseFloat(e.target.value) || 0)}
                             className="h-8 text-sm"
-                            onClick={(e) => e.stopPropagation()}
                           />
                         </div>
                       </div>
@@ -404,10 +460,14 @@ const Index = () => {
                           <span>Totale Mensile:</span>
                           <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
                         </div>
-                        <div className="flex justify-between text-sm bg-[#1790FF] bg-opacity-10 p-2 rounded">
-                          <span>Take Rate:</span>
-                          <span className="font-medium text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
-                        </div>
+                        
+                        {/* Bottone Usa questo scenario */}
+                        <Button 
+                          onClick={() => selectPredefinedScenario(scenario)}
+                          className="w-full mt-3 bg-[#1790FF] hover:bg-[#1470CC] text-white"
+                        >
+                          Usa questo scenario
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -420,7 +480,7 @@ const Index = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
+                  <FileText className="h-5 w-5" />
                   {getTranslation(language, 'customScenario')}
                 </CardTitle>
               </CardHeader>
