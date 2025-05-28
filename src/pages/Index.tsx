@@ -74,37 +74,39 @@ const Index = () => {
 
   // Calculate GTV
   const gtv = useMemo(() => {
-    return clientData.resiAnnuali * clientData.carrelloMedio;
-  }, [clientData.resiAnnuali, clientData.carrelloMedio]);
+    return clientData.totalOrdersAnnual * clientData.carrelloMedio;
+  }, [clientData.totalOrdersAnnual, clientData.carrelloMedio]);
 
-  // Auto-adjust base scenario pricing to maintain 2.3% take rate
+  // Auto-adjust predefined scenarios to maintain progressive take rates (2.3%, 2.8%, 3.3%)
   useEffect(() => {
     if (gtv > 0) {
-      const targetTakeRate = 0.023; // 2.3%
-      const targetACV = gtv * targetTakeRate;
-      const targetMonthlyCost = targetACV / 12;
+      const targetTakeRates = [0.023, 0.028, 0.033]; // Progressive take rates
       
-      // Calculate other fees first
-      const resiMensili = clientData.resiAnnuali / 12;
-      const transactionFee = resiMensili * predefinedScenarios[0]?.transactionFeeFixed || 0;
+      const updatedScenarios = predefinedScenarios.map((scenario, index) => {
+        const targetTakeRate = targetTakeRates[index];
+        const targetACV = gtv * targetTakeRate;
+        const targetMonthlyCost = targetACV / 12;
+        
+        // Calculate other fees first
+        const resiMensili = clientData.resiAnnuali / 12;
+        const transactionFee = resiMensili * scenario.transactionFeeFixed;
+        
+        const rdvAnnuali = clientData.resiAnnuali * 0.35;
+        const rdvMensili = rdvAnnuali / 12;
+        const rdvFee = (rdvMensili * clientData.carrelloMedio * scenario.rdvPercentage) / 100;
+        
+        const upsellingAnnuali = clientData.resiAnnuali * 0.0378;
+        const upsellingMensili = upsellingAnnuali / 12;
+        const incrementoCarrello = clientData.carrelloMedio * 0.3;
+        const upsellingFee = (upsellingMensili * incrementoCarrello * scenario.upsellingPercentage) / 100;
+        
+        // Calculate required SaaS fee to reach target
+        const requiredSaasFee = Math.max(0, targetMonthlyCost - transactionFee - rdvFee - upsellingFee);
+        
+        return { ...scenario, saasFee: Math.round(requiredSaasFee) };
+      });
       
-      const rdvAnnuali = clientData.resiAnnuali * 0.37;
-      const rdvMensili = rdvAnnuali / 12;
-      const rdvFee = (rdvMensili * clientData.carrelloMedio * (predefinedScenarios[0]?.rdvPercentage || 0)) / 100;
-      
-      const upsellingAnnuali = clientData.resiAnnuali * 0.0378;
-      const upsellingMensili = upsellingAnnuali / 12;
-      const incrementoCarrello = clientData.carrelloMedio * 0.3;
-      const upsellingFee = (upsellingMensili * incrementoCarrello * (predefinedScenarios[0]?.upsellingPercentage || 0)) / 100;
-      
-      // Calculate required SaaS fee to reach target
-      const requiredSaasFee = Math.max(0, targetMonthlyCost - transactionFee - rdvFee - upsellingFee);
-      
-      setPredefinedScenarios(prev => 
-        prev.map((scenario, index) => 
-          index === 0 ? { ...scenario, saasFee: Math.round(requiredSaasFee) } : scenario
-        )
-      );
+      setPredefinedScenarios(updatedScenarios);
     }
   }, [gtv, clientData.resiAnnuali, clientData.carrelloMedio]);
 
@@ -114,6 +116,13 @@ const Index = () => {
         i === index ? { ...scenario, [field]: value } : scenario
       )
     );
+  };
+
+  const selectPredefinedScenario = (scenario: PricingData) => {
+    setCustomScenario({
+      ...scenario,
+      name: "Scenario Personalizzato"
+    });
   };
 
   const updateClientData = (field: keyof ClientData, value: number) => {
@@ -169,8 +178,8 @@ const Index = () => {
     // Calcolo Transaction Fee (fixed amount per return)
     const transactionFee = resiMensili * scenario.transactionFeeFixed;
     
-    // Calcolo RDV (37% dei resi in un anno)
-    const rdvAnnuali = clientData.resiAnnuali * 0.37;
+    // Calcolo RDV (35% dei resi in un anno)
+    const rdvAnnuali = clientData.resiAnnuali * 0.35;
     const rdvMensili = rdvAnnuali / 12;
     const rdvFee = (rdvMensili * clientData.carrelloMedio * scenario.rdvPercentage) / 100;
     
@@ -211,21 +220,21 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-[#1790FF] p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex-1"></div>
             <div className="flex items-center justify-center gap-2">
-              <Calculator className="h-8 w-8 text-blue-600" />
-              <h1 className="text-3xl font-bold text-gray-900">{getTranslation(language, 'title')}</h1>
+              <Calculator className="h-8 w-8 text-white" />
+              <h1 className="text-3xl font-bold text-white">{getTranslation(language, 'title')}</h1>
             </div>
             <div className="flex-1 flex justify-end">
               <LanguageSelector language={language} setLanguage={setLanguage} />
             </div>
           </div>
-          <p className="text-gray-600">{getTranslation(language, 'subtitle')}</p>
+          <p className="text-white">{getTranslation(language, 'subtitle')}</p>
         </div>
 
         {/* Dati Cliente */}
@@ -237,7 +246,17 @@ const Index = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
+              <div className="space-y-2">
+                <Label htmlFor="totalOrdersAnnual">{getTranslation(language, 'totalAnnualOrders')}</Label>
+                <Input
+                  id="totalOrdersAnnual"
+                  type="number"
+                  value={clientData.totalOrdersAnnual || ''}
+                  onChange={(e) => updateClientData('totalOrdersAnnual', parseInt(e.target.value) || 0)}
+                  placeholder="100000"
+                />
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="resiAnnuali">{getTranslation(language, 'annualReturns')}</Label>
                 <Input
@@ -245,7 +264,7 @@ const Index = () => {
                   type="number"
                   value={clientData.resiAnnuali || ''}
                   onChange={(e) => updateClientData('resiAnnuali', parseInt(e.target.value) || 0)}
-                  placeholder="Inserisci il numero di resi annuali"
+                  placeholder="23900"
                 />
               </div>
               <div className="space-y-2">
@@ -255,7 +274,18 @@ const Index = () => {
                   type="number"
                   value={clientData.resiMensili || ''}
                   onChange={(e) => updateClientData('resiMensili', parseInt(e.target.value) || 0)}
-                  placeholder="Inserisci il numero di resi mensili"
+                  placeholder="1992"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="returnRate">{getTranslation(language, 'returnRate')}</Label>
+                <Input
+                  id="returnRate"
+                  type="number"
+                  step="0.1"
+                  value={clientData.returnRatePercentage || ''}
+                  onChange={(e) => updateClientData('returnRatePercentage', parseFloat(e.target.value) || 0)}
+                  placeholder="23.9"
                 />
               </div>
               <div className="space-y-2">
@@ -265,23 +295,13 @@ const Index = () => {
                   type="number"
                   value={clientData.carrelloMedio || ''}
                   onChange={(e) => updateClientData('carrelloMedio', parseFloat(e.target.value) || 0)}
-                  placeholder="Inserisci il carrello medio"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="totalOrdersAnnual">{getTranslation(language, 'totalAnnualOrders')}</Label>
-                <Input
-                  id="totalOrdersAnnual"
-                  type="number"
-                  value={clientData.totalOrdersAnnual || ''}
-                  onChange={(e) => updateClientData('totalOrdersAnnual', parseInt(e.target.value) || 0)}
-                  placeholder="Inserisci il totale ordini annuali"
+                  placeholder="35.50"
                 />
               </div>
               <div className="space-y-2">
                 <Label>{getTranslation(language, 'annualGTV')}</Label>
-                <div className="p-3 bg-blue-50 rounded-md border">
-                  <span className="text-lg font-semibold text-blue-700">
+                <div className="p-3 bg-[#1790FF] text-white rounded-md border">
+                  <span className="text-lg font-semibold">
                     {formatCurrency(gtv)}
                   </span>
                 </div>
@@ -292,7 +312,7 @@ const Index = () => {
 
         {/* Scenari di Pricing */}
         <Tabs defaultValue="predefiniti" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-3 bg-white">
             <TabsTrigger value="predefiniti">{getTranslation(language, 'predefinedScenarios')}</TabsTrigger>
             <TabsTrigger value="personalizzato">{getTranslation(language, 'customScenario')}</TabsTrigger>
             <TabsTrigger value="business-case">{getTranslation(language, 'businessCase')}</TabsTrigger>
@@ -303,7 +323,11 @@ const Index = () => {
               {predefinedScenarios.map((scenario, index) => {
                 const calculation = calculateScenario(scenario);
                 return (
-                  <Card key={index} className="border-2 hover:border-blue-300 transition-colors">
+                  <Card 
+                    key={index} 
+                    className="border-2 hover:border-[#1790FF] transition-colors cursor-pointer"
+                    onClick={() => selectPredefinedScenario(scenario)}
+                  >
                     <CardHeader>
                       <CardTitle className="text-lg flex items-center justify-between">
                         {scenario.name}
@@ -320,6 +344,7 @@ const Index = () => {
                             value={scenario.saasFee}
                             onChange={(e) => updatePredefinedScenario(index, 'saasFee', parseFloat(e.target.value) || 0)}
                             className="h-8 text-sm"
+                            onClick={(e) => e.stopPropagation()}
                           />
                         </div>
                         <div className="space-y-1">
@@ -330,6 +355,7 @@ const Index = () => {
                             value={scenario.transactionFeeFixed}
                             onChange={(e) => updatePredefinedScenario(index, 'transactionFeeFixed', parseFloat(e.target.value) || 0)}
                             className="h-8 text-sm"
+                            onClick={(e) => e.stopPropagation()}
                           />
                         </div>
                         <div className="space-y-1">
@@ -340,6 +366,7 @@ const Index = () => {
                             value={scenario.rdvPercentage}
                             onChange={(e) => updatePredefinedScenario(index, 'rdvPercentage', parseFloat(e.target.value) || 0)}
                             className="h-8 text-sm"
+                            onClick={(e) => e.stopPropagation()}
                           />
                         </div>
                         <div className="space-y-1">
@@ -350,18 +377,10 @@ const Index = () => {
                             value={scenario.upsellingPercentage}
                             onChange={(e) => updatePredefinedScenario(index, 'upsellingPercentage', parseFloat(e.target.value) || 0)}
                             className="h-8 text-sm"
+                            onClick={(e) => e.stopPropagation()}
                           />
                         </div>
                       </div>
-
-                      {/* Fee Distribution Chart */}
-                      <FeeDistributionChart
-                        saasFee={calculation.saasFee}
-                        transactionFee={calculation.transactionFee}
-                        rdvFee={calculation.rdvFee}
-                        upsellingFee={calculation.upsellingFee}
-                        totalMensile={calculation.totalMensile}
-                      />
 
                       {/* Calcoli */}
                       <div className="space-y-2 border-t pt-3">
@@ -385,9 +404,9 @@ const Index = () => {
                           <span>Totale Mensile:</span>
                           <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
                         </div>
-                        <div className="flex justify-between text-sm bg-blue-50 p-2 rounded">
+                        <div className="flex justify-between text-sm bg-[#1790FF] bg-opacity-10 p-2 rounded">
                           <span>Take Rate:</span>
-                          <span className="font-medium text-blue-600">{formatPercentage(calculation.takeRate)}</span>
+                          <span className="font-medium text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
                         </div>
                       </div>
                     </CardContent>
@@ -463,9 +482,9 @@ const Index = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="returnRate">{getTranslation(language, 'returnRate')}</Label>
+                    <Label htmlFor="returnRateCustom">{getTranslation(language, 'returnRate')}</Label>
                     <Input
-                      id="returnRate"
+                      id="returnRateCustom"
                       type="number"
                       step="0.1"
                       value={clientData.returnRatePercentage || ''}
@@ -475,7 +494,7 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Risultati Scenario Personalizzato - senza take rate e fee distribution */}
+                {/* Risultati Scenario Personalizzato */}
                 {(() => {
                   const calculation = calculateScenario(customScenario);
                   return (

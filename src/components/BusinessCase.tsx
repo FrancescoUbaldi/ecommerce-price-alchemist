@@ -61,6 +61,7 @@ const BusinessCase = ({
   const returnRate = clientData.returnRatePercentage;
   const resiValue = resi * clientData.carrelloMedio;
   
+  // Fatturazione netta pre-REVER = n° ordini x AOV - valore resi
   const fatturazioneNettaPreRever = fatturazione - resiValue;
   
   // RDV calculations (35% dei resi)
@@ -84,10 +85,12 @@ const BusinessCase = ({
   
   const totalPlatformCost = transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale + saasFeeAnnuale;
   
-  // ROI calculations
+  // ROI calculations - REVER ROI = Fatturazione netta generata da REVER / REVER Platform Cost
+  const reverROI = totalPlatformCost > 0 ? (fatturazioneGenerataRever / totalPlatformCost) * 100 : 0;
+  
+  // Net Revenues calculations
   const netRevenuesWithoutRever = fatturazioneNettaPreRever * 0.1; // Assumendo 10% margine
   const aumentoNetRevenues = fatturazioneGenerataRever * 0.1 - totalPlatformCost;
-  const reverROI = totalPlatformCost > 0 ? (aumentoNetRevenues / totalPlatformCost) * 100 : 0;
 
   return (
     <div className="space-y-6">
@@ -128,7 +131,7 @@ const BusinessCase = ({
         <CardContent>
           <Table>
             <TableHeader>
-              <TableRow className="bg-blue-100">
+              <TableRow className="bg-[#1790FF] bg-opacity-10">
                 <TableHead></TableHead>
                 <TableHead className="text-center">Ordini</TableHead>
                 <TableHead className="text-center">AOV</TableHead>
