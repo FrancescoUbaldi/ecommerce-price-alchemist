@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+
+import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,12 +18,14 @@ interface PricingData {
 
 interface ClientData {
   resiAnnuali: number;
+  resiMensili: number;
   carrelloMedio: number;
 }
 
 const Index = () => {
   const [clientData, setClientData] = useState<ClientData>({
     resiAnnuali: 0,
+    resiMensili: 0,
     carrelloMedio: 0
   });
 
@@ -63,12 +66,58 @@ const Index = () => {
     return clientData.resiAnnuali * clientData.carrelloMedio;
   }, [clientData.resiAnnuali, clientData.carrelloMedio]);
 
+  // Auto-adjust base scenario pricing to maintain 2.3% take rate
+  useEffect(() => {
+    if (gtv > 0) {
+      const targetTakeRate = 0.023; // 2.3%
+      const targetACV = gtv * targetTakeRate;
+      const targetMonthlyCost = targetACV / 12;
+      
+      // Calculate other fees first
+      const resiMensili = clientData.resiAnnuali / 12;
+      const transactionFee = resiMensili * predefinedScenarios[0].transactionFeeFixed;
+      
+      const rdvAnnuali = clientData.resiAnnuali * 0.37;
+      const rdvMensili = rdvAnnuali / 12;
+      const rdvFee = (rdvMensili * clientData.carrelloMedio * predefinedScenarios[0].rdvPercentage) / 100;
+      
+      const upsellingAnnuali = clientData.resiAnnuali * 0.0378;
+      const upsellingMensili = upsellingAnnuali / 12;
+      const incrementoCarrello = clientData.carrelloMedio * 0.3;
+      const upsellingFee = (upsellingMensili * incrementoCarrello * predefinedScenarios[0].upsellingPercentage) / 100;
+      
+      // Calculate required SaaS fee to reach target
+      const requiredSaasFee = Math.max(0, targetMonthlyCost - transactionFee - rdvFee - upsellingFee);
+      
+      setPredefinedScenarios(prev => 
+        prev.map((scenario, index) => 
+          index === 0 ? { ...scenario, saasFee: Math.round(requiredSaasFee) } : scenario
+        )
+      );
+    }
+  }, [gtv, clientData.resiAnnuali, clientData.carrelloMedio]);
+
   const updatePredefinedScenario = (index: number, field: keyof PricingData, value: number) => {
     setPredefinedScenarios(prev => 
       prev.map((scenario, i) => 
         i === index ? { ...scenario, [field]: value } : scenario
       )
     );
+  };
+
+  const updateClientData = (field: keyof ClientData, value: number) => {
+    setClientData(prev => {
+      const newData = { ...prev, [field]: value };
+      
+      // Sync annual and monthly returns
+      if (field === 'resiAnnuali') {
+        newData.resiMensili = Math.round(value / 12);
+      } else if (field === 'resiMensili') {
+        newData.resiAnnuali = value * 12;
+      }
+      
+      return newData;
+    });
   };
 
   const calculateScenario = (scenario: PricingData) => {
@@ -152,18 +201,25 @@ const Index = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="resiAnnuali">Resi Annuali</Label>
                 <Input
                   id="resiAnnuali"
                   type="number"
                   value={clientData.resiAnnuali || ''}
-                  onChange={(e) => setClientData({
-                    ...clientData,
-                    resiAnnuali: parseInt(e.target.value) || 0
-                  })}
+                  onChange={(e) => updateClientData('resiAnnuali', parseInt(e.target.value) || 0)}
                   placeholder="Inserisci il numero di resi annuali"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="resiMensili">Resi Mensili</Label>
+                <Input
+                  id="resiMensili"
+                  type="number"
+                  value={clientData.resiMensili || ''}
+                  onChange={(e) => updateClientData('resiMensili', parseInt(e.target.value) || 0)}
+                  placeholder="Inserisci il numero di resi mensili"
                 />
               </div>
               <div className="space-y-2">
@@ -172,10 +228,7 @@ const Index = () => {
                   id="carrelloMedio"
                   type="number"
                   value={clientData.carrelloMedio || ''}
-                  onChange={(e) => setClientData({
-                    ...clientData,
-                    carrelloMedio: parseFloat(e.target.value) || 0
-                  })}
+                  onChange={(e) => updateClientData('carrelloMedio', parseFloat(e.target.value) || 0)}
                   placeholder="Inserisci il carrello medio"
                 />
               </div>
