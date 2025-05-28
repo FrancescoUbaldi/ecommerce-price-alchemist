@@ -242,6 +242,15 @@ const Index = () => {
     }).format(value);
   };
 
+  const formatCurrencyNoDecimals = (value: number) => {
+    return new Intl.NumberFormat('it-IT', {
+      style: 'currency',
+      currency: 'EUR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(value);
+  };
+
   const formatPercentage = (value: number) => {
     return `${value.toFixed(2)}%`;
   };
@@ -271,7 +280,7 @@ const Index = () => {
               <img 
                 src="/lovable-uploads/f7dbf19a-18fa-4078-980a-2e6cc9c4fd45.png" 
                 alt="REVER Logo" 
-                className="h-16 w-auto"
+                className="h-20 w-auto"
               />
             </div>
             <div className="flex-1 flex justify-center">
@@ -339,7 +348,7 @@ const Index = () => {
                 <Label>{getTranslation(language, 'annualGTV')}</Label>
                 <div className="p-3 bg-[#1790FF] text-white rounded-md border-2 border-[#1790FF] shadow-lg">
                   <span className="text-lg font-semibold">
-                    {formatCurrency(gtv)}
+                    {formatCurrencyNoDecimals(gtv)}
                   </span>
                 </div>
               </div>

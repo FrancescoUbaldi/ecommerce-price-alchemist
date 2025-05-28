@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -11,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTranslation } from '@/utils/translations';
 
 interface ClientData {
@@ -94,152 +94,268 @@ const BusinessCase = ({
   // Net Revenues Nome Ecommerce = Fatturazione Netta Finale - REVER Platform Cost
   const netRevenuesEcommerce = fatturazioneNettaFinale - totalPlatformCost;
   
-  // REVER ROI = Fatturazione Netta Finale - REVER Platform Cost
-  const reverROI = fatturazioneNettaFinale - totalPlatformCost;
+  // REVER ROI = (Fatturazione Netta Generata da REVER / REVER Platform Cost) * 100
+  const reverROIPercentage = totalPlatformCost > 0 ? (fatturazioneGenerataRever / totalPlatformCost) * 100 : 0;
   
   // Aumento Net Revenues con REVER = Net Revenues Nome Ecommerce - Fatturazione Netta Pre REVER
   const aumentoNetRevenues = netRevenuesEcommerce - fatturazioneNettaPreRever;
 
-  return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>{getTranslation(language, 'businessCaseConfig')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="clientName">{getTranslation(language, 'ecommerceName')}</Label>
-              <Input
-                id="clientName"
-                value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
-                placeholder={getTranslation(language, 'enterEcommerceName')}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="returnRateBusiness">{getTranslation(language, 'returnRate')}</Label>
-              <Input
-                id="returnRateBusiness"
-                type="number"
-                step="0.1"
-                value={clientData.returnRatePercentage || ''}
-                onChange={(e) => updateClientData('returnRatePercentage', parseFloat(e.target.value) || 0)}
-                placeholder="23.9"
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+  // Tooltip formulas
+  const tooltipFormulas = {
+    fatturazione: "Ordini × AOV",
+    resi: "Resi × AOV",
+    fatturazioneNettaPreRever: "Fatturazione - Resi",
+    rdvValue: "Resi × RDV rate (35%) × AOV",
+    upsellingValue: "Upsell Orders (3.78% dei resi) × Upsell AOV (AOV + 30%)",
+    fatturazioneNettaFinale: "Fatturazione Netta Pre REVER + Vendite Ritenute + Upselling",
+    fatturazioneGenerataRever: "Vendite Ritenute + Upselling",
+    totalPlatformCost: "SaaS Fee Annuale + Transaction Fee + RDV Fee + Upselling Fee",
+    reverROI: "(Fatturazione Netta Generata da REVER / REVER Platform Cost) × 100",
+    netRevenuesEcommerce: "Fatturazione Netta Finale - REVER Platform Cost",
+    aumentoNetRevenues: "Net Revenues Ecommerce - Fatturazione Netta Pre REVER"
+  };
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Business Case: {clientName || getTranslation(language, 'ecommerceName')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-100">
-                <TableHead className="font-semibold"></TableHead>
-                <TableHead className="text-center font-semibold">Ordini</TableHead>
-                <TableHead className="text-center font-semibold">AOV</TableHead>
-                <TableHead className="text-center font-semibold">%</TableHead>
-                <TableHead className="text-center font-semibold">Totale</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow className="border-b">
-                <TableCell className="font-medium">Fatturazione (Pre REVER)</TableCell>
-                <TableCell className="text-center">{clientData.totalOrdersAnnual.toLocaleString()}</TableCell>
-                <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
-                <TableCell className="text-center">100.00%</TableCell>
-                <TableCell className="text-center font-bold">{formatCurrency(fatturazione)}</TableCell>
-              </TableRow>
-              
-              <TableRow className="border-b">
-                <TableCell className="font-medium">Resi (Pre REVER)</TableCell>
-                <TableCell className="text-center">{annualReturns.toLocaleString()}</TableCell>
-                <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
-                <TableCell className="text-center">{formatPercentage(clientData.returnRatePercentage)} <span className="text-sm text-gray-500">return rate</span></TableCell>
-                <TableCell className="text-center font-bold">{formatCurrency(resiValue)}</TableCell>
-              </TableRow>
-              
-              <TableRow className="bg-gray-50 font-semibold italic border-b">
-                <TableCell>Fatturazione netta (Pre REVER)</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell className="text-center font-bold">{formatCurrency(fatturazioneNettaPreRever)}</TableCell>
-              </TableRow>
-              
-              <TableRow className="border-b">
-                <TableCell className="font-medium">Vendite ritenute (35% con REVER)</TableCell>
-                <TableCell className="text-center">{Math.round(rdvResi).toLocaleString()}</TableCell>
-                <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
-                <TableCell className="text-center">35.00% <span className="text-sm text-gray-500">RDV rate</span></TableCell>
-                <TableCell className="text-center font-bold">{formatCurrency(rdvValue)}</TableCell>
-              </TableRow>
-              
-              <TableRow className="border-b">
-                <TableCell className="font-medium">Upselling (con REVER)</TableCell>
-                <TableCell className="text-center">{Math.round(upsellingResi).toLocaleString()}</TableCell>
-                <TableCell className="text-center">{formatCurrency(upsellingAOV)}</TableCell>
-                <TableCell className="text-center">3.78% <span className="text-sm text-gray-500">Upselling rate</span></TableCell>
-                <TableCell className="text-center font-bold">{formatCurrency(upsellingValue)}</TableCell>
-              </TableRow>
-              
-              <TableRow className="bg-gray-50 font-semibold italic border-b">
-                <TableCell>Fatturazione Netta Finale {clientName || getTranslation(language, 'ecommerceName')}</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell className="text-center font-bold">{formatCurrency(fatturazioneNettaFinale)}</TableCell>
-              </TableRow>
-              
-              <TableRow className="bg-gray-50 font-semibold italic border-b">
-                <TableCell>Fatturazione Netta Generata da REVER</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell className="text-center font-bold">{formatCurrency(fatturazioneGenerataRever)}</TableCell>
-              </TableRow>
-              
-              <TableRow className="border-b">
-                <TableCell className="font-medium">REVER Platform Cost</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell className="text-center font-bold">{formatCurrency(totalPlatformCost)}</TableCell>
-              </TableRow>
-              
-              <TableRow className="bg-blue-50 font-semibold border-b">
-                <TableCell>REVER ROI</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell className="text-center font-bold text-green-600">{formatCurrency(reverROI)}</TableCell>
-              </TableRow>
-              
-              <TableRow className="bg-green-50 font-semibold border-b">
-                <TableCell>Net Revenues {clientName || getTranslation(language, 'ecommerceName')}</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell className="text-center font-bold">{formatCurrency(netRevenuesEcommerce)}</TableCell>
-              </TableRow>
-              
-              <TableRow className="bg-green-100 font-semibold">
-                <TableCell>Aumento Net Revenues con REVER</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell className="text-center font-bold">{formatCurrency(aumentoNetRevenues)}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
+  return (
+    <TooltipProvider>
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>{getTranslation(language, 'businessCaseConfig')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="clientName">{getTranslation(language, 'ecommerceName')}</Label>
+                <Input
+                  id="clientName"
+                  value={clientName}
+                  onChange={(e) => setClientName(e.target.value)}
+                  placeholder={getTranslation(language, 'enterEcommerceName')}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="returnRateBusiness">{getTranslation(language, 'returnRate')}</Label>
+                <Input
+                  id="returnRateBusiness"
+                  type="number"
+                  step="0.1"
+                  value={clientData.returnRatePercentage || ''}
+                  onChange={(e) => updateClientData('returnRatePercentage', parseFloat(e.target.value) || 0)}
+                  placeholder="23.9"
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Business Case: {clientName || getTranslation(language, 'ecommerceName')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-[#1790FF]">
+                  <TableHead className="font-semibold text-white"></TableHead>
+                  <TableHead className="text-center font-semibold text-white">Ordini</TableHead>
+                  <TableHead className="text-center font-semibold text-white">AOV</TableHead>
+                  <TableHead className="text-center font-semibold text-white">%</TableHead>
+                  <TableHead className="text-center font-semibold text-white">Totale</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow className="border-b">
+                  <TableCell className="font-medium">Fatturazione (Pre REVER)</TableCell>
+                  <TableCell className="text-center">{clientData.totalOrdersAnnual.toLocaleString()}</TableCell>
+                  <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
+                  <TableCell className="text-center">100.00%</TableCell>
+                  <TableCell className="text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help">{formatCurrency(fatturazione)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{tooltipFormulas.fatturazione}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+                
+                <TableRow className="border-b">
+                  <TableCell className="font-medium">Resi (Pre REVER)</TableCell>
+                  <TableCell className="text-center">{annualReturns.toLocaleString()}</TableCell>
+                  <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
+                  <TableCell className="text-center">{formatPercentage(clientData.returnRatePercentage)} <span className="text-sm text-gray-500">return rate</span></TableCell>
+                  <TableCell className="text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help">{formatCurrency(resiValue)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{tooltipFormulas.resi}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+                
+                <TableRow className="bg-gray-50 font-semibold italic border-b">
+                  <TableCell>Fatturazione netta (Pre REVER)</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell className="text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help font-bold">{formatCurrency(fatturazioneNettaPreRever)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{tooltipFormulas.fatturazioneNettaPreRever}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+                
+                <TableRow className="border-b">
+                  <TableCell className="font-medium">Vendite ritenute (35% con REVER)</TableCell>
+                  <TableCell className="text-center">{Math.round(rdvResi).toLocaleString()}</TableCell>
+                  <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
+                  <TableCell className="text-center">35.00% <span className="text-sm text-gray-500">RDV rate</span></TableCell>
+                  <TableCell className="text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help">{formatCurrency(rdvValue)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{tooltipFormulas.rdvValue}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+                
+                <TableRow className="border-b">
+                  <TableCell className="font-medium">Upselling (con REVER)</TableCell>
+                  <TableCell className="text-center">{Math.round(upsellingResi).toLocaleString()}</TableCell>
+                  <TableCell className="text-center">{formatCurrency(upsellingAOV)}</TableCell>
+                  <TableCell className="text-center">3.78% <span className="text-sm text-gray-500">Upselling rate</span></TableCell>
+                  <TableCell className="text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help">{formatCurrency(upsellingValue)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{tooltipFormulas.upsellingValue}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+                
+                <TableRow className="bg-gray-50 font-semibold italic border-b">
+                  <TableCell>Fatturazione Netta Finale {clientName || getTranslation(language, 'ecommerceName')}</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell className="text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help font-bold">{formatCurrency(fatturazioneNettaFinale)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{tooltipFormulas.fatturazioneNettaFinale}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+                
+                <TableRow className="bg-gray-50 font-semibold italic border-b">
+                  <TableCell>Fatturazione Netta Generata da REVER</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell className="text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help font-bold">{formatCurrency(fatturazioneGenerataRever)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{tooltipFormulas.fatturazioneGenerataRever}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+                
+                <TableRow className="border-b">
+                  <TableCell className="font-medium">REVER Platform Cost</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell className="text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help">{formatCurrency(totalPlatformCost)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{tooltipFormulas.totalPlatformCost}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+                
+                <TableRow className="bg-blue-50 font-semibold border-b">
+                  <TableCell>REVER ROI</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell className="text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help font-bold text-green-600">{formatPercentage(reverROIPercentage)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{tooltipFormulas.reverROI}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+                
+                <TableRow className="bg-green-50 font-semibold border-b">
+                  <TableCell>Net Revenues {clientName || getTranslation(language, 'ecommerceName')}</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell className="text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help font-bold">{formatCurrency(netRevenuesEcommerce)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{tooltipFormulas.netRevenuesEcommerce}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+                
+                <TableRow className="bg-green-100 font-semibold">
+                  <TableCell>Aumento Net Revenues con REVER</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell className="text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help font-bold">{formatCurrency(aumentoNetRevenues)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{tooltipFormulas.aumentoNetRevenues}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
+    </TooltipProvider>
   );
 };
 
