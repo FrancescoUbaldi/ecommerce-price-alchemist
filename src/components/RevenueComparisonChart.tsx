@@ -67,6 +67,11 @@ const RevenueComparisonChart = ({
   };
 
   const CustomLabel = ({ x, y, width, payload }: any) => {
+    // Add safety checks for payload
+    if (!payload || typeof payload.value === 'undefined') {
+      return null;
+    }
+
     return (
       <text 
         x={x + width / 2} 
