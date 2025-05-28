@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -274,29 +273,25 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header with logo repositioned */}
-        <div className="text-center space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <img 
-                src="/lovable-uploads/f7dbf19a-18fa-4078-980a-2e6cc9c4fd45.png" 
-                alt="REVER Logo" 
-                className="h-24 w-auto"
-              />
-            </div>
-            <div className="flex-1 flex justify-center">
-              <h1 className="text-3xl font-bold text-[#1790FF]">Price & Smile :)</h1>
-            </div>
-            <div className="flex justify-end">
-              <LanguageSelector language={language} setLanguage={setLanguage} />
-            </div>
+        {/* Updated Header with better alignment */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <img 
+              src="/lovable-uploads/f7dbf19a-18fa-4078-980a-2e6cc9c4fd45.png" 
+              alt="REVER Logo" 
+              className="h-32 w-auto"
+            />
           </div>
-          <div className="text-center">
-            <p className="text-gray-600">Calcola il pricing perfetto per il tuo cliente</p>
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <h1 className="text-3xl font-bold text-[#1790FF] mb-1">{getTranslation(language, 'title')}</h1>
+            <p className="text-gray-600 text-center">{getTranslation(language, 'subtitle')}</p>
+          </div>
+          <div className="flex justify-end">
+            <LanguageSelector language={language} setLanguage={setLanguage} />
           </div>
         </div>
 
-        {/* Client Data - Removed Return Rate and Total Orders Annual fields */}
+        {/* Client Data */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -359,18 +354,18 @@ const Index = () => {
           </CardContent>
         </Card>
 
-        {/* Pricing Scenarios */}
+        {/* Pricing Scenarios with improved tab styling */}
         <Tabs defaultValue="predefiniti" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-white relative">
+          <TabsList className="grid w-full grid-cols-3 bg-gray-100 p-1 rounded-lg">
             <TabsTrigger 
               value="predefiniti"
-              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white transition-all duration-300"
+              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 data-[state=inactive]:hover:bg-gray-200 transition-all duration-300 cursor-pointer rounded-md font-medium"
             >
               {getTranslation(language, 'predefinedScenarios')}
             </TabsTrigger>
             <TabsTrigger 
               value="personalizzato"
-              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white transition-all duration-300"
+              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 data-[state=inactive]:hover:bg-gray-200 transition-all duration-300 cursor-pointer rounded-md font-medium"
             >
               {getTranslation(language, 'customScenario')}
               {showScenarioNotification && (
@@ -381,7 +376,7 @@ const Index = () => {
             </TabsTrigger>
             <TabsTrigger 
               value="business-case"
-              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white transition-all duration-300"
+              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 data-[state=inactive]:hover:bg-gray-200 transition-all duration-300 cursor-pointer rounded-md font-medium"
             >
               {getTranslation(language, 'businessCase')}
             </TabsTrigger>
@@ -391,7 +386,6 @@ const Index = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {predefinedScenarios.map((scenario, index) => {
                 const calculation = calculateScenario(scenario);
-                const takeRateStatus = getTakeRateStatus(calculation.takeRate, scenario.name);
                 
                 return (
                   <Card 
@@ -473,16 +467,11 @@ const Index = () => {
                           <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
                         </div>
                         
-                        {/* Take Rate with status */}
+                        {/* Take Rate without status indicator */}
                         <div className="flex justify-between font-semibold text-lg border-t pt-2">
                           <span>{getTranslation(language, 'takeRate')}:</span>
                           <span className="text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
                         </div>
-                        {takeRateStatus && (
-                          <div className="text-xs text-center mt-1">
-                            {takeRateStatus}
-                          </div>
-                        )}
 
                         {/* Fee Distribution Chart */}
                         <div className="mt-4">
