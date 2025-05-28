@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -280,7 +281,7 @@ const Index = () => {
               <img 
                 src="/lovable-uploads/f7dbf19a-18fa-4078-980a-2e6cc9c4fd45.png" 
                 alt="REVER Logo" 
-                className="h-20 w-auto"
+                className="h-24 w-auto"
               />
             </div>
             <div className="flex-1 flex justify-center">
@@ -290,7 +291,9 @@ const Index = () => {
               <LanguageSelector language={language} setLanguage={setLanguage} />
             </div>
           </div>
-          <p className="text-gray-600">{getTranslation(language, 'subtitle')}</p>
+          <div className="text-center">
+            <p className="text-gray-600">Calcola il pricing perfetto per il tuo cliente</p>
+          </div>
         </div>
 
         {/* Client Data - Removed Return Rate and Total Orders Annual fields */}

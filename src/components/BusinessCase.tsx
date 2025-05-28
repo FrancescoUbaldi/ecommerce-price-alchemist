@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -84,7 +85,7 @@ const BusinessCase = ({
   // Fatturazione Netta Generata da REVER = RDV + Upselling
   const fatturazioneGenerataRever = rdvValue + upsellingValue;
   
-  // REVER Platform Cost = SaaS Fee Annuale + Total Transaction Fee + Total RDV Fee + Total Upselling Fee
+  // REVER Platform Cost calculation with ANNUAL values
   const saasFeeAnnuale = scenario.saasFee * 12;
   const transactionFeeAnnuale = scenario.transactionFeeFixed * annualReturns;
   const rdvFeeAnnuale = (rdvValue * scenario.rdvPercentage) / 100;
@@ -99,21 +100,6 @@ const BusinessCase = ({
   
   // Aumento Net Revenues con REVER = Net Revenues Nome Ecommerce - Fatturazione Netta Pre REVER
   const aumentoNetRevenues = netRevenuesEcommerce - fatturazioneNettaPreRever;
-
-  // Tooltip formulas
-  const tooltipFormulas = {
-    fatturazione: "Ordini × AOV",
-    resi: "Resi × AOV",
-    fatturazioneNettaPreRever: "Fatturazione - Resi",
-    rdvValue: "Resi × RDV rate (35%) × AOV",
-    upsellingValue: "Upsell Orders (3.78% dei resi) × Upsell AOV (AOV + 30%)",
-    fatturazioneNettaFinale: "Fatturazione Netta Pre REVER + Vendite Ritenute + Upselling",
-    fatturazioneGenerataRever: "Vendite Ritenute + Upselling",
-    totalPlatformCost: "SaaS Fee Annuale + Transaction Fee + RDV Fee + Upselling Fee",
-    reverROI: "(Fatturazione Netta Generata da REVER / REVER Platform Cost) × 100",
-    netRevenuesEcommerce: "Fatturazione Netta Finale - REVER Platform Cost",
-    aumentoNetRevenues: "Net Revenues Ecommerce - Fatturazione Netta Pre REVER"
-  };
 
   return (
     <TooltipProvider>
@@ -174,8 +160,14 @@ const BusinessCase = ({
                       <TooltipTrigger asChild>
                         <span className="cursor-help">{formatCurrency(fatturazione)}</span>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{tooltipFormulas.fatturazione}</p>
+                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <div className="space-y-1 text-sm">
+                          <div>Ordini: {clientData.totalOrdersAnnual.toLocaleString()}</div>
+                          <div>AOV: {formatCurrency(clientData.carrelloMedio)}</div>
+                          <div className="border-t pt-1 mt-2 font-semibold">
+                            Totale: {formatCurrency(fatturazione)}
+                          </div>
+                        </div>
                       </TooltipContent>
                     </Tooltip>
                   </TableCell>
@@ -191,8 +183,14 @@ const BusinessCase = ({
                       <TooltipTrigger asChild>
                         <span className="cursor-help">{formatCurrency(resiValue)}</span>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{tooltipFormulas.resi}</p>
+                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <div className="space-y-1 text-sm">
+                          <div>Resi: {annualReturns.toLocaleString()}</div>
+                          <div>AOV: {formatCurrency(clientData.carrelloMedio)}</div>
+                          <div className="border-t pt-1 mt-2 font-semibold">
+                            Totale: {formatCurrency(resiValue)}
+                          </div>
+                        </div>
                       </TooltipContent>
                     </Tooltip>
                   </TableCell>
@@ -208,8 +206,14 @@ const BusinessCase = ({
                       <TooltipTrigger asChild>
                         <span className="cursor-help font-bold">{formatCurrency(fatturazioneNettaPreRever)}</span>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{tooltipFormulas.fatturazioneNettaPreRever}</p>
+                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <div className="space-y-1 text-sm">
+                          <div>Fatturazione: {formatCurrency(fatturazione)}</div>
+                          <div>Resi: {formatCurrency(resiValue)}</div>
+                          <div className="border-t pt-1 mt-2 font-semibold">
+                            Totale: {formatCurrency(fatturazioneNettaPreRever)}
+                          </div>
+                        </div>
                       </TooltipContent>
                     </Tooltip>
                   </TableCell>
@@ -225,8 +229,15 @@ const BusinessCase = ({
                       <TooltipTrigger asChild>
                         <span className="cursor-help">{formatCurrency(rdvValue)}</span>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{tooltipFormulas.rdvValue}</p>
+                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <div className="space-y-1 text-sm">
+                          <div>Resi: {annualReturns.toLocaleString()}</div>
+                          <div>RDV Rate: 35%</div>
+                          <div>AOV: {formatCurrency(clientData.carrelloMedio)}</div>
+                          <div className="border-t pt-1 mt-2 font-semibold">
+                            Totale: {formatCurrency(rdvValue)}
+                          </div>
+                        </div>
                       </TooltipContent>
                     </Tooltip>
                   </TableCell>
@@ -242,8 +253,14 @@ const BusinessCase = ({
                       <TooltipTrigger asChild>
                         <span className="cursor-help">{formatCurrency(upsellingValue)}</span>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{tooltipFormulas.upsellingValue}</p>
+                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <div className="space-y-1 text-sm">
+                          <div>Upsell Orders: {Math.round(upsellingResi).toLocaleString()}</div>
+                          <div>Upsell AOV: {formatCurrency(upsellingAOV)}</div>
+                          <div className="border-t pt-1 mt-2 font-semibold">
+                            Totale: {formatCurrency(upsellingValue)}
+                          </div>
+                        </div>
                       </TooltipContent>
                     </Tooltip>
                   </TableCell>
@@ -259,8 +276,15 @@ const BusinessCase = ({
                       <TooltipTrigger asChild>
                         <span className="cursor-help font-bold">{formatCurrency(fatturazioneNettaFinale)}</span>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{tooltipFormulas.fatturazioneNettaFinale}</p>
+                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <div className="space-y-1 text-sm">
+                          <div>Fatturazione Netta Pre REVER: {formatCurrency(fatturazioneNettaPreRever)}</div>
+                          <div>Vendite Ritenute: {formatCurrency(rdvValue)}</div>
+                          <div>Upselling: {formatCurrency(upsellingValue)}</div>
+                          <div className="border-t pt-1 mt-2 font-semibold">
+                            Totale: {formatCurrency(fatturazioneNettaFinale)}
+                          </div>
+                        </div>
                       </TooltipContent>
                     </Tooltip>
                   </TableCell>
@@ -276,8 +300,14 @@ const BusinessCase = ({
                       <TooltipTrigger asChild>
                         <span className="cursor-help font-bold">{formatCurrency(fatturazioneGenerataRever)}</span>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{tooltipFormulas.fatturazioneGenerataRever}</p>
+                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <div className="space-y-1 text-sm">
+                          <div>Vendite Ritenute: {formatCurrency(rdvValue)}</div>
+                          <div>Upselling: {formatCurrency(upsellingValue)}</div>
+                          <div className="border-t pt-1 mt-2 font-semibold">
+                            Totale: {formatCurrency(fatturazioneGenerataRever)}
+                          </div>
+                        </div>
                       </TooltipContent>
                     </Tooltip>
                   </TableCell>
@@ -293,8 +323,16 @@ const BusinessCase = ({
                       <TooltipTrigger asChild>
                         <span className="cursor-help">{formatCurrency(totalPlatformCost)}</span>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{tooltipFormulas.totalPlatformCost}</p>
+                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <div className="space-y-1 text-sm">
+                          <div>SaaS Fee Annuale: {formatCurrency(saasFeeAnnuale)}</div>
+                          <div>Total Transaction Fee: {formatCurrency(transactionFeeAnnuale)}</div>
+                          <div>Total RDV Fee: {formatCurrency(rdvFeeAnnuale)}</div>
+                          <div>Total Upselling Fee: {formatCurrency(upsellingFeeAnnuale)}</div>
+                          <div className="border-t pt-1 mt-2 font-semibold">
+                            Totale: {formatCurrency(totalPlatformCost)}
+                          </div>
+                        </div>
                       </TooltipContent>
                     </Tooltip>
                   </TableCell>
@@ -310,8 +348,14 @@ const BusinessCase = ({
                       <TooltipTrigger asChild>
                         <span className="cursor-help font-bold text-green-600">{formatPercentage(reverROIPercentage)}</span>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{tooltipFormulas.reverROI}</p>
+                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <div className="space-y-1 text-sm">
+                          <div>Fatturazione Netta Generata da REVER: {formatCurrency(fatturazioneGenerataRever)}</div>
+                          <div>REVER Platform Cost: {formatCurrency(totalPlatformCost)}</div>
+                          <div className="border-t pt-1 mt-2 font-semibold">
+                            ROI: {formatPercentage(reverROIPercentage)}
+                          </div>
+                        </div>
                       </TooltipContent>
                     </Tooltip>
                   </TableCell>
@@ -327,8 +371,14 @@ const BusinessCase = ({
                       <TooltipTrigger asChild>
                         <span className="cursor-help font-bold">{formatCurrency(netRevenuesEcommerce)}</span>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{tooltipFormulas.netRevenuesEcommerce}</p>
+                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <div className="space-y-1 text-sm">
+                          <div>Fatturazione Netta Finale: {formatCurrency(fatturazioneNettaFinale)}</div>
+                          <div>REVER Platform Cost: {formatCurrency(totalPlatformCost)}</div>
+                          <div className="border-t pt-1 mt-2 font-semibold">
+                            Totale: {formatCurrency(netRevenuesEcommerce)}
+                          </div>
+                        </div>
                       </TooltipContent>
                     </Tooltip>
                   </TableCell>
@@ -344,8 +394,14 @@ const BusinessCase = ({
                       <TooltipTrigger asChild>
                         <span className="cursor-help font-bold">{formatCurrency(aumentoNetRevenues)}</span>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{tooltipFormulas.aumentoNetRevenues}</p>
+                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <div className="space-y-1 text-sm">
+                          <div>Net Revenues Ecommerce: {formatCurrency(netRevenuesEcommerce)}</div>
+                          <div>Fatturazione Netta Pre REVER: {formatCurrency(fatturazioneNettaPreRever)}</div>
+                          <div className="border-t pt-1 mt-2 font-semibold">
+                            Totale: {formatCurrency(aumentoNetRevenues)}
+                          </div>
+                        </div>
                       </TooltipContent>
                     </Tooltip>
                   </TableCell>
