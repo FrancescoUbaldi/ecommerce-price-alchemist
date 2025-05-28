@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -73,10 +72,10 @@ const Index = () => {
     }
   ]);
 
-  // Calculate GTV
+  // Calculate GTV - FIXED: should be Annual Returns × Average Cart
   const gtv = useMemo(() => {
-    return clientData.totalOrdersAnnual * clientData.carrelloMedio;
-  }, [clientData.totalOrdersAnnual, clientData.carrelloMedio]);
+    return clientData.resiAnnuali * clientData.carrelloMedio;
+  }, [clientData.resiAnnuali, clientData.carrelloMedio]);
 
   // Auto-adjust predefined scenarios to maintain progressive take rates (2.3%, 2.8%, 3.3%)
   useEffect(() => {
@@ -152,26 +151,27 @@ const Index = () => {
     setClientData(prev => {
       const newData = { ...prev, [field]: value };
       
-      // Sync annual and monthly returns
+      // IMPROVED: Dynamic relationship between Returns, Return Rate, and Total Orders
       if (field === 'resiAnnuali') {
         newData.resiMensili = Math.round(value / 12);
-        // Update return rate if we have total orders
+        // If we have total orders, update return rate
         if (newData.totalOrdersAnnual > 0) {
           newData.returnRatePercentage = (value / newData.totalOrdersAnnual) * 100;
         }
       } else if (field === 'resiMensili') {
         newData.resiAnnuali = value * 12;
-        // Update return rate if we have total orders
+        // If we have total orders, update return rate
         if (newData.totalOrdersAnnual > 0) {
           newData.returnRatePercentage = ((value * 12) / newData.totalOrdersAnnual) * 100;
         }
       } else if (field === 'totalOrdersAnnual') {
-        // Update return rate based on existing returns
-        if (value > 0) {
-          newData.returnRatePercentage = (newData.resiAnnuali / value) * 100;
+        // If we have a return rate, update returns based on new total orders
+        if (newData.returnRatePercentage > 0) {
+          newData.resiAnnuali = Math.round((newData.returnRatePercentage / 100) * value);
+          newData.resiMensili = Math.round(newData.resiAnnuali / 12);
         }
       } else if (field === 'returnRatePercentage') {
-        // Update returns based on total orders
+        // If we have total orders, update returns based on new rate
         if (newData.totalOrdersAnnual > 0) {
           newData.resiAnnuali = Math.round((value / 100) * newData.totalOrdersAnnual);
           newData.resiMensili = Math.round(newData.resiAnnuali / 12);
@@ -256,7 +256,7 @@ const Index = () => {
             <div className="flex-1"></div>
             <div className="flex items-center justify-center gap-2">
               <Calculator className="h-8 w-8 text-white" />
-              <h1 className="text-3xl font-bold text-white">Price & Smile :)</h1>
+              <h1 className="text-3xl font-bold text-white">{getTranslation(language, 'title')}</h1>
             </div>
             <div className="flex-1 flex justify-end">
               <LanguageSelector language={language} setLanguage={setLanguage} />
@@ -280,7 +280,7 @@ const Index = () => {
                 className="flex items-center gap-2"
               >
                 <RotateCcw className="h-4 w-4" />
-                Reset
+                {getTranslation(language, 'reset')}
               </Button>
             </div>
           </CardHeader>
@@ -365,7 +365,7 @@ const Index = () => {
               {getTranslation(language, 'customScenario')}
               {showScenarioNotification && (
                 <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-xs px-2 py-1 rounded animate-fade-in">
-                  Scenario applicato!
+                  {getTranslation(language, 'scenarioApplied')}
                 </span>
               )}
             </TabsTrigger>
@@ -398,7 +398,7 @@ const Index = () => {
                       {/* Parametri Modificabili */}
                       <div className="bg-gray-50 p-3 rounded-lg space-y-3 text-sm">
                         <div className="space-y-1">
-                          <label className="text-xs text-gray-600">SaaS Fee (€/mese)</label>
+                          <label className="text-xs text-gray-600">{getTranslation(language, 'saasFee')}</label>
                           <Input
                             type="number"
                             value={scenario.saasFee}
@@ -407,7 +407,7 @@ const Index = () => {
                           />
                         </div>
                         <div className="space-y-1">
-                          <label className="text-xs text-gray-600">Transaction Fee (€/reso)</label>
+                          <label className="text-xs text-gray-600">{getTranslation(language, 'transactionFee')}</label>
                           <Input
                             type="number"
                             step="0.10"
@@ -417,7 +417,7 @@ const Index = () => {
                           />
                         </div>
                         <div className="space-y-1">
-                          <label className="text-xs text-gray-600">RDV Fee (%)</label>
+                          <label className="text-xs text-gray-600">{getTranslation(language, 'rdvFee')}</label>
                           <Input
                             type="number"
                             step="0.1"
@@ -427,7 +427,7 @@ const Index = () => {
                           />
                         </div>
                         <div className="space-y-1">
-                          <label className="text-xs text-gray-600">Upselling Fee (%)</label>
+                          <label className="text-xs text-gray-600">{getTranslation(language, 'upsellingFee')}</label>
                           <Input
                             type="number"
                             step="0.1"
@@ -457,13 +457,13 @@ const Index = () => {
                           <span>{formatCurrency(calculation.upsellingFee)}</span>
                         </div>
                         <div className="flex justify-between font-bold text-lg border-t pt-2">
-                          <span>Totale Mensile:</span>
+                          <span>{getTranslation(language, 'monthlyTotal')}:</span>
                           <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
                         </div>
                         
                         {/* Take Rate */}
                         <div className="flex justify-between font-semibold text-lg border-t pt-2">
-                          <span>Take Rate:</span>
+                          <span>{getTranslation(language, 'takeRate')}:</span>
                           <span className="text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
                         </div>
 
@@ -483,7 +483,7 @@ const Index = () => {
                           onClick={() => selectPredefinedScenario(scenario)}
                           className="w-full mt-3 bg-[#1790FF] hover:bg-[#1470CC] text-white"
                         >
-                          Usa questo scenario
+                          {getTranslation(language, 'useThisScenario')}
                         </Button>
                       </div>
                     </CardContent>
@@ -593,12 +593,12 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Risultati Scenario Personalizzato */}
+                {/* Risultati Scenario Personalizzato - NO Take Rate or Fee Distribution here */}
                 {(() => {
                   const calculation = calculateScenario(customScenario);
                   return (
                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
-                      <h3 className="text-lg font-semibold mb-4">Risultati Calcolo</h3>
+                      <h3 className="text-lg font-semibold mb-4">{getTranslation(language, 'calculationResults')}</h3>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-3">
@@ -629,12 +629,8 @@ const Index = () => {
                             <span className="font-medium">{formatCurrency(gtv)}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>ACV Annuale:</span>
+                            <span>{getTranslation(language, 'annualACV')}:</span>
                             <span className="font-medium">{formatCurrency(calculation.annualContractValue)}</span>
-                          </div>
-                          <div className="flex justify-between font-bold text-xl border-t pt-3">
-                            <span>Take Rate:</span>
-                            <span className="text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
                           </div>
                         </div>
                       </div>
