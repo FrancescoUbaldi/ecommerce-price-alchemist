@@ -27,16 +27,26 @@ const RevenueComparisonChart = ({
 
   const difference = finalNetBilling - preReverNetBilling;
 
+  // Ensure visual growth of at least 15-20% even when values are similar
+  const visualPreRever = preReverNetBilling;
+  const visualMinGrowth = preReverNetBilling * 0.15; // 15% minimum visual growth
+  const actualGrowth = finalNetBilling - preReverNetBilling;
+  const visualFinalNetBilling = finalNetBilling < preReverNetBilling + visualMinGrowth 
+    ? preReverNetBilling + visualMinGrowth 
+    : finalNetBilling;
+
   const data = [
     {
       name: getTranslation(language, 'netRevenuePreRever'),
       value: preReverNetBilling,
+      visualValue: visualPreRever,
       color: '#E5E7EB',
       isBaseline: true
     },
     {
       name: getTranslation(language, 'netRevenueWithRever'),
       value: finalNetBilling,
+      visualValue: visualFinalNetBilling,
       color: '#1790FF',
       isBaseline: false
     }
@@ -48,7 +58,7 @@ const RevenueComparisonChart = ({
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
           <p className="text-sm font-medium">{label}</p>
           <p className="text-sm text-gray-600">
-            {formatCurrency(payload[0].value)}
+            {formatCurrency(payload[0].payload.value)}
           </p>
         </div>
       );
@@ -56,18 +66,18 @@ const RevenueComparisonChart = ({
     return null;
   };
 
-  const CustomLabel = ({ x, y, width, value, payload }: any) => {
+  const CustomLabel = ({ x, y, width, payload }: any) => {
     return (
       <text 
         x={x + width / 2} 
         y={y - 10} 
         fill="#374151" 
         textAnchor="middle" 
-        fontSize="13"
+        fontSize="14"
         fontWeight="bold"
         className="animate-fade-in"
       >
-        {formatCurrency(value)}
+        {formatCurrency(payload.value)}
       </text>
     );
   };
@@ -90,8 +100,8 @@ const RevenueComparisonChart = ({
           <ResponsiveContainer width="100%" height="100%">
             <BarChart 
               data={data} 
-              margin={{ top: 40, right: 40, left: 20, bottom: 60 }}
-              barCategoryGap="30%"
+              margin={{ top: 40, right: 40, left: 20, bottom: 40 }}
+              barCategoryGap="40%"
             >
               <XAxis 
                 dataKey="name" 
@@ -99,9 +109,9 @@ const RevenueComparisonChart = ({
                 tickLine={false}
                 tick={{ fontSize: 12, fill: '#6B7280' }}
                 interval={0}
-                angle={-20}
-                textAnchor="end"
-                height={80}
+                angle={0}
+                textAnchor="middle"
+                height={40}
               />
               <YAxis 
                 hide 
@@ -109,9 +119,10 @@ const RevenueComparisonChart = ({
               />
               <Tooltip content={<CustomTooltip />} />
               <Bar 
-                dataKey="value" 
+                dataKey="visualValue" 
                 radius={[6, 6, 0, 0]}
                 label={<CustomLabel />}
+                maxBarSize={80}
                 className="animate-scale-in"
               >
                 {data.map((entry, index) => (
@@ -119,8 +130,11 @@ const RevenueComparisonChart = ({
                     key={`cell-${index}`} 
                     fill={entry.color}
                     className={`transition-all duration-1000 ease-out ${
-                      entry.isBaseline ? 'opacity-80' : 'opacity-100 animate-pulse'
+                      entry.isBaseline ? 'opacity-80' : 'opacity-100'
                     }`}
+                    style={{
+                      animation: `scale-in 1s ease-out ${index * 0.2}s both`
+                    }}
                   />
                 ))}
               </Bar>
