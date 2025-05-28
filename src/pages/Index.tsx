@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, RotateCcw } from 'lucide-react';
+import { Settings, FileText, RotateCcw } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
 import LanguageSelector from '@/components/LanguageSelector';
@@ -72,7 +72,7 @@ const Index = () => {
     }
   ]);
 
-  // Calculate GTV - FIXED: should always be Annual Returns × Average Cart
+  // Calculate GTV - FIXED: should be Annual Returns × Average Cart
   const gtv = useMemo(() => {
     return clientData.resiAnnuali * clientData.carrelloMedio;
   }, [clientData.resiAnnuali, clientData.carrelloMedio]);
@@ -253,7 +253,8 @@ const Index = () => {
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex-1"></div>
+            <div className="flex items-center justify-center gap-4">
               <img 
                 src="/lovable-uploads/f7dbf19a-18fa-4078-980a-2e6cc9c4fd45.png" 
                 alt="REVER Logo" 
@@ -261,12 +262,14 @@ const Index = () => {
               />
               <h1 className="text-3xl font-bold text-[#1790FF]">{getTranslation(language, 'title')}</h1>
             </div>
-            <LanguageSelector language={language} setLanguage={setLanguage} />
+            <div className="flex-1 flex justify-end">
+              <LanguageSelector language={language} setLanguage={setLanguage} />
+            </div>
           </div>
           <p className="text-gray-600">{getTranslation(language, 'subtitle')}</p>
         </div>
 
-        {/* Dati Cliente */}
+        {/* Dati Cliente - REMOVED returnRate and totalOrdersAnnual fields */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -477,6 +480,7 @@ const Index = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
                   {getTranslation(language, 'customScenario')}
                 </CardTitle>
               </CardHeader>
@@ -572,7 +576,7 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Risultati Scenario Personalizzato */}
+                {/* Risultati Scenario Personalizzato - NO Take Rate or Fee Distribution here */}
                 {(() => {
                   const calculation = calculateScenario(customScenario);
                   return (
