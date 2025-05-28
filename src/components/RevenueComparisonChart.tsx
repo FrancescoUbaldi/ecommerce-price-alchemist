@@ -106,7 +106,7 @@ const RevenueComparisonChart = ({
             <BarChart 
               data={data} 
               margin={{ top: 40, right: 40, left: 20, bottom: 40 }}
-              barCategoryGap="40%"
+              barCategoryGap="20%"
             >
               <XAxis 
                 dataKey="name" 
@@ -127,7 +127,7 @@ const RevenueComparisonChart = ({
                 dataKey="visualValue" 
                 radius={[6, 6, 0, 0]}
                 label={<CustomLabel />}
-                maxBarSize={80}
+                maxBarSize={60}
                 className="animate-scale-in"
               >
                 {data.map((entry, index) => (
@@ -135,10 +135,15 @@ const RevenueComparisonChart = ({
                     key={`cell-${index}`} 
                     fill={entry.color}
                     className={`transition-all duration-1000 ease-out ${
-                      entry.isBaseline ? 'opacity-80' : 'opacity-100'
+                      entry.isBaseline 
+                        ? 'opacity-80' 
+                        : 'opacity-100 animate-pulse'
                     }`}
                     style={{
-                      animation: `scale-in 1s ease-out ${index * 0.2}s both`
+                      animation: entry.isBaseline 
+                        ? `scale-in 1s ease-out ${index * 0.2}s both`
+                        : `scale-in 1s ease-out ${index * 0.2}s both, pulse 2s infinite 1s`,
+                      filter: entry.isBaseline ? 'none' : 'drop-shadow(0 0 8px rgba(23, 144, 255, 0.3))'
                     }}
                   />
                 ))}

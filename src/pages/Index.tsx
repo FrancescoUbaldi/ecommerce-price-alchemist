@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, RotateCcw, Copy } from 'lucide-react';
+import { Settings, RotateCcw, Copy, Check } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
 import LanguageSelector from '@/components/LanguageSelector';
@@ -30,13 +30,14 @@ interface ClientData {
 const Index = () => {
   const [language, setLanguage] = useState<string>('it');
   const [showScenarioNotification, setShowScenarioNotification] = useState(false);
+  const [showResetConfirmation, setShowResetConfirmation] = useState(false);
   
   const [clientData, setClientData] = useState<ClientData>({
     resiAnnuali: 0,
     resiMensili: 0,
     carrelloMedio: 0,
     totalOrdersAnnual: 0,
-    returnRatePercentage: 23.9
+    returnRatePercentage: 0
   });
 
   const [clientName, setClientName] = useState<string>('');
@@ -133,20 +134,24 @@ const Index = () => {
       name: "Scenario Personalizzato"
     });
     
-    // Show notification
     setShowScenarioNotification(true);
     setTimeout(() => setShowScenarioNotification(false), 3000);
   };
 
   const resetData = () => {
+    // Reset all client data to 0
     setClientData({
       resiAnnuali: 0,
       resiMensili: 0,
       carrelloMedio: 0,
       totalOrdersAnnual: 0,
-      returnRatePercentage: 23.9
+      returnRatePercentage: 0
     });
+    
+    // Reset client name
     setClientName('');
+    
+    // Reset custom scenario to all zeros
     setCustomScenario({
       saasFee: 0,
       transactionFeeFixed: 0,
@@ -154,13 +159,16 @@ const Index = () => {
       upsellingPercentage: 0,
       name: "Scenario Personalizzato"
     });
+
+    // Show confirmation message
+    setShowResetConfirmation(true);
+    setTimeout(() => setShowResetConfirmation(false), 3000);
   };
 
   const updateClientData = (field: keyof ClientData, value: number) => {
     setClientData(prev => {
       const newData = { ...prev, [field]: value };
       
-      // Dynamic relationship between Returns, Return Rate, and Total Orders
       if (field === 'resiAnnuali') {
         newData.resiMensili = Math.round(value / 12);
         if (newData.totalOrdersAnnual > 0) {
@@ -205,15 +213,12 @@ const Index = () => {
 
     const resiMensili = annualReturns / 12;
     
-    // Transaction Fee calculation
     const transactionFee = resiMensili * scenario.transactionFeeFixed;
     
-    // RDV calculation (35% of returns)
     const rdvAnnuali = annualReturns * 0.35;
     const rdvMensili = rdvAnnuali / 12;
     const rdvFee = (rdvMensili * clientData.carrelloMedio * scenario.rdvPercentage) / 100;
     
-    // Upselling calculation (3.78% of returns with 30% cart increase)
     const upsellingAnnuali = annualReturns * 0.0378;
     const upsellingMensili = upsellingAnnuali / 12;
     const incrementoCarrello = clientData.carrelloMedio * 0.3;
@@ -222,7 +227,6 @@ const Index = () => {
     const totalMensile = scenario.saasFee + transactionFee + rdvFee + upsellingFee;
     const annualContractValue = totalMensile * 12;
     
-    // Take Rate calculation using GTV
     const takeRate = gtv > 0 ? (annualContractValue / gtv) * 100 : 0;
 
     return {
@@ -263,7 +267,6 @@ const Index = () => {
     return emojis[index] || '📊';
   };
 
-  // Check Take Rate ranges for predefined scenarios
   const getTakeRateStatus = (takeRate: number, scenarioName: string) => {
     if (scenarioName === "GAS") {
       return takeRate >= 2.8 && takeRate <= 4.8 ? "✅ In range (2.8%-4.8%)" : "⚠️ Out of range";
@@ -314,15 +317,25 @@ const Index = () => {
                 <Settings className="h-5 w-5" />
                 {getTranslation(language, 'clientData')}
               </CardTitle>
-              <Button 
-                onClick={resetData}
-                variant="outline" 
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                <RotateCcw className="h-4 w-4" />
-                {getTranslation(language, 'reset')}
-              </Button>
+              <div className="flex flex-col items-end">
+                <Button 
+                  onClick={resetData}
+                  variant="outline" 
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  {getTranslation(language, 'reset')}
+                </Button>
+                {showResetConfirmation && (
+                  <div className="mt-2 flex items-center gap-2 bg-green-50 px-3 py-2 rounded-md border border-green-200 animate-fade-in">
+                    <Check className="h-4 w-4 text-green-600" />
+                    <span className="text-sm text-green-700 font-medium">
+                      ✅ Tutti i dati sono stati azzerati correttamente
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </CardHeader>
           <CardContent>
@@ -369,7 +382,6 @@ const Index = () => {
           </CardContent>
         </Card>
 
-        {/* Pricing Scenarios with improved tab styling */}
         <Tabs defaultValue="predefiniti" className="w-full">
           <TabsList className="grid w-full grid-cols-3 bg-gray-100 p-1 rounded-lg">
             <TabsTrigger 
@@ -416,7 +428,6 @@ const Index = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      {/* Editable Parameters */}
                       <div className="bg-gray-50 p-3 rounded-lg space-y-3 text-sm">
                         <div className="space-y-1">
                           <label className="text-xs text-gray-600">{getTranslation(language, 'saasFee')}</label>
@@ -459,7 +470,6 @@ const Index = () => {
                         </div>
                       </div>
 
-                      {/* Calculations */}
                       <div className="space-y-2 border-t pt-3">
                         <div className="flex justify-between text-sm">
                           <span>SaaS Fee:</span>
@@ -482,13 +492,11 @@ const Index = () => {
                           <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
                         </div>
                         
-                        {/* Take Rate without status indicator */}
                         <div className="flex justify-between font-semibold text-lg border-t pt-2">
                           <span>{getTranslation(language, 'takeRate')}:</span>
                           <span className="text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
                         </div>
 
-                        {/* Fee Distribution Chart */}
                         <div className="mt-4">
                           <FeeDistributionChart
                             saasFee={calculation.saasFee}
@@ -499,7 +507,6 @@ const Index = () => {
                           />
                         </div>
                         
-                        {/* Use this scenario button */}
                         <Button 
                           onClick={() => selectPredefinedScenario(scenario)}
                           className="w-full mt-3 bg-[#1790FF] hover:bg-[#1470CC] text-white"
@@ -523,7 +530,6 @@ const Index = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {/* Client Data Sync Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
                   <div className="space-y-2">
                     <Label htmlFor="customTotalOrders">{getTranslation(language, 'totalAnnualOrders')}</Label>
@@ -614,7 +620,6 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Custom Scenario Results */}
                 {(() => {
                   const calculation = calculateScenario(customScenario);
                   return (
@@ -659,7 +664,6 @@ const Index = () => {
                   );
                 })()}
 
-                {/* Combo Actions */}
                 <ComboActions
                   currentScenario={customScenario}
                   onDuplicate={handleDuplicateScenario}
@@ -668,7 +672,6 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            {/* Duplicated Scenarios */}
             {duplicatedScenarios.map((scenario, index) => (
               <Card key={index} className="border-dashed border-2">
                 <CardHeader>
@@ -720,7 +723,6 @@ const Index = () => {
                     </div>
                   </div>
 
-                  {/* Duplicated Scenario Results */}
                   {(() => {
                     const calculation = calculateScenario(scenario);
                     return (
