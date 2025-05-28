@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Copy, Save, Check } from 'lucide-react';
+import { Copy, Save, Check, Play } from 'lucide-react';
 import { getTranslation } from '@/utils/translations';
 
 interface PricingData {
@@ -15,10 +15,18 @@ interface PricingData {
 interface ComboActionsProps {
   currentScenario: PricingData;
   onDuplicate: (scenario: PricingData) => void;
+  onUseCombo?: (scenario: PricingData) => void;
   language: string;
+  isDuplicated?: boolean;
 }
 
-const ComboActions = ({ currentScenario, onDuplicate, language }: ComboActionsProps) => {
+const ComboActions = ({ 
+  currentScenario, 
+  onDuplicate, 
+  onUseCombo,
+  language, 
+  isDuplicated = false 
+}: ComboActionsProps) => {
   const [isSaved, setIsSaved] = useState(false);
 
   const handleDuplicate = () => {
@@ -34,16 +42,24 @@ const ComboActions = ({ currentScenario, onDuplicate, language }: ComboActionsPr
     setTimeout(() => setIsSaved(false), 2000);
   };
 
+  const handleUseCombo = () => {
+    if (onUseCombo) {
+      onUseCombo(currentScenario);
+    }
+  };
+
   return (
-    <div className="flex gap-3 mt-4">
-      <Button
-        onClick={handleDuplicate}
-        variant="outline"
-        className="flex items-center gap-2 hover:bg-gray-50"
-      >
-        <Copy className="h-4 w-4" />
-        {getTranslation(language, 'duplicateCombo')}
-      </Button>
+    <div className="flex gap-3 mt-4 flex-wrap">
+      {!isDuplicated && (
+        <Button
+          onClick={handleDuplicate}
+          variant="outline"
+          className="flex items-center gap-2 hover:bg-gray-50"
+        >
+          <Copy className="h-4 w-4" />
+          {getTranslation(language, 'duplicateCombo')}
+        </Button>
+      )}
       
       <Button
         onClick={handleSave}
@@ -66,6 +82,16 @@ const ComboActions = ({ currentScenario, onDuplicate, language }: ComboActionsPr
           </>
         )}
       </Button>
+
+      {isDuplicated && onUseCombo && (
+        <Button
+          onClick={handleUseCombo}
+          className="flex items-center gap-2 bg-[#1790FF] hover:bg-[#1470CC] text-white"
+        >
+          <Play className="h-4 w-4" />
+          {getTranslation(language, 'useThisCombo')}
+        </Button>
+      )}
     </div>
   );
 };
