@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, FileText, RotateCcw } from 'lucide-react';
+import { Settings, RotateCcw } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
 import LanguageSelector from '@/components/LanguageSelector';
@@ -72,15 +72,21 @@ const Index = () => {
     }
   ]);
 
-  // Calculate GTV - FIXED: should be Annual Returns × Average Cart
+  // Calculate GTV - FIXED: should be Annual Returns × Average Cart OR Monthly Returns × 12 × Average Cart
   const gtv = useMemo(() => {
-    return clientData.resiAnnuali * clientData.carrelloMedio;
-  }, [clientData.resiAnnuali, clientData.carrelloMedio]);
+    if (clientData.resiAnnuali > 0 && clientData.carrelloMedio > 0) {
+      return clientData.resiAnnuali * clientData.carrelloMedio;
+    } else if (clientData.resiMensili > 0 && clientData.carrelloMedio > 0) {
+      return clientData.resiMensili * 12 * clientData.carrelloMedio;
+    }
+    return 0;
+  }, [clientData.resiAnnuali, clientData.resiMensili, clientData.carrelloMedio]);
 
-  // Auto-adjust predefined scenarios to maintain progressive take rates (2.3%, 2.8%, 3.3%)
+  // Auto-adjust predefined scenarios based on Take Rate targets
   useEffect(() => {
     if (gtv > 0) {
-      const targetTakeRates = [0.023, 0.028, 0.033]; // Progressive take rates
+      // Target Take Rate ranges: ECO MODE (flexible), GAS (2.8%-4.8%), FULL GAS (>5%)
+      const targetTakeRates = [0.025, 0.035, 0.055]; // Base target rates
       
       const updatedScenarios = predefinedScenarios.map((scenario, index) => {
         const targetTakeRate = targetTakeRates[index];
@@ -88,14 +94,14 @@ const Index = () => {
         const targetMonthlyCost = targetACV / 12;
         
         // Calculate other fees first
-        const resiMensili = clientData.resiAnnuali / 12;
+        const resiMensili = clientData.resiAnnuali > 0 ? clientData.resiAnnuali / 12 : clientData.resiMensili;
         const transactionFee = resiMensili * scenario.transactionFeeFixed;
         
-        const rdvAnnuali = clientData.resiAnnuali * 0.35;
+        const rdvAnnuali = (clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12) * 0.35;
         const rdvMensili = rdvAnnuali / 12;
         const rdvFee = (rdvMensili * clientData.carrelloMedio * scenario.rdvPercentage) / 100;
         
-        const upsellingAnnuali = clientData.resiAnnuali * 0.0378;
+        const upsellingAnnuali = (clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12) * 0.0378;
         const upsellingMensili = upsellingAnnuali / 12;
         const incrementoCarrello = clientData.carrelloMedio * 0.3;
         const upsellingFee = (upsellingMensili * incrementoCarrello * scenario.upsellingPercentage) / 100;
@@ -108,7 +114,7 @@ const Index = () => {
       
       setPredefinedScenarios(updatedScenarios);
     }
-  }, [gtv, clientData.resiAnnuali, clientData.carrelloMedio]);
+  }, [gtv, clientData.resiAnnuali, clientData.resiMensili, clientData.carrelloMedio]);
 
   const updatePredefinedScenario = (index: number, field: keyof PricingData, value: number) => {
     setPredefinedScenarios(prev => 
@@ -151,27 +157,23 @@ const Index = () => {
     setClientData(prev => {
       const newData = { ...prev, [field]: value };
       
-      // IMPROVED: Dynamic relationship between Returns, Return Rate, and Total Orders
+      // Dynamic relationship between Returns, Return Rate, and Total Orders
       if (field === 'resiAnnuali') {
         newData.resiMensili = Math.round(value / 12);
-        // If we have total orders, update return rate
         if (newData.totalOrdersAnnual > 0) {
           newData.returnRatePercentage = (value / newData.totalOrdersAnnual) * 100;
         }
       } else if (field === 'resiMensili') {
         newData.resiAnnuali = value * 12;
-        // If we have total orders, update return rate
         if (newData.totalOrdersAnnual > 0) {
           newData.returnRatePercentage = ((value * 12) / newData.totalOrdersAnnual) * 100;
         }
       } else if (field === 'totalOrdersAnnual') {
-        // If we have a return rate, update returns based on new total orders
         if (newData.returnRatePercentage > 0) {
           newData.resiAnnuali = Math.round((newData.returnRatePercentage / 100) * value);
           newData.resiMensili = Math.round(newData.resiAnnuali / 12);
         }
       } else if (field === 'returnRatePercentage') {
-        // If we have total orders, update returns based on new rate
         if (newData.totalOrdersAnnual > 0) {
           newData.resiAnnuali = Math.round((value / 100) * newData.totalOrdersAnnual);
           newData.resiMensili = Math.round(newData.resiAnnuali / 12);
@@ -183,7 +185,9 @@ const Index = () => {
   };
 
   const calculateScenario = (scenario: PricingData) => {
-    if (!clientData.resiAnnuali || !clientData.carrelloMedio) {
+    const annualReturns = clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12;
+    
+    if (!annualReturns || !clientData.carrelloMedio) {
       return {
         saasFee: 0,
         transactionFee: 0,
@@ -196,18 +200,18 @@ const Index = () => {
       };
     }
 
-    const resiMensili = clientData.resiAnnuali / 12;
+    const resiMensili = annualReturns / 12;
     
-    // Calcolo Transaction Fee (fixed amount per return)
+    // Transaction Fee calculation
     const transactionFee = resiMensili * scenario.transactionFeeFixed;
     
-    // Calcolo RDV (35% dei resi in un anno)
-    const rdvAnnuali = clientData.resiAnnuali * 0.35;
+    // RDV calculation (35% of returns)
+    const rdvAnnuali = annualReturns * 0.35;
     const rdvMensili = rdvAnnuali / 12;
     const rdvFee = (rdvMensili * clientData.carrelloMedio * scenario.rdvPercentage) / 100;
     
-    // Calcolo Upselling (3.78% dei resi in un anno con incremento del carrello medio del 30%)
-    const upsellingAnnuali = clientData.resiAnnuali * 0.0378;
+    // Upselling calculation (3.78% of returns with 30% cart increase)
+    const upsellingAnnuali = annualReturns * 0.0378;
     const upsellingMensili = upsellingAnnuali / 12;
     const incrementoCarrello = clientData.carrelloMedio * 0.3;
     const upsellingFee = (upsellingMensili * incrementoCarrello * scenario.upsellingPercentage) / 100;
@@ -215,7 +219,7 @@ const Index = () => {
     const totalMensile = scenario.saasFee + transactionFee + rdvFee + upsellingFee;
     const annualContractValue = totalMensile * 12;
     
-    // Calcolo Take Rate usando GTV
+    // Take Rate calculation using GTV
     const takeRate = gtv > 0 ? (annualContractValue / gtv) * 100 : 0;
 
     return {
@@ -247,29 +251,40 @@ const Index = () => {
     return emojis[index] || '📊';
   };
 
+  // Check Take Rate ranges for predefined scenarios
+  const getTakeRateStatus = (takeRate: number, scenarioName: string) => {
+    if (scenarioName === "GAS") {
+      return takeRate >= 2.8 && takeRate <= 4.8 ? "✅ In range (2.8%-4.8%)" : "⚠️ Out of range";
+    } else if (scenarioName === "FULL GAS") {
+      return takeRate > 5 ? "✅ In range (>5%)" : "⚠️ Out of range";
+    }
+    return "";
+  };
+
   return (
     <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
+        {/* Header with logo repositioned */}
         <div className="text-center space-y-2">
           <div className="flex items-center justify-between">
-            <div className="flex-1"></div>
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center">
               <img 
                 src="/lovable-uploads/f7dbf19a-18fa-4078-980a-2e6cc9c4fd45.png" 
                 alt="REVER Logo" 
-                className="h-12"
+                className="h-16 w-auto"
               />
-              <h1 className="text-3xl font-bold text-[#1790FF]">{getTranslation(language, 'title')}</h1>
             </div>
-            <div className="flex-1 flex justify-end">
+            <div className="flex-1 flex justify-center">
+              <h1 className="text-3xl font-bold text-[#1790FF]">Price & Smile :)</h1>
+            </div>
+            <div className="flex justify-end">
               <LanguageSelector language={language} setLanguage={setLanguage} />
             </div>
           </div>
           <p className="text-gray-600">{getTranslation(language, 'subtitle')}</p>
         </div>
 
-        {/* Dati Cliente - REMOVED returnRate and totalOrdersAnnual fields */}
+        {/* Client Data - Removed Return Rate and Total Orders Annual fields */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -332,7 +347,7 @@ const Index = () => {
           </CardContent>
         </Card>
 
-        {/* Scenari di Pricing */}
+        {/* Pricing Scenarios */}
         <Tabs defaultValue="predefiniti" className="w-full">
           <TabsList className="grid w-full grid-cols-3 bg-white relative">
             <TabsTrigger 
@@ -364,6 +379,8 @@ const Index = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {predefinedScenarios.map((scenario, index) => {
                 const calculation = calculateScenario(scenario);
+                const takeRateStatus = getTakeRateStatus(calculation.takeRate, scenario.name);
+                
                 return (
                   <Card 
                     key={index} 
@@ -378,7 +395,7 @@ const Index = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      {/* Parametri Modificabili */}
+                      {/* Editable Parameters */}
                       <div className="bg-gray-50 p-3 rounded-lg space-y-3 text-sm">
                         <div className="space-y-1">
                           <label className="text-xs text-gray-600">{getTranslation(language, 'saasFee')}</label>
@@ -421,7 +438,7 @@ const Index = () => {
                         </div>
                       </div>
 
-                      {/* Calcoli */}
+                      {/* Calculations */}
                       <div className="space-y-2 border-t pt-3">
                         <div className="flex justify-between text-sm">
                           <span>SaaS Fee:</span>
@@ -444,11 +461,16 @@ const Index = () => {
                           <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
                         </div>
                         
-                        {/* Take Rate */}
+                        {/* Take Rate with status */}
                         <div className="flex justify-between font-semibold text-lg border-t pt-2">
                           <span>{getTranslation(language, 'takeRate')}:</span>
                           <span className="text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
                         </div>
+                        {takeRateStatus && (
+                          <div className="text-xs text-center mt-1">
+                            {takeRateStatus}
+                          </div>
+                        )}
 
                         {/* Fee Distribution Chart */}
                         <div className="mt-4">
@@ -461,7 +483,7 @@ const Index = () => {
                           />
                         </div>
                         
-                        {/* Bottone Usa questo scenario */}
+                        {/* Use this scenario button */}
                         <Button 
                           onClick={() => selectPredefinedScenario(scenario)}
                           className="w-full mt-3 bg-[#1790FF] hover:bg-[#1470CC] text-white"
@@ -480,7 +502,7 @@ const Index = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
+                  <Settings className="h-5 w-5" />
                   {getTranslation(language, 'customScenario')}
                 </CardTitle>
               </CardHeader>
@@ -576,7 +598,7 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Risultati Scenario Personalizzato - NO Take Rate or Fee Distribution here */}
+                {/* Custom Scenario Results - NO Take Rate or Fee Distribution here */}
                 {(() => {
                   const calculation = calculateScenario(customScenario);
                   return (
