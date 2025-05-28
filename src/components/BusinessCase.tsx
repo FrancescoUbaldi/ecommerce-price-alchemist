@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,6 +12,8 @@ import {
 } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTranslation } from '@/utils/translations';
+import RevenueComparisonChart from './RevenueComparisonChart';
+import RevenueSuggestionBox from './RevenueSuggestionBox';
 
 interface ClientData {
   resiAnnuali: number;
@@ -411,6 +412,19 @@ const BusinessCase = ({
             </Table>
           </CardContent>
         </Card>
+
+        {/* Revenue Comparison Chart */}
+        <RevenueComparisonChart
+          preReverNetBilling={fatturazioneNettaPreRever}
+          finalNetBilling={fatturazioneNettaFinale}
+          language={language}
+        />
+
+        {/* Revenue Suggestion Box */}
+        <RevenueSuggestionBox
+          extraRevenue={aumentoNetRevenues}
+          language={language}
+        />
       </div>
     </TooltipProvider>
   );

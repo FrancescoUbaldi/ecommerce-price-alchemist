@@ -1,4 +1,3 @@
-
 export const translations = {
   it: {
     title: "Price & Smile :)",
@@ -45,7 +44,14 @@ export const translations = {
     netRevenueUplift: "Aumento Net Revenues con REVER",
     returnRate2: "return rate",
     rdvRate: "RDV rate",
-    upsellingRate: "Upselling rate"
+    upsellingRate: "Upselling rate",
+    revenueImpactTitle: "Impatto REVER sul fatturato",
+    revenueSuggestion: "💡 Con questa configurazione, REVER può generare un extra fatturato netto di",
+    revenueSuggestionEnd: "all'anno rispetto al tuo scenario attuale.",
+    duplicateCombo: "Duplica Combo",
+    saveCombo: "Salva Combo",
+    comboSaved: "Combo salvata!",
+    duplicatedCombo: "Combo duplicata - modificabile"
   },
   en: {
     title: "Price & Smile :)",
@@ -92,7 +98,14 @@ export const translations = {
     netRevenueUplift: "Net Revenue Uplift with REVER",
     returnRate2: "return rate",
     rdvRate: "RDV rate",
-    upsellingRate: "Upselling rate"
+    upsellingRate: "Upselling rate",
+    revenueImpactTitle: "REVER Impact on Revenue",
+    revenueSuggestion: "💡 With this configuration, REVER can generate an extra net revenue of",
+    revenueSuggestionEnd: "per year compared to your current scenario.",
+    duplicateCombo: "Duplicate Combo",
+    saveCombo: "Save Combo",
+    comboSaved: "Combo saved!",
+    duplicatedCombo: "Duplicated combo - editable"
   },
   es: {
     title: "Price & Smile :)",
@@ -139,7 +152,14 @@ export const translations = {
     netRevenueUplift: "Incremento Ingresos Netos con REVER",
     returnRate2: "tasa devolución",
     rdvRate: "tasa RDV",
-    upsellingRate: "tasa Upselling"
+    upsellingRate: "tasa Upselling",
+    revenueImpactTitle: "Impacto de REVER en los Ingresos",
+    revenueSuggestion: "💡 Con esta configuración, REVER puede generar ingresos netos adicionales de",
+    revenueSuggestionEnd: "al año en comparación con tu escenario actual.",
+    duplicateCombo: "Duplicar Combo",
+    saveCombo: "Guardar Combo",
+    comboSaved: "¡Combo guardado!",
+    duplicatedCombo: "Combo duplicado - editable"
   },
   fr: {
     title: "Price & Smile :)",
@@ -186,7 +206,14 @@ export const translations = {
     netRevenueUplift: "Augmentation Revenus Nets avec REVER",
     returnRate2: "taux retour",
     rdvRate: "taux RDV",
-    upsellingRate: "taux Upselling"
+    upsellingRate: "taux Upselling",
+    revenueImpactTitle: "Impact de REVER sur le Chiffre d'Affaires",
+    revenueSuggestion: "💡 Avec cette configuration, REVER peut générer un chiffre d'affaires net supplémentaire de",
+    revenueSuggestionEnd: "par an par rapport à votre scénario actuel.",
+    duplicateCombo: "Dupliquer Combo",
+    saveCombo: "Sauvegarder Combo",
+    comboSaved: "Combo sauvegardé !",
+    duplicatedCombo: "Combo dupliqué - modifiable"
   }
 };
 
