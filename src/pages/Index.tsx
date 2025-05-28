@@ -1,12 +1,12 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calculator, Euro, TrendingUp, Settings } from 'lucide-react';
+import { Calculator, Euro, TrendingUp, Settings, FileText } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
+import BusinessCase from '@/components/BusinessCase';
 
 interface PricingData {
   saasFee: number;
@@ -28,6 +28,8 @@ const Index = () => {
     resiMensili: 0,
     carrelloMedio: 0
   });
+
+  const [clientName, setClientName] = useState<string>('');
 
   const [customScenario, setCustomScenario] = useState<PricingData>({
     saasFee: 0,
@@ -75,16 +77,16 @@ const Index = () => {
       
       // Calculate other fees first
       const resiMensili = clientData.resiAnnuali / 12;
-      const transactionFee = resiMensili * predefinedScenarios[0].transactionFeeFixed;
+      const transactionFee = resiMensili * predefinedScenarios[0]?.transactionFeeFixed || 0;
       
       const rdvAnnuali = clientData.resiAnnuali * 0.37;
       const rdvMensili = rdvAnnuali / 12;
-      const rdvFee = (rdvMensili * clientData.carrelloMedio * predefinedScenarios[0].rdvPercentage) / 100;
+      const rdvFee = (rdvMensili * clientData.carrelloMedio * (predefinedScenarios[0]?.rdvPercentage || 0)) / 100;
       
       const upsellingAnnuali = clientData.resiAnnuali * 0.0378;
       const upsellingMensili = upsellingAnnuali / 12;
       const incrementoCarrello = clientData.carrelloMedio * 0.3;
-      const upsellingFee = (upsellingMensili * incrementoCarrello * predefinedScenarios[0].upsellingPercentage) / 100;
+      const upsellingFee = (upsellingMensili * incrementoCarrello * (predefinedScenarios[0]?.upsellingPercentage || 0)) / 100;
       
       // Calculate required SaaS fee to reach target
       const requiredSaasFee = Math.max(0, targetMonthlyCost - transactionFee - rdvFee - upsellingFee);
@@ -95,7 +97,7 @@ const Index = () => {
         )
       );
     }
-  }, [gtv, clientData.resiAnnuali, clientData.carrelloMedio]);
+  }, [gtv, clientData.resiAnnuali, clientData.carrelloMedio, predefinedScenarios]);
 
   const updatePredefinedScenario = (index: number, field: keyof PricingData, value: number) => {
     setPredefinedScenarios(prev => 
@@ -246,9 +248,10 @@ const Index = () => {
 
         {/* Scenari di Pricing */}
         <Tabs defaultValue="predefiniti" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="predefiniti">Scenari Predefiniti</TabsTrigger>
             <TabsTrigger value="personalizzato">Scenario Personalizzato</TabsTrigger>
+            <TabsTrigger value="business-case">Business Case</TabsTrigger>
           </TabsList>
 
           <TabsContent value="predefiniti" className="space-y-6">
@@ -478,6 +481,15 @@ const Index = () => {
                 })()}
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="business-case" className="space-y-6">
+            <BusinessCase
+              clientName={clientName}
+              setClientName={setClientName}
+              clientData={clientData}
+              scenario={customScenario}
+            />
           </TabsContent>
         </Tabs>
       </div>
