@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -7,10 +8,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calculator, Euro, TrendingUp, Settings, FileText } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
+import LanguageSelector from '@/components/LanguageSelector';
+import { getTranslation } from '@/utils/translations';
 
 interface PricingData {
   saasFee: number;
-  transactionFeeFixed: number; // Now fixed euro amount per return
+  transactionFeeFixed: number;
   rdvPercentage: number;
   upsellingPercentage: number;
   name: string;
@@ -20,13 +23,19 @@ interface ClientData {
   resiAnnuali: number;
   resiMensili: number;
   carrelloMedio: number;
+  totalOrdersAnnual: number;
+  returnRatePercentage: number;
 }
 
 const Index = () => {
+  const [language, setLanguage] = useState<string>('it');
+  
   const [clientData, setClientData] = useState<ClientData>({
     resiAnnuali: 0,
     resiMensili: 0,
-    carrelloMedio: 0
+    carrelloMedio: 0,
+    totalOrdersAnnual: 0,
+    returnRatePercentage: 23.9
   });
 
   const [clientName, setClientName] = useState<string>('');
@@ -97,7 +106,7 @@ const Index = () => {
         )
       );
     }
-  }, [gtv, clientData.resiAnnuali, clientData.carrelloMedio, predefinedScenarios]);
+  }, [gtv, clientData.resiAnnuali, clientData.carrelloMedio]);
 
   const updatePredefinedScenario = (index: number, field: keyof PricingData, value: number) => {
     setPredefinedScenarios(prev => 
@@ -114,8 +123,27 @@ const Index = () => {
       // Sync annual and monthly returns
       if (field === 'resiAnnuali') {
         newData.resiMensili = Math.round(value / 12);
+        // Update return rate if we have total orders
+        if (newData.totalOrdersAnnual > 0) {
+          newData.returnRatePercentage = (value / newData.totalOrdersAnnual) * 100;
+        }
       } else if (field === 'resiMensili') {
         newData.resiAnnuali = value * 12;
+        // Update return rate if we have total orders
+        if (newData.totalOrdersAnnual > 0) {
+          newData.returnRatePercentage = ((value * 12) / newData.totalOrdersAnnual) * 100;
+        }
+      } else if (field === 'totalOrdersAnnual') {
+        // Update return rate based on existing returns
+        if (value > 0) {
+          newData.returnRatePercentage = (newData.resiAnnuali / value) * 100;
+        }
+      } else if (field === 'returnRatePercentage') {
+        // Update returns based on total orders
+        if (newData.totalOrdersAnnual > 0) {
+          newData.resiAnnuali = Math.round((value / 100) * newData.totalOrdersAnnual);
+          newData.resiMensili = Math.round(newData.resiAnnuali / 12);
+        }
       }
       
       return newData;
@@ -187,11 +215,17 @@ const Index = () => {
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center justify-center gap-2">
-            <Calculator className="h-8 w-8 text-blue-600" />
-            Tool di Pricing Ecommerce
-          </h1>
-          <p className="text-gray-600">Calcola il pricing ottimale per i tuoi clienti ecommerce</p>
+          <div className="flex items-center justify-between">
+            <div className="flex-1"></div>
+            <div className="flex items-center justify-center gap-2">
+              <Calculator className="h-8 w-8 text-blue-600" />
+              <h1 className="text-3xl font-bold text-gray-900">{getTranslation(language, 'title')}</h1>
+            </div>
+            <div className="flex-1 flex justify-end">
+              <LanguageSelector language={language} setLanguage={setLanguage} />
+            </div>
+          </div>
+          <p className="text-gray-600">{getTranslation(language, 'subtitle')}</p>
         </div>
 
         {/* Dati Cliente */}
@@ -199,13 +233,13 @@ const Index = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Settings className="h-5 w-5" />
-              Dati Cliente
+              {getTranslation(language, 'clientData')}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="resiAnnuali">Resi Annuali</Label>
+                <Label htmlFor="resiAnnuali">{getTranslation(language, 'annualReturns')}</Label>
                 <Input
                   id="resiAnnuali"
                   type="number"
@@ -215,7 +249,7 @@ const Index = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="resiMensili">Resi Mensili</Label>
+                <Label htmlFor="resiMensili">{getTranslation(language, 'monthlyReturns')}</Label>
                 <Input
                   id="resiMensili"
                   type="number"
@@ -225,7 +259,7 @@ const Index = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="carrelloMedio">Carrello Medio (€)</Label>
+                <Label htmlFor="carrelloMedio">{getTranslation(language, 'averageCart')}</Label>
                 <Input
                   id="carrelloMedio"
                   type="number"
@@ -235,7 +269,17 @@ const Index = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label>GTV Annuale</Label>
+                <Label htmlFor="totalOrdersAnnual">{getTranslation(language, 'totalAnnualOrders')}</Label>
+                <Input
+                  id="totalOrdersAnnual"
+                  type="number"
+                  value={clientData.totalOrdersAnnual || ''}
+                  onChange={(e) => updateClientData('totalOrdersAnnual', parseInt(e.target.value) || 0)}
+                  placeholder="Inserisci il totale ordini annuali"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>{getTranslation(language, 'annualGTV')}</Label>
                 <div className="p-3 bg-blue-50 rounded-md border">
                   <span className="text-lg font-semibold text-blue-700">
                     {formatCurrency(gtv)}
@@ -249,9 +293,9 @@ const Index = () => {
         {/* Scenari di Pricing */}
         <Tabs defaultValue="predefiniti" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="predefiniti">Scenari Predefiniti</TabsTrigger>
-            <TabsTrigger value="personalizzato">Scenario Personalizzato</TabsTrigger>
-            <TabsTrigger value="business-case">Business Case</TabsTrigger>
+            <TabsTrigger value="predefiniti">{getTranslation(language, 'predefinedScenarios')}</TabsTrigger>
+            <TabsTrigger value="personalizzato">{getTranslation(language, 'customScenario')}</TabsTrigger>
+            <TabsTrigger value="business-case">{getTranslation(language, 'businessCase')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="predefiniti" className="space-y-6">
@@ -358,13 +402,13 @@ const Index = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <TrendingUp className="h-5 w-5" />
-                  Scenario Personalizzato
+                  {getTranslation(language, 'customScenario')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                   <div className="space-y-2">
-                    <Label htmlFor="customSaasFee">SaaS Fee (€/mese)</Label>
+                    <Label htmlFor="customSaasFee">{getTranslation(language, 'saasFee')}</Label>
                     <Input
                       id="customSaasFee"
                       type="number"
@@ -377,7 +421,7 @@ const Index = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="customTransactionFee">Transaction Fee (€/reso)</Label>
+                    <Label htmlFor="customTransactionFee">{getTranslation(language, 'transactionFee')}</Label>
                     <Input
                       id="customTransactionFee"
                       type="number"
@@ -391,7 +435,7 @@ const Index = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="customRdvFee">RDV Fee (%)</Label>
+                    <Label htmlFor="customRdvFee">{getTranslation(language, 'rdvFee')}</Label>
                     <Input
                       id="customRdvFee"
                       type="number"
@@ -405,7 +449,7 @@ const Index = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="customUpsellingFee">Upselling Fee (%)</Label>
+                    <Label htmlFor="customUpsellingFee">{getTranslation(language, 'upsellingFee')}</Label>
                     <Input
                       id="customUpsellingFee"
                       type="number"
@@ -418,26 +462,26 @@ const Index = () => {
                       placeholder="0"
                     />
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="returnRate">{getTranslation(language, 'returnRate')}</Label>
+                    <Input
+                      id="returnRate"
+                      type="number"
+                      step="0.1"
+                      value={clientData.returnRatePercentage || ''}
+                      onChange={(e) => updateClientData('returnRatePercentage', parseFloat(e.target.value) || 0)}
+                      placeholder="23.9"
+                    />
+                  </div>
                 </div>
 
-                {/* Risultati Scenario Personalizzato */}
+                {/* Risultati Scenario Personalizzato - senza take rate e fee distribution */}
                 {(() => {
                   const calculation = calculateScenario(customScenario);
                   return (
                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
                       <h3 className="text-lg font-semibold mb-4">Risultati Calcolo</h3>
                       
-                      {/* Fee Distribution Chart */}
-                      <div className="mb-6">
-                        <FeeDistributionChart
-                          saasFee={calculation.saasFee}
-                          transactionFee={calculation.transactionFee}
-                          rdvFee={calculation.rdvFee}
-                          upsellingFee={calculation.upsellingFee}
-                          totalMensile={calculation.totalMensile}
-                        />
-                      </div>
-
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-3">
                           <div className="flex justify-between">
@@ -457,22 +501,18 @@ const Index = () => {
                             <span className="font-medium">{formatCurrency(calculation.upsellingFee)}</span>
                           </div>
                           <div className="flex justify-between font-bold text-xl border-t pt-3">
-                            <span>Totale Mensile:</span>
+                            <span>{getTranslation(language, 'monthlyTotal')}:</span>
                             <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
                           </div>
                         </div>
                         <div className="space-y-3">
                           <div className="flex justify-between">
-                            <span>GTV Annuale:</span>
+                            <span>{getTranslation(language, 'annualGTV')}:</span>
                             <span className="font-medium">{formatCurrency(gtv)}</span>
                           </div>
                           <div className="flex justify-between">
                             <span>ACV Annuale:</span>
                             <span className="font-medium">{formatCurrency(calculation.annualContractValue)}</span>
-                          </div>
-                          <div className="flex justify-between text-lg font-bold bg-blue-100 p-3 rounded">
-                            <span>Take Rate:</span>
-                            <span className="text-blue-600">{formatPercentage(calculation.takeRate)}</span>
                           </div>
                         </div>
                       </div>
@@ -489,6 +529,8 @@ const Index = () => {
               setClientName={setClientName}
               clientData={clientData}
               scenario={customScenario}
+              language={language}
+              updateClientData={updateClientData}
             />
           </TabsContent>
         </Tabs>

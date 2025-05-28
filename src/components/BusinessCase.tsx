@@ -11,23 +11,38 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { getTranslation } from '@/utils/translations';
+
+interface ClientData {
+  resiAnnuali: number;
+  resiMensili: number;
+  carrelloMedio: number;
+  totalOrdersAnnual: number;
+  returnRatePercentage: number;
+}
 
 interface BusinessCaseProps {
   clientName: string;
   setClientName: (name: string) => void;
-  clientData: {
-    resiAnnuali: number;
-    carrelloMedio: number;
-  };
+  clientData: ClientData;
   scenario: {
     saasFee: number;
     transactionFeeFixed: number;
     rdvPercentage: number;
     upsellingPercentage: number;
   };
+  language: string;
+  updateClientData: (field: keyof ClientData, value: number) => void;
 }
 
-const BusinessCase = ({ clientName, setClientName, clientData, scenario }: BusinessCaseProps) => {
+const BusinessCase = ({ 
+  clientName, 
+  setClientName, 
+  clientData, 
+  scenario, 
+  language, 
+  updateClientData 
+}: BusinessCaseProps) => {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('it-IT', {
       style: 'currency',
@@ -41,9 +56,9 @@ const BusinessCase = ({ clientName, setClientName, clientData, scenario }: Busin
   };
 
   // Calcoli business case
-  const fatturazione = clientData.resiAnnuali * clientData.carrelloMedio;
+  const fatturazione = clientData.totalOrdersAnnual * clientData.carrelloMedio;
   const resi = clientData.resiAnnuali;
-  const returnRate = clientData.resiAnnuali > 0 ? (resi / (resi / 0.239)) * 100 : 23.9; // Assumendo 23.9% return rate
+  const returnRate = clientData.returnRatePercentage;
   const resiValue = resi * clientData.carrelloMedio;
   
   const fatturazioneNettaPreRever = fatturazione - resiValue;
@@ -78,24 +93,37 @@ const BusinessCase = ({ clientName, setClientName, clientData, scenario }: Busin
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Business Case Configuration</CardTitle>
+          <CardTitle>{getTranslation(language, 'businessCaseConfig')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
-            <Label htmlFor="clientName">Nome Ecommerce</Label>
-            <Input
-              id="clientName"
-              value={clientName}
-              onChange={(e) => setClientName(e.target.value)}
-              placeholder="Inserisci il nome dell'ecommerce"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="clientName">{getTranslation(language, 'ecommerceName')}</Label>
+              <Input
+                id="clientName"
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+                placeholder={getTranslation(language, 'enterEcommerceName')}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="returnRateBusiness">{getTranslation(language, 'returnRate')}</Label>
+              <Input
+                id="returnRateBusiness"
+                type="number"
+                step="0.1"
+                value={clientData.returnRatePercentage || ''}
+                onChange={(e) => updateClientData('returnRatePercentage', parseFloat(e.target.value) || 0)}
+                placeholder="23.9"
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Business Case: {clientName || 'Nome Ecommerce'}</CardTitle>
+          <CardTitle>Business Case: {clientName || getTranslation(language, 'ecommerceName')}</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
@@ -111,7 +139,7 @@ const BusinessCase = ({ clientName, setClientName, clientData, scenario }: Busin
             <TableBody>
               <TableRow>
                 <TableCell className="font-medium">Fatturazione (Pre REVER)</TableCell>
-                <TableCell className="text-center">{clientData.resiAnnuali > 0 ? Math.round(resi / 0.239) : 0}</TableCell>
+                <TableCell className="text-center">{clientData.totalOrdersAnnual}</TableCell>
                 <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
                 <TableCell className="text-center">100.00%</TableCell>
                 <TableCell className="text-center font-bold">{formatCurrency(fatturazione)}</TableCell>
@@ -145,7 +173,7 @@ const BusinessCase = ({ clientName, setClientName, clientData, scenario }: Busin
                 <TableCell className="text-center font-bold">{formatCurrency(upsellingValue)}</TableCell>
               </TableRow>
               <TableRow className="font-semibold italic">
-                <TableCell>Fatturazione Netta Finale {clientName || 'Nome Ecommerce'}</TableCell>
+                <TableCell>Fatturazione Netta Finale {clientName || getTranslation(language, 'ecommerceName')}</TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
@@ -173,7 +201,7 @@ const BusinessCase = ({ clientName, setClientName, clientData, scenario }: Busin
                 <TableCell className="text-center font-bold text-green-600">{formatPercentage(reverROI)}</TableCell>
               </TableRow>
               <TableRow className="bg-green-50 font-semibold">
-                <TableCell>Net Revenues {clientName || 'Nome Ecommerce'}</TableCell>
+                <TableCell>Net Revenues {clientName || getTranslation(language, 'ecommerceName')}</TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
