@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -157,14 +158,14 @@ const BusinessCase = ({
                   <TableCell className="text-center">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="cursor-help font-bold">{formatCurrency(fatturazione)}</span>
+                        <span className="cursor-help">{formatCurrency(fatturazione)}</span>
                       </TooltipTrigger>
                       <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                         <div className="space-y-1 text-sm">
                           <div>{getTranslation(language, 'orders')}: {clientData.totalOrdersAnnual.toLocaleString()}</div>
-                          <div>{getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
+                          <div>× {getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
                           <div className="border-t pt-1 mt-2 font-semibold">
-                            {getTranslation(language, 'total')}: {formatCurrency(fatturazione)}
+                            = {getTranslation(language, 'total')}: {formatCurrency(fatturazione)}
                           </div>
                         </div>
                       </TooltipContent>
@@ -180,14 +181,14 @@ const BusinessCase = ({
                   <TableCell className="text-center">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="cursor-help font-bold">{formatCurrency(resiValue)}</span>
+                        <span className="cursor-help">{formatCurrency(resiValue)}</span>
                       </TooltipTrigger>
                       <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                         <div className="space-y-1 text-sm">
                           <div>{getTranslation(language, 'annualReturns')}: {annualReturns.toLocaleString()}</div>
-                          <div>{getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
+                          <div>× {getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
                           <div className="border-t pt-1 mt-2 font-semibold">
-                            {getTranslation(language, 'total')}: {formatCurrency(resiValue)}
+                            = {getTranslation(language, 'total')}: {formatCurrency(resiValue)}
                           </div>
                         </div>
                       </TooltipContent>
@@ -208,9 +209,9 @@ const BusinessCase = ({
                       <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                         <div className="space-y-1 text-sm">
                           <div>{getTranslation(language, 'preReverBilling')}: {formatCurrency(fatturazione)}</div>
-                          <div>{getTranslation(language, 'preReverReturns')}: {formatCurrency(resiValue)}</div>
+                          <div>− {getTranslation(language, 'preReverReturns')}: {formatCurrency(resiValue)}</div>
                           <div className="border-t pt-1 mt-2 font-semibold">
-                            {getTranslation(language, 'total')}: {formatCurrency(fatturazioneNettaPreRever)}
+                            = {getTranslation(language, 'total')}: {formatCurrency(fatturazioneNettaPreRever)}
                           </div>
                         </div>
                       </TooltipContent>
@@ -226,15 +227,15 @@ const BusinessCase = ({
                   <TableCell className="text-center">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="cursor-help font-bold">{formatCurrency(rdvValue)}</span>
+                        <span className="cursor-help">{formatCurrency(rdvValue)}</span>
                       </TooltipTrigger>
                       <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                         <div className="space-y-1 text-sm">
                           <div>{getTranslation(language, 'annualReturns')}: {annualReturns.toLocaleString()}</div>
-                          <div>{getTranslation(language, 'rdvRate')}: 35%</div>
-                          <div>{getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
+                          <div>× {getTranslation(language, 'rdvRate')}: 35%</div>
+                          <div>× {getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
                           <div className="border-t pt-1 mt-2 font-semibold">
-                            {getTranslation(language, 'total')}: {formatCurrency(rdvValue)}
+                            = {getTranslation(language, 'total')}: {formatCurrency(rdvValue)}
                           </div>
                         </div>
                       </TooltipContent>
@@ -250,14 +251,14 @@ const BusinessCase = ({
                   <TableCell className="text-center">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="cursor-help font-bold">{formatCurrency(upsellingValue)}</span>
+                        <span className="cursor-help">{formatCurrency(upsellingValue)}</span>
                       </TooltipTrigger>
                       <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                         <div className="space-y-1 text-sm">
                           <div>Upsell Orders: {Math.round(upsellingResi).toLocaleString()}</div>
-                          <div>Upsell {getTranslation(language, 'aov')}: {formatCurrency(upsellingAOV)}</div>
+                          <div>× Upsell {getTranslation(language, 'aov')}: {formatCurrency(upsellingAOV)}</div>
                           <div className="border-t pt-1 mt-2 font-semibold">
-                            {getTranslation(language, 'total')}: {formatCurrency(upsellingValue)}
+                            = {getTranslation(language, 'total')}: {formatCurrency(upsellingValue)}
                           </div>
                         </div>
                       </TooltipContent>
@@ -278,10 +279,10 @@ const BusinessCase = ({
                       <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                         <div className="space-y-1 text-sm">
                           <div>{getTranslation(language, 'preReverNetBilling')}: {formatCurrency(fatturazioneNettaPreRever)}</div>
-                          <div>{getTranslation(language, 'retainedSalesWithRever')}: {formatCurrency(rdvValue)}</div>
-                          <div>{getTranslation(language, 'upsellingWithRever')}: {formatCurrency(upsellingValue)}</div>
+                          <div>+ {getTranslation(language, 'retainedSalesWithRever')}: {formatCurrency(rdvValue)}</div>
+                          <div>+ {getTranslation(language, 'upsellingWithRever')}: {formatCurrency(upsellingValue)}</div>
                           <div className="border-t pt-1 mt-2 font-semibold">
-                            {getTranslation(language, 'total')}: {formatCurrency(fatturazioneNettaFinale)}
+                            = {getTranslation(language, 'total')}: {formatCurrency(fatturazioneNettaFinale)}
                           </div>
                         </div>
                       </TooltipContent>
@@ -302,9 +303,9 @@ const BusinessCase = ({
                       <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                         <div className="space-y-1 text-sm">
                           <div>{getTranslation(language, 'retainedSalesWithRever')}: {formatCurrency(rdvValue)}</div>
-                          <div>{getTranslation(language, 'upsellingWithRever')}: {formatCurrency(upsellingValue)}</div>
+                          <div>+ {getTranslation(language, 'upsellingWithRever')}: {formatCurrency(upsellingValue)}</div>
                           <div className="border-t pt-1 mt-2 font-semibold">
-                            {getTranslation(language, 'total')}: {formatCurrency(fatturazioneGenerataRever)}
+                            = {getTranslation(language, 'total')}: {formatCurrency(fatturazioneGenerataRever)}
                           </div>
                         </div>
                       </TooltipContent>
@@ -320,16 +321,16 @@ const BusinessCase = ({
                   <TableCell className="text-center">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="cursor-help font-bold">{formatCurrency(totalPlatformCost)}</span>
+                        <span className="cursor-help">{formatCurrency(totalPlatformCost)}</span>
                       </TooltipTrigger>
                       <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                         <div className="space-y-1 text-sm">
                           <div>SaaS Fee: {formatCurrency(saasFeeAnnuale)}</div>
-                          <div>Transaction Fee: {formatCurrency(transactionFeeAnnuale)}</div>
-                          <div>RDV Fee: {formatCurrency(rdvFeeAnnuale)}</div>
-                          <div>Upselling Fee: {formatCurrency(upsellingFeeAnnuale)}</div>
+                          <div>+ Transaction Fee: {formatCurrency(transactionFeeAnnuale)}</div>
+                          <div>+ RDV Fee: {formatCurrency(rdvFeeAnnuale)}</div>
+                          <div>+ Upselling Fee: {formatCurrency(upsellingFeeAnnuale)}</div>
                           <div className="border-t pt-1 mt-2 font-semibold">
-                            {getTranslation(language, 'total')}: {formatCurrency(totalPlatformCost)}
+                            = {getTranslation(language, 'total')}: {formatCurrency(totalPlatformCost)}
                           </div>
                         </div>
                       </TooltipContent>
@@ -350,9 +351,10 @@ const BusinessCase = ({
                       <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                         <div className="space-y-1 text-sm">
                           <div>{getTranslation(language, 'netBillingGeneratedByRever')}: {formatCurrency(fatturazioneGenerataRever)}</div>
-                          <div>{getTranslation(language, 'reverPlatformCost')}: {formatCurrency(totalPlatformCost)}</div>
+                          <div>÷ {getTranslation(language, 'reverPlatformCost')}: {formatCurrency(totalPlatformCost)}</div>
+                          <div>× 100</div>
                           <div className="border-t pt-1 mt-2 font-semibold">
-                            ROI: {formatPercentage(reverROIPercentage)}
+                            = ROI: {formatPercentage(reverROIPercentage)}
                           </div>
                         </div>
                       </TooltipContent>
@@ -373,9 +375,9 @@ const BusinessCase = ({
                       <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                         <div className="space-y-1 text-sm">
                           <div>{getTranslation(language, 'finalNetBilling')}: {formatCurrency(fatturazioneNettaFinale)}</div>
-                          <div>{getTranslation(language, 'reverPlatformCost')}: {formatCurrency(totalPlatformCost)}</div>
+                          <div>− {getTranslation(language, 'reverPlatformCost')}: {formatCurrency(totalPlatformCost)}</div>
                           <div className="border-t pt-1 mt-2 font-semibold">
-                            {getTranslation(language, 'total')}: {formatCurrency(netRevenuesEcommerce)}
+                            = {getTranslation(language, 'total')}: {formatCurrency(netRevenuesEcommerce)}
                           </div>
                         </div>
                       </TooltipContent>
@@ -396,9 +398,9 @@ const BusinessCase = ({
                       <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                         <div className="space-y-1 text-sm">
                           <div>{getTranslation(language, 'netRevenues')}: {formatCurrency(netRevenuesEcommerce)}</div>
-                          <div>{getTranslation(language, 'preReverNetBilling')}: {formatCurrency(fatturazioneNettaPreRever)}</div>
+                          <div>− {getTranslation(language, 'preReverNetBilling')}: {formatCurrency(fatturazioneNettaPreRever)}</div>
                           <div className="border-t pt-1 mt-2 font-semibold">
-                            {getTranslation(language, 'total')}: {formatCurrency(aumentoNetRevenues)}
+                            = {getTranslation(language, 'total')}: {formatCurrency(aumentoNetRevenues)}
                           </div>
                         </div>
                       </TooltipContent>
