@@ -461,6 +461,23 @@ const Index = () => {
                           <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
                         </div>
                         
+                        {/* Take Rate */}
+                        <div className="flex justify-between font-semibold text-lg border-t pt-2">
+                          <span>Take Rate:</span>
+                          <span className="text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
+                        </div>
+
+                        {/* Fee Distribution Chart */}
+                        <div className="mt-4">
+                          <FeeDistributionChart
+                            saasFee={calculation.saasFee}
+                            transactionFee={calculation.transactionFee}
+                            rdvFee={calculation.rdvFee}
+                            upsellingFee={calculation.upsellingFee}
+                            totalMensile={calculation.totalMensile}
+                          />
+                        </div>
+                        
                         {/* Bottone Usa questo scenario */}
                         <Button 
                           onClick={() => selectPredefinedScenario(scenario)}
@@ -485,7 +502,40 @@ const Index = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+                {/* Client Data Sync Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+                  <div className="space-y-2">
+                    <Label htmlFor="customTotalOrders">{getTranslation(language, 'totalAnnualOrders')}</Label>
+                    <Input
+                      id="customTotalOrders"
+                      type="number"
+                      value={clientData.totalOrdersAnnual || ''}
+                      onChange={(e) => updateClientData('totalOrdersAnnual', parseInt(e.target.value) || 0)}
+                      placeholder="100000"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="customReturnRatePersonal">{getTranslation(language, 'returnRate')}</Label>
+                    <Input
+                      id="customReturnRatePersonal"
+                      type="number"
+                      step="0.1"
+                      value={clientData.returnRatePercentage || ''}
+                      onChange={(e) => updateClientData('returnRatePercentage', parseFloat(e.target.value) || 0)}
+                      placeholder="23.9"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>{getTranslation(language, 'annualGTV')}</Label>
+                    <div className="p-3 bg-[#1790FF] text-white rounded-md border-2 border-[#1790FF] shadow-lg">
+                      <span className="text-lg font-semibold">
+                        {formatCurrency(gtv)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                   <div className="space-y-2">
                     <Label htmlFor="customSaasFee">{getTranslation(language, 'saasFee')}</Label>
                     <Input
@@ -541,17 +591,6 @@ const Index = () => {
                       placeholder="0"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="returnRateCustom">{getTranslation(language, 'returnRate')}</Label>
-                    <Input
-                      id="returnRateCustom"
-                      type="number"
-                      step="0.1"
-                      value={clientData.returnRatePercentage || ''}
-                      onChange={(e) => updateClientData('returnRatePercentage', parseFloat(e.target.value) || 0)}
-                      placeholder="23.9"
-                    />
-                  </div>
                 </div>
 
                 {/* Risultati Scenario Personalizzato */}
@@ -592,6 +631,10 @@ const Index = () => {
                           <div className="flex justify-between">
                             <span>ACV Annuale:</span>
                             <span className="font-medium">{formatCurrency(calculation.annualContractValue)}</span>
+                          </div>
+                          <div className="flex justify-between font-bold text-xl border-t pt-3">
+                            <span>Take Rate:</span>
+                            <span className="text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
                           </div>
                         </div>
                       </div>
