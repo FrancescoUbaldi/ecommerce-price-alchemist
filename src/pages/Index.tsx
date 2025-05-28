@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calculator, Settings, FileText, RotateCcw } from 'lucide-react';
+import { Settings, FileText, RotateCcw } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
 import LanguageSelector from '@/components/LanguageSelector';
@@ -248,24 +248,28 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1790FF] p-6">
+    <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex-1"></div>
-            <div className="flex items-center justify-center gap-2">
-              <Calculator className="h-8 w-8 text-white" />
-              <h1 className="text-3xl font-bold text-white">{getTranslation(language, 'title')}</h1>
+            <div className="flex items-center justify-center gap-4">
+              <img 
+                src="/lovable-uploads/f7dbf19a-18fa-4078-980a-2e6cc9c4fd45.png" 
+                alt="REVER Logo" 
+                className="h-12"
+              />
+              <h1 className="text-3xl font-bold text-[#1790FF]">{getTranslation(language, 'title')}</h1>
             </div>
             <div className="flex-1 flex justify-end">
               <LanguageSelector language={language} setLanguage={setLanguage} />
             </div>
           </div>
-          <p className="text-white">{getTranslation(language, 'subtitle')}</p>
+          <p className="text-gray-600">{getTranslation(language, 'subtitle')}</p>
         </div>
 
-        {/* Dati Cliente */}
+        {/* Dati Cliente - REMOVED returnRate and totalOrdersAnnual fields */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -285,17 +289,7 @@ const Index = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
-              <div className="space-y-2">
-                <Label htmlFor="totalOrdersAnnual">{getTranslation(language, 'totalAnnualOrders')}</Label>
-                <Input
-                  id="totalOrdersAnnual"
-                  type="number"
-                  value={clientData.totalOrdersAnnual || ''}
-                  onChange={(e) => updateClientData('totalOrdersAnnual', parseInt(e.target.value) || 0)}
-                  placeholder="100000"
-                />
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
               <div className="space-y-2">
                 <Label htmlFor="resiAnnuali">{getTranslation(language, 'annualReturns')}</Label>
                 <Input
@@ -314,17 +308,6 @@ const Index = () => {
                   value={clientData.resiMensili || ''}
                   onChange={(e) => updateClientData('resiMensili', parseInt(e.target.value) || 0)}
                   placeholder="1992"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="returnRate">{getTranslation(language, 'returnRate')}</Label>
-                <Input
-                  id="returnRate"
-                  type="number"
-                  step="0.1"
-                  value={clientData.returnRatePercentage || ''}
-                  onChange={(e) => updateClientData('returnRatePercentage', parseFloat(e.target.value) || 0)}
-                  placeholder="23.9"
                 />
               </div>
               <div className="space-y-2">
