@@ -17,7 +17,9 @@ const ClientLogoBanner = ({ language }: ClientLogoBannerProps) => {
     { name: 'Boggi Milano', src: '/lovable-uploads/eb68f2d7-2571-4dfd-bb9c-349a32ded363.png' },
     { name: 'The Bradery', src: '/lovable-uploads/48c7de9e-dfb5-4e77-a89a-783466d45ab6.png' },
     { name: 'Alpinestars', src: '/lovable-uploads/ad7ea1cb-9ae1-47f4-971c-1c26b5046773.png' },
-    { name: 'PDPAOLA', src: '/lovable-uploads/0027420a-ff0f-437d-85f8-78fe7ad74d57.png' }
+    { name: 'PDPAOLA', src: '/lovable-uploads/0027420a-ff0f-437d-85f8-78fe7ad74d57.png' },
+    { name: 'Ellesse', src: '/lovable-uploads/b9db9871-3680-4fe7-b140-c2df65585375.png' },
+    { name: 'ISDIN', src: '/lovable-uploads/d0121c92-148c-4e39-9320-316cb1f6bcb2.png' }
   ];
 
   // Duplicate logos for seamless infinite scroll
@@ -55,7 +57,7 @@ const ClientLogoBanner = ({ language }: ClientLogoBannerProps) => {
               <img
                 src={logo.src}
                 alt={logo.name}
-                className="max-h-20 w-auto filter grayscale hover:filter-none transition-all duration-300"
+                className="max-h-32 w-auto filter grayscale hover:filter-none transition-all duration-300"
               />
             </div>
           ))}
