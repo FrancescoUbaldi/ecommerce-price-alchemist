@@ -14,6 +14,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { getTranslation } from '@/utils/translations';
 import RevenueComparisonChart from './RevenueComparisonChart';
 import RevenueSuggestionBox from './RevenueSuggestionBox';
+import ClientLogoBanner from './ClientLogoBanner';
 
 interface ClientData {
   resiAnnuali: number;
@@ -425,6 +426,9 @@ const BusinessCase = ({
           extraRevenue={aumentoNetRevenues}
           language={language}
         />
+
+        {/* Client Logo Banner */}
+        <ClientLogoBanner language={language} />
       </div>
     </TooltipProvider>
   );
