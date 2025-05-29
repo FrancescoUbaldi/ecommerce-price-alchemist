@@ -166,7 +166,7 @@ const Index = () => {
       duplicatedScenarios: [...duplicatedScenarios]
     });
 
-    // Reset all client data to 0
+    // FORCE RESET ALL CLIENT DATA TO 0 EXPLICITLY
     setClientData({
       resiAnnuali: 0,
       resiMensili: 0,
@@ -175,10 +175,10 @@ const Index = () => {
       returnRatePercentage: 0
     });
     
-    // Reset client name
+    // FORCE RESET CLIENT NAME TO EMPTY STRING
     setClientName('');
     
-    // Reset custom scenario to all zeros
+    // FORCE RESET CUSTOM SCENARIO TO ALL ZEROS
     setCustomScenario({
       saasFee: 0,
       transactionFeeFixed: 0,
@@ -187,8 +187,33 @@ const Index = () => {
       name: "Scenario Personalizzato"
     });
 
-    // Reset duplicated scenarios
+    // FORCE RESET DUPLICATED SCENARIOS TO EMPTY ARRAY
     setDuplicatedScenarios([]);
+
+    // FORCE RESET PREDEFINED SCENARIOS TO INITIAL VALUES
+    setPredefinedScenarios([
+      {
+        saasFee: 199,
+        transactionFeeFixed: 1.50,
+        rdvPercentage: 0,
+        upsellingPercentage: 5,
+        name: "ECO MODE"
+      },
+      {
+        saasFee: 299,
+        transactionFeeFixed: 1.20,
+        rdvPercentage: 2,
+        upsellingPercentage: 4,
+        name: "GAS"
+      },
+      {
+        saasFee: 399,
+        transactionFeeFixed: 1.00,
+        rdvPercentage: 3,
+        upsellingPercentage: 3,
+        name: "FULL GAS"
+      }
+    ]);
 
     // Show confirmation message and undo button
     setShowResetConfirmation(true);
@@ -370,17 +395,17 @@ const Index = () => {
                   {getTranslation(language, 'reset')}
                 </Button>
                 
-                {/* Reset confirmation message */}
+                {/* Enhanced reset confirmation message */}
                 {showResetConfirmation && (
                   <div className="mt-2 flex items-center gap-2 bg-[#DFF6E1] px-3 py-2 rounded-md border border-green-200 animate-fade-in">
                     <Check className="h-4 w-4 text-green-600" />
                     <span className="text-sm text-green-700 font-medium">
-                      ✅ I dati sono stati azzerati con successo
+                      ✅ Tutti i dati sono stati azzerati con successo
                     </span>
                   </div>
                 )}
 
-                {/* Undo button */}
+                {/* Enhanced Undo button with fade animation */}
                 {showUndoButton && (
                   <Button 
                     onClick={undoReset}
