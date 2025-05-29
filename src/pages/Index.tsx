@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, RotateCcw, Copy, Check } from 'lucide-react';
+import { Settings, RotateCcw, Check, Undo } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
 import LanguageSelector from '@/components/LanguageSelector';
@@ -27,10 +27,19 @@ interface ClientData {
   returnRatePercentage: number;
 }
 
+interface AppState {
+  clientData: ClientData;
+  clientName: string;
+  customScenario: PricingData;
+  duplicatedScenarios: PricingData[];
+}
+
 const Index = () => {
   const [language, setLanguage] = useState<string>('it');
   const [showScenarioNotification, setShowScenarioNotification] = useState(false);
   const [showResetConfirmation, setShowResetConfirmation] = useState(false);
+  const [showUndoButton, setShowUndoButton] = useState(false);
+  const [previousState, setPreviousState] = useState<AppState | null>(null);
   
   const [clientData, setClientData] = useState<ClientData>({
     resiAnnuali: 0,
@@ -120,6 +129,16 @@ const Index = () => {
     }
   }, [gtv, clientData.resiAnnuali, clientData.resiMensili, clientData.carrelloMedio]);
 
+  // Hide undo button after 5 seconds
+  useEffect(() => {
+    if (showUndoButton) {
+      const timer = setTimeout(() => {
+        setShowUndoButton(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showUndoButton]);
+
   const updatePredefinedScenario = (index: number, field: keyof PricingData, value: number) => {
     setPredefinedScenarios(prev => 
       prev.map((scenario, i) => 
@@ -139,6 +158,14 @@ const Index = () => {
   };
 
   const resetData = () => {
+    // Store current state for undo functionality
+    setPreviousState({
+      clientData: { ...clientData },
+      clientName,
+      customScenario: { ...customScenario },
+      duplicatedScenarios: [...duplicatedScenarios]
+    });
+
     // Reset all client data to 0
     setClientData({
       resiAnnuali: 0,
@@ -160,9 +187,24 @@ const Index = () => {
       name: "Scenario Personalizzato"
     });
 
-    // Show confirmation message
+    // Reset duplicated scenarios
+    setDuplicatedScenarios([]);
+
+    // Show confirmation message and undo button
     setShowResetConfirmation(true);
-    setTimeout(() => setShowResetConfirmation(false), 3000);
+    setShowUndoButton(true);
+    setTimeout(() => setShowResetConfirmation(false), 4000);
+  };
+
+  const undoReset = () => {
+    if (previousState) {
+      setClientData(previousState.clientData);
+      setClientName(previousState.clientName);
+      setCustomScenario(previousState.customScenario);
+      setDuplicatedScenarios(previousState.duplicatedScenarios);
+      setShowUndoButton(false);
+      setPreviousState(null);
+    }
   };
 
   const updateClientData = (field: keyof ClientData, value: number) => {
@@ -317,7 +359,7 @@ const Index = () => {
                 <Settings className="h-5 w-5" />
                 {getTranslation(language, 'clientData')}
               </CardTitle>
-              <div className="flex flex-col items-end">
+              <div className="flex flex-col items-end relative">
                 <Button 
                   onClick={resetData}
                   variant="outline" 
@@ -327,13 +369,28 @@ const Index = () => {
                   <RotateCcw className="h-4 w-4" />
                   {getTranslation(language, 'reset')}
                 </Button>
+                
+                {/* Reset confirmation message */}
                 {showResetConfirmation && (
-                  <div className="mt-2 flex items-center gap-2 bg-green-50 px-3 py-2 rounded-md border border-green-200 animate-fade-in">
+                  <div className="mt-2 flex items-center gap-2 bg-[#DFF6E1] px-3 py-2 rounded-md border border-green-200 animate-fade-in">
                     <Check className="h-4 w-4 text-green-600" />
                     <span className="text-sm text-green-700 font-medium">
-                      ✅ Tutti i dati sono stati azzerati correttamente
+                      ✅ I dati sono stati azzerati con successo
                     </span>
                   </div>
+                )}
+
+                {/* Undo button */}
+                {showUndoButton && (
+                  <Button 
+                    onClick={undoReset}
+                    variant="outline" 
+                    size="sm"
+                    className="mt-2 flex items-center gap-2 bg-blue-50 border-blue-200 hover:bg-blue-100 animate-fade-in"
+                  >
+                    <Undo className="h-4 w-4" />
+                    ↩️ Annulla reset
+                  </Button>
                 )}
               </div>
             </div>
@@ -676,7 +733,7 @@ const Index = () => {
               <Card key={index} className="border-dashed border-2">
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
-                    <Copy className="h-5 w-5" />
+                    <div className="h-5 w-5" />
                     {scenario.name}
                   </CardTitle>
                 </CardHeader>
