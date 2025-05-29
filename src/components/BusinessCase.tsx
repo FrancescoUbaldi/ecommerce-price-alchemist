@@ -136,32 +136,23 @@ const BusinessCase = ({
           </CardContent>
         </Card>
 
-        {/* Business Case with full-width dark external container */}
+        {/* Business Case with compact dark container */}
         <div 
-          className="w-full m-0"
           style={{
             backgroundColor: '#000D1F',
             borderRadius: '16px',
-            padding: '32px',
-            margin: '0'
+            padding: '24px 24px 0 24px'
           }}
         >
           {/* Title with white text */}
-          <div className="mb-6">
+          <div className="mb-4">
             <h2 className="text-2xl font-bold leading-none tracking-tight text-white">
               Business Case: {clientName || getTranslation(language, 'ecommerceName')}
             </h2>
           </div>
 
-          {/* White table container */}
-          <div 
-            className="bg-white rounded-xl"
-            style={{
-              borderRadius: '12px',
-              padding: '24px',
-              backgroundColor: 'white'
-            }}
-          >
+          {/* Table without white container - directly in the blue background */}
+          <div className="bg-white">
             <Table>
               <TableHeader>
                 <TableRow className="bg-[#1790FF]">
