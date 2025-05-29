@@ -56,6 +56,7 @@ export const translations = {
     netRevenuePreRever: 'Net Revenue Pre REVER',
     netRevenueWithRever: 'Net Revenue con REVER',
     growthIndicator: 'di crescita',
+    clientsBannerHeading: "Ci hanno già scelto:",
   },
   en: {
     title: "Price & Smile :)",
@@ -114,6 +115,7 @@ export const translations = {
     netRevenuePreRever: 'Net Revenue Pre REVER',
     netRevenueWithRever: 'Net Revenue with REVER',
     growthIndicator: 'growth',
+    clientsBannerHeading: "Trusted by:",
   },
   es: {
     title: "Price & Smile :)",
@@ -172,6 +174,7 @@ export const translations = {
     netRevenuePreRever: 'Ingresos Netos Pre REVER',
     netRevenueWithRever: 'Ingresos Netos con REVER',
     growthIndicator: 'de crecimiento',
+    clientsBannerHeading: "Ya han confiado en nosotros:",
   },
   fr: {
     title: "Price & Smile :)",
@@ -230,6 +233,7 @@ export const translations = {
     netRevenuePreRever: 'Net Revenue Pre REVER',
     netRevenueWithRever: 'Net Revenue with REVER',
     growthIndicator: 'growth',
+    clientsBannerHeading: "Ils nous ont déjà choisi:",
   }
 };
 
