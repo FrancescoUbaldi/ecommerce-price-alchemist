@@ -136,15 +136,24 @@ const BusinessCase = ({
           </CardContent>
         </Card>
 
-        {/* Business Case with external dark container */}
+        {/* Business Case with full-width dark external container */}
         <div 
-          className="rounded-2xl p-8"
+          className="w-full m-0"
           style={{
             backgroundColor: '#000D1F',
             borderRadius: '16px',
-            padding: '32px'
+            padding: '32px',
+            margin: '0'
           }}
         >
+          {/* Title with white text */}
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold leading-none tracking-tight text-white">
+              Business Case: {clientName || getTranslation(language, 'ecommerceName')}
+            </h2>
+          </div>
+
+          {/* White table container */}
           <div 
             className="bg-white rounded-xl"
             style={{
@@ -153,11 +162,6 @@ const BusinessCase = ({
               backgroundColor: 'white'
             }}
           >
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold leading-none tracking-tight">
-                Business Case: {clientName || getTranslation(language, 'ecommerceName')}
-              </h2>
-            </div>
             <Table>
               <TableHeader>
                 <TableRow className="bg-[#1790FF]">
