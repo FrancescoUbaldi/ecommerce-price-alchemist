@@ -40,6 +40,8 @@ const Index = () => {
   const [showResetConfirmation, setShowResetConfirmation] = useState(false);
   const [showUndoButton, setShowUndoButton] = useState(false);
   const [previousState, setPreviousState] = useState<AppState | null>(null);
+  const [showComboDeletedNotification, setShowComboDeletedNotification] = useState(false);
+  const [showComboUsedNotification, setShowComboUsedNotification] = useState(false);
   
   // Track which field was last modified to determine calculation priority
   const [lastModifiedField, setLastModifiedField] = useState<'orders' | 'returns' | 'rate' | null>(null);
@@ -379,7 +381,24 @@ const Index = () => {
   };
 
   const handleDuplicateScenario = (scenario: PricingData) => {
-    setDuplicatedScenarios(prev => [...prev, scenario]);
+    if (duplicatedScenarios.length < 3) {
+      setDuplicatedScenarios(prev => [...prev, scenario]);
+    }
+  };
+
+  const handleDeleteDuplicatedScenario = (index: number) => {
+    setDuplicatedScenarios(prev => prev.filter((_, i) => i !== index));
+    setShowComboDeletedNotification(true);
+    setTimeout(() => setShowComboDeletedNotification(false), 3000);
+  };
+
+  const handleUseDuplicatedScenario = (scenario: PricingData) => {
+    setCustomScenario({
+      ...scenario,
+      name: "Scenario Personalizzato"
+    });
+    setShowComboUsedNotification(true);
+    setTimeout(() => setShowComboUsedNotification(false), 3000);
   };
 
   const updateDuplicatedScenario = (index: number, field: keyof PricingData, value: number) => {
@@ -393,7 +412,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Updated Header with better alignment */}
+        {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <img 
@@ -410,6 +429,19 @@ const Index = () => {
             <LanguageSelector language={language} setLanguage={setLanguage} />
           </div>
         </div>
+
+        {/* Notifications */}
+        {showComboDeletedNotification && (
+          <div className="fixed top-4 right-4 bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-md shadow-lg animate-fade-in z-50">
+            ✅ Combo eliminata con successo
+          </div>
+        )}
+
+        {showComboUsedNotification && (
+          <div className="fixed top-4 right-4 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-lg animate-fade-in z-50">
+            ✅ Business Case aggiornato con questa configurazione
+          </div>
+        )}
 
         {/* Client Data */}
         <Card>
@@ -787,6 +819,7 @@ const Index = () => {
                   currentScenario={customScenario}
                   onDuplicate={handleDuplicateScenario}
                   language={language}
+                  duplicateCount={duplicatedScenarios.length}
                 />
               </CardContent>
             </Card>
@@ -796,7 +829,7 @@ const Index = () => {
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
                     <div className="h-5 w-5" />
-                    {scenario.name}
+                    {scenario.name} #{index + 1}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
