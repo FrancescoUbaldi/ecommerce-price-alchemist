@@ -136,293 +136,306 @@ const BusinessCase = ({
           </CardContent>
         </Card>
 
-        {/* Business Case with compact dark container */}
+        {/* Business Case with dark blue container and centered white table */}
         <div 
           style={{
             backgroundColor: '#000D1F',
-            borderRadius: '16px',
-            padding: '24px 24px 0 24px'
+            padding: '0px',
+            margin: '0px',
+            borderRadius: '0px'
           }}
         >
-          {/* Title with white text */}
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold leading-none tracking-tight text-white">
+          {/* Title with white text and proper spacing */}
+          <div style={{ padding: '16px 0px', textAlign: 'left' }}>
+            <h2 className="text-2xl font-bold leading-none tracking-tight" style={{ color: '#FFFFFF' }}>
               Business Case: {clientName || getTranslation(language, 'ecommerceName')}
             </h2>
           </div>
 
-          {/* Table without white container - directly in the blue background */}
-          <div className="bg-white">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-[#1790FF]">
-                  <TableHead className="font-semibold text-white"></TableHead>
-                  <TableHead className="text-center font-semibold text-white">{getTranslation(language, 'orders')}</TableHead>
-                  <TableHead className="text-center font-semibold text-white">{getTranslation(language, 'aov')}</TableHead>
-                  <TableHead className="text-center font-semibold text-white">{getTranslation(language, 'percentage')}</TableHead>
-                  <TableHead className="text-center font-semibold text-white">{getTranslation(language, 'total')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow className="border-b">
-                  <TableCell className="font-medium">{getTranslation(language, 'preReverBilling')}</TableCell>
-                  <TableCell className="text-center">{clientData.totalOrdersAnnual.toLocaleString()}</TableCell>
-                  <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
-                  <TableCell className="text-center">100.00%</TableCell>
-                  <TableCell className="text-center">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="cursor-help">{formatCurrency(fatturazione)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-                        <div className="space-y-1 text-sm">
-                          <div>{getTranslation(language, 'orders')}: {clientData.totalOrdersAnnual.toLocaleString()}</div>
-                          <div>× {getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
-                          <div className="border-t pt-1 mt-2 font-semibold">
-                            = {getTranslation(language, 'total')}: {formatCurrency(fatturazione)}
+          {/* Centered white table with rounded corners and shadow */}
+          <div 
+            style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '16px',
+              padding: '32px',
+              margin: '0px',
+              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+              display: 'flex',
+              justifyContent: 'center'
+            }}
+          >
+            <div style={{ width: '100%' }}>
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-[#1790FF]">
+                    <TableHead className="font-semibold text-white"></TableHead>
+                    <TableHead className="text-center font-semibold text-white">{getTranslation(language, 'orders')}</TableHead>
+                    <TableHead className="text-center font-semibold text-white">{getTranslation(language, 'aov')}</TableHead>
+                    <TableHead className="text-center font-semibold text-white">{getTranslation(language, 'percentage')}</TableHead>
+                    <TableHead className="text-center font-semibold text-white">{getTranslation(language, 'total')}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow className="border-b">
+                    <TableCell className="font-medium">{getTranslation(language, 'preReverBilling')}</TableCell>
+                    <TableCell className="text-center">{clientData.totalOrdersAnnual.toLocaleString()}</TableCell>
+                    <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
+                    <TableCell className="text-center">100.00%</TableCell>
+                    <TableCell className="text-center">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help">{formatCurrency(fatturazione)}</span>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                          <div className="space-y-1 text-sm">
+                            <div>{getTranslation(language, 'orders')}: {clientData.totalOrdersAnnual.toLocaleString()}</div>
+                            <div>× {getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
+                            <div className="border-t pt-1 mt-2 font-semibold">
+                              = {getTranslation(language, 'total')}: {formatCurrency(fatturazione)}
+                            </div>
                           </div>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-                
-                <TableRow className="border-b">
-                  <TableCell className="font-medium">{getTranslation(language, 'preReverReturns')}</TableCell>
-                  <TableCell className="text-center">{annualReturns.toLocaleString()}</TableCell>
-                  <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
-                  <TableCell className="text-center">{formatPercentage(clientData.returnRatePercentage)} <span className="text-sm text-gray-500">{getTranslation(language, 'returnRate2')}</span></TableCell>
-                  <TableCell className="text-center">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="cursor-help">{formatCurrency(resiValue)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-                        <div className="space-y-1 text-sm">
-                          <div>{getTranslation(language, 'annualReturns')}: {annualReturns.toLocaleString()}</div>
-                          <div>× {getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
-                          <div className="border-t pt-1 mt-2 font-semibold">
-                            = {getTranslation(language, 'total')}: {formatCurrency(resiValue)}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                  
+                  <TableRow className="border-b">
+                    <TableCell className="font-medium">{getTranslation(language, 'preReverReturns')}</TableCell>
+                    <TableCell className="text-center">{annualReturns.toLocaleString()}</TableCell>
+                    <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
+                    <TableCell className="text-center">{formatPercentage(clientData.returnRatePercentage)} <span className="text-sm text-gray-500">{getTranslation(language, 'returnRate2')}</span></TableCell>
+                    <TableCell className="text-center">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help">{formatCurrency(resiValue)}</span>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                          <div className="space-y-1 text-sm">
+                            <div>{getTranslation(language, 'annualReturns')}: {annualReturns.toLocaleString()}</div>
+                            <div>× {getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
+                            <div className="border-t pt-1 mt-2 font-semibold">
+                              = {getTranslation(language, 'total')}: {formatCurrency(resiValue)}
+                            </div>
                           </div>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-                
-                <TableRow className="bg-gray-50 font-semibold italic border-b">
-                  <TableCell>{getTranslation(language, 'preReverNetBilling')}</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell className="text-center">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="cursor-help font-bold">{formatCurrency(fatturazioneNettaPreRever)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-                        <div className="space-y-1 text-sm">
-                          <div>{getTranslation(language, 'preReverBilling')}: {formatCurrency(fatturazione)}</div>
-                          <div>− {getTranslation(language, 'preReverReturns')}: {formatCurrency(resiValue)}</div>
-                          <div className="border-t pt-1 mt-2 font-semibold">
-                            = {getTranslation(language, 'total')}: {formatCurrency(fatturazioneNettaPreRever)}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                  
+                  <TableRow className="bg-gray-50 font-semibold italic border-b">
+                    <TableCell>{getTranslation(language, 'preReverNetBilling')}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell className="text-center">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help font-bold">{formatCurrency(fatturazioneNettaPreRever)}</span>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                          <div className="space-y-1 text-sm">
+                            <div>{getTranslation(language, 'preReverBilling')}: {formatCurrency(fatturazione)}</div>
+                            <div>− {getTranslation(language, 'preReverReturns')}: {formatCurrency(resiValue)}</div>
+                            <div className="border-t pt-1 mt-2 font-semibold">
+                              = {getTranslation(language, 'total')}: {formatCurrency(fatturazioneNettaPreRever)}
+                            </div>
                           </div>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-                
-                <TableRow className="border-b">
-                  <TableCell className="font-medium">{getTranslation(language, 'retainedSalesWithRever')}</TableCell>
-                  <TableCell className="text-center">{Math.round(rdvResi).toLocaleString()}</TableCell>
-                  <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
-                  <TableCell className="text-center">35.00% <span className="text-sm text-gray-500">{getTranslation(language, 'rdvRate')}</span></TableCell>
-                  <TableCell className="text-center">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="cursor-help">{formatCurrency(rdvValue)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-                        <div className="space-y-1 text-sm">
-                          <div>{getTranslation(language, 'annualReturns')}: {annualReturns.toLocaleString()}</div>
-                          <div>× {getTranslation(language, 'rdvRate')}: 35%</div>
-                          <div>× {getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
-                          <div className="border-t pt-1 mt-2 font-semibold">
-                            = {getTranslation(language, 'total')}: {formatCurrency(rdvValue)}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                  
+                  <TableRow className="border-b">
+                    <TableCell className="font-medium">{getTranslation(language, 'retainedSalesWithRever')}</TableCell>
+                    <TableCell className="text-center">{Math.round(rdvResi).toLocaleString()}</TableCell>
+                    <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
+                    <TableCell className="text-center">35.00% <span className="text-sm text-gray-500">{getTranslation(language, 'rdvRate')}</span></TableCell>
+                    <TableCell className="text-center">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help">{formatCurrency(rdvValue)}</span>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                          <div className="space-y-1 text-sm">
+                            <div>{getTranslation(language, 'annualReturns')}: {annualReturns.toLocaleString()}</div>
+                            <div>× {getTranslation(language, 'rdvRate')}: 35%</div>
+                            <div>× {getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
+                            <div className="border-t pt-1 mt-2 font-semibold">
+                              = {getTranslation(language, 'total')}: {formatCurrency(rdvValue)}
+                            </div>
                           </div>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-                
-                <TableRow className="border-b">
-                  <TableCell className="font-medium">{getTranslation(language, 'upsellingWithRever')}</TableCell>
-                  <TableCell className="text-center">{Math.round(upsellingResi).toLocaleString()}</TableCell>
-                  <TableCell className="text-center">{formatCurrency(upsellingAOV)}</TableCell>
-                  <TableCell className="text-center">3.78% <span className="text-sm text-gray-500">{getTranslation(language, 'upsellingRate')}</span></TableCell>
-                  <TableCell className="text-center">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="cursor-help">{formatCurrency(upsellingValue)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-                        <div className="space-y-1 text-sm">
-                          <div>Upsell Orders: {Math.round(upsellingResi).toLocaleString()}</div>
-                          <div>× Upsell {getTranslation(language, 'aov')}: {formatCurrency(upsellingAOV)}</div>
-                          <div className="border-t pt-1 mt-2 font-semibold">
-                            = {getTranslation(language, 'total')}: {formatCurrency(upsellingValue)}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                  
+                  <TableRow className="border-b">
+                    <TableCell className="font-medium">{getTranslation(language, 'upsellingWithRever')}</TableCell>
+                    <TableCell className="text-center">{Math.round(upsellingResi).toLocaleString()}</TableCell>
+                    <TableCell className="text-center">{formatCurrency(upsellingAOV)}</TableCell>
+                    <TableCell className="text-center">3.78% <span className="text-sm text-gray-500">{getTranslation(language, 'upsellingRate')}</span></TableCell>
+                    <TableCell className="text-center">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help">{formatCurrency(upsellingValue)}</span>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                          <div className="space-y-1 text-sm">
+                            <div>Upsell Orders: {Math.round(upsellingResi).toLocaleString()}</div>
+                            <div>× Upsell {getTranslation(language, 'aov')}: {formatCurrency(upsellingAOV)}</div>
+                            <div className="border-t pt-1 mt-2 font-semibold">
+                              = {getTranslation(language, 'total')}: {formatCurrency(upsellingValue)}
+                            </div>
                           </div>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-                
-                <TableRow className="bg-gray-50 font-semibold italic border-b">
-                  <TableCell>{getTranslation(language, 'finalNetBilling')} {clientName || getTranslation(language, 'ecommerceName')}</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell className="text-center">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="cursor-help font-bold">{formatCurrency(fatturazioneNettaFinale)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-                        <div className="space-y-1 text-sm">
-                          <div>{getTranslation(language, 'preReverNetBilling')}: {formatCurrency(fatturazioneNettaPreRever)}</div>
-                          <div>+ {getTranslation(language, 'retainedSalesWithRever')}: {formatCurrency(rdvValue)}</div>
-                          <div>+ {getTranslation(language, 'upsellingWithRever')}: {formatCurrency(upsellingValue)}</div>
-                          <div className="border-t pt-1 mt-2 font-semibold">
-                            = {getTranslation(language, 'total')}: {formatCurrency(fatturazioneNettaFinale)}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                  
+                  <TableRow className="bg-gray-50 font-semibold italic border-b">
+                    <TableCell>{getTranslation(language, 'finalNetBilling')} {clientName || getTranslation(language, 'ecommerceName')}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell className="text-center">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help font-bold">{formatCurrency(fatturazioneNettaFinale)}</span>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                          <div className="space-y-1 text-sm">
+                            <div>{getTranslation(language, 'preReverNetBilling')}: {formatCurrency(fatturazioneNettaPreRever)}</div>
+                            <div>+ {getTranslation(language, 'retainedSalesWithRever')}: {formatCurrency(rdvValue)}</div>
+                            <div>+ {getTranslation(language, 'upsellingWithRever')}: {formatCurrency(upsellingValue)}</div>
+                            <div className="border-t pt-1 mt-2 font-semibold">
+                              = {getTranslation(language, 'total')}: {formatCurrency(fatturazioneNettaFinale)}
+                            </div>
                           </div>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-                
-                <TableRow className="bg-gray-50 font-semibold italic border-b">
-                  <TableCell>{getTranslation(language, 'netBillingGeneratedByRever')}</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell className="text-center">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="cursor-help font-bold">{formatCurrency(fatturazioneGenerataRever)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-                        <div className="space-y-1 text-sm">
-                          <div>{getTranslation(language, 'retainedSalesWithRever')}: {formatCurrency(rdvValue)}</div>
-                          <div>+ {getTranslation(language, 'upsellingWithRever')}: {formatCurrency(upsellingValue)}</div>
-                          <div className="border-t pt-1 mt-2 font-semibold">
-                            = {getTranslation(language, 'total')}: {formatCurrency(fatturazioneGenerataRever)}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                  
+                  <TableRow className="bg-gray-50 font-semibold italic border-b">
+                    <TableCell>{getTranslation(language, 'netBillingGeneratedByRever')}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell className="text-center">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help font-bold">{formatCurrency(fatturazioneGenerataRever)}</span>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                          <div className="space-y-1 text-sm">
+                            <div>{getTranslation(language, 'retainedSalesWithRever')}: {formatCurrency(rdvValue)}</div>
+                            <div>+ {getTranslation(language, 'upsellingWithRever')}: {formatCurrency(upsellingValue)}</div>
+                            <div className="border-t pt-1 mt-2 font-semibold">
+                              = {getTranslation(language, 'total')}: {formatCurrency(fatturazioneGenerataRever)}
+                            </div>
                           </div>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-                
-                <TableRow className="border-b">
-                  <TableCell className="font-medium">{getTranslation(language, 'reverPlatformCost')}</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell className="text-center">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="cursor-help">{formatCurrency(totalPlatformCost)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-                        <div className="space-y-1 text-sm">
-                          <div>SaaS Fee: {formatCurrency(saasFeeAnnuale)}</div>
-                          <div>+ Transaction Fee: {formatCurrency(transactionFeeAnnuale)}</div>
-                          <div>+ RDV Fee: {formatCurrency(rdvFeeAnnuale)}</div>
-                          <div>+ Upselling Fee: {formatCurrency(upsellingFeeAnnuale)}</div>
-                          <div className="border-t pt-1 mt-2 font-semibold">
-                            = {getTranslation(language, 'total')}: {formatCurrency(totalPlatformCost)}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                  
+                  <TableRow className="border-b">
+                    <TableCell className="font-medium">{getTranslation(language, 'reverPlatformCost')}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell className="text-center">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help">{formatCurrency(totalPlatformCost)}</span>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                          <div className="space-y-1 text-sm">
+                            <div>SaaS Fee: {formatCurrency(saasFeeAnnuale)}</div>
+                            <div>+ Transaction Fee: {formatCurrency(transactionFeeAnnuale)}</div>
+                            <div>+ RDV Fee: {formatCurrency(rdvFeeAnnuale)}</div>
+                            <div>+ Upselling Fee: {formatCurrency(upsellingFeeAnnuale)}</div>
+                            <div className="border-t pt-1 mt-2 font-semibold">
+                              = {getTranslation(language, 'total')}: {formatCurrency(totalPlatformCost)}
+                            </div>
                           </div>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-                
-                <TableRow className="bg-blue-50 font-semibold border-b">
-                  <TableCell>{getTranslation(language, 'reverROI')}</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell className="text-center">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="cursor-help font-bold text-green-600">{formatPercentage(reverROIPercentage)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-                        <div className="space-y-1 text-sm">
-                          <div>{getTranslation(language, 'netBillingGeneratedByRever')}: {formatCurrency(fatturazioneGenerataRever)}</div>
-                          <div>÷ {getTranslation(language, 'reverPlatformCost')}: {formatCurrency(totalPlatformCost)}</div>
-                          <div>× 100</div>
-                          <div className="border-t pt-1 mt-2 font-semibold">
-                            = ROI: {formatPercentage(reverROIPercentage)}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                  
+                  <TableRow className="bg-blue-50 font-semibold border-b">
+                    <TableCell>{getTranslation(language, 'reverROI')}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell className="text-center">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help font-bold text-green-600">{formatPercentage(reverROIPercentage)}</span>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                          <div className="space-y-1 text-sm">
+                            <div>{getTranslation(language, 'netBillingGeneratedByRever')}: {formatCurrency(fatturazioneGenerataRever)}</div>
+                            <div>÷ {getTranslation(language, 'reverPlatformCost')}: {formatCurrency(totalPlatformCost)}</div>
+                            <div>× 100</div>
+                            <div className="border-t pt-1 mt-2 font-semibold">
+                              = ROI: {formatPercentage(reverROIPercentage)}
+                            </div>
                           </div>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-                
-                <TableRow className="bg-green-50 font-semibold border-b">
-                  <TableCell>{getTranslation(language, 'netRevenues')} {clientName || getTranslation(language, 'ecommerceName')}</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell className="text-center">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="cursor-help font-bold">{formatCurrency(netRevenuesEcommerce)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-                        <div className="space-y-1 text-sm">
-                          <div>{getTranslation(language, 'finalNetBilling')}: {formatCurrency(fatturazioneNettaFinale)}</div>
-                          <div>− {getTranslation(language, 'reverPlatformCost')}: {formatCurrency(totalPlatformCost)}</div>
-                          <div className="border-t pt-1 mt-2 font-semibold">
-                            = {getTranslation(language, 'total')}: {formatCurrency(netRevenuesEcommerce)}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                  
+                  <TableRow className="bg-green-50 font-semibold border-b">
+                    <TableCell>{getTranslation(language, 'netRevenues')} {clientName || getTranslation(language, 'ecommerceName')}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell className="text-center">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help font-bold">{formatCurrency(netRevenuesEcommerce)}</span>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                          <div className="space-y-1 text-sm">
+                            <div>{getTranslation(language, 'finalNetBilling')}: {formatCurrency(fatturazioneNettaFinale)}</div>
+                            <div>− {getTranslation(language, 'reverPlatformCost')}: {formatCurrency(totalPlatformCost)}</div>
+                            <div className="border-t pt-1 mt-2 font-semibold">
+                              = {getTranslation(language, 'total')}: {formatCurrency(netRevenuesEcommerce)}
+                            </div>
                           </div>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-                
-                <TableRow className="bg-green-100 font-semibold">
-                  <TableCell>{getTranslation(language, 'netRevenueUplift')}</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell className="text-center">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="cursor-help font-bold">{formatCurrency(aumentoNetRevenues)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-                        <div className="space-y-1 text-sm">
-                          <div>{getTranslation(language, 'netRevenues')}: {formatCurrency(netRevenuesEcommerce)}</div>
-                          <div>− {getTranslation(language, 'preReverNetBilling')}: {formatCurrency(fatturazioneNettaPreRever)}</div>
-                          <div className="border-t pt-1 mt-2 font-semibold">
-                            = {getTranslation(language, 'total')}: {formatCurrency(aumentoNetRevenues)}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                  
+                  <TableRow className="bg-green-100 font-semibold">
+                    <TableCell>{getTranslation(language, 'netRevenueUplift')}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell className="text-center">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help font-bold">{formatCurrency(aumentoNetRevenues)}</span>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                          <div className="space-y-1 text-sm">
+                            <div>{getTranslation(language, 'netRevenues')}: {formatCurrency(netRevenuesEcommerce)}</div>
+                            <div>− {getTranslation(language, 'preReverNetBilling')}: {formatCurrency(fatturazioneNettaPreRever)}</div>
+                            <div className="border-t pt-1 mt-2 font-semibold">
+                              = {getTranslation(language, 'total')}: {formatCurrency(aumentoNetRevenues)}
+                            </div>
                           </div>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </div>
 
