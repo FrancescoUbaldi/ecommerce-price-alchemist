@@ -496,7 +496,7 @@ const Index = () => {
                   type="number"
                   value={clientData.resiAnnuali || ''}
                   onChange={(e) => updateClientData('resiAnnuali', parseInt(e.target.value) || 0)}
-                  placeholder="0"
+                  placeholder="23900"
                 />
               </div>
               <div className="space-y-2">
@@ -506,7 +506,7 @@ const Index = () => {
                   type="number"
                   value={clientData.resiMensili || ''}
                   onChange={(e) => updateClientData('resiMensili', parseInt(e.target.value) || 0)}
-                  placeholder="0"
+                  placeholder="1992"
                 />
               </div>
               <div className="space-y-2">
@@ -516,7 +516,7 @@ const Index = () => {
                   type="number"
                   value={clientData.carrelloMedio || ''}
                   onChange={(e) => updateClientData('carrelloMedio', parseFloat(e.target.value) || 0)}
-                  placeholder="0"
+                  placeholder="35.50"
                 />
               </div>
               <div className="space-y-2">
@@ -687,7 +687,7 @@ const Index = () => {
                       type="number"
                       value={clientData.totalOrdersAnnual || ''}
                       onChange={(e) => updateCustomScenarioField('totalOrdersAnnual', parseInt(e.target.value) || 0)}
-                      placeholder="0"
+                      placeholder="100000"
                     />
                   </div>
                   <div className="space-y-2">
@@ -697,7 +697,7 @@ const Index = () => {
                       type="number"
                       value={clientData.resiAnnuali || ''}
                       onChange={(e) => updateCustomScenarioField('resiAnnuali', parseInt(e.target.value) || 0)}
-                      placeholder="0"
+                      placeholder="23900"
                     />
                   </div>
                   <div className="space-y-2">
@@ -708,7 +708,7 @@ const Index = () => {
                       step="0.1"
                       value={clientData.returnRatePercentage || ''}
                       onChange={(e) => updateCustomScenarioField('returnRatePercentage', parseFloat(e.target.value) || 0)}
-                      placeholder="0"
+                      placeholder="23.9"
                     />
                   </div>
                 </div>

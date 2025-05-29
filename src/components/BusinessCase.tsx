@@ -2,7 +2,6 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -12,7 +11,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Download } from 'lucide-react';
 import { getTranslation } from '@/utils/translations';
 import RevenueComparisonChart from './RevenueComparisonChart';
 import RevenueSuggestionBox from './RevenueSuggestionBox';
@@ -104,41 +102,6 @@ const BusinessCase = ({
   
   // Aumento Net Revenues con REVER = Net Revenues Nome Ecommerce - Fatturazione Netta Pre REVER
   const aumentoNetRevenues = netRevenuesEcommerce - fatturazioneNettaPreRever;
-
-  const exportToSpreadsheet = () => {
-    // Create CSV content
-    const csvContent = [
-      // Header
-      ['Business Case', clientName || getTranslation(language, 'ecommerceName')],
-      [],
-      // Table headers
-      ['', getTranslation(language, 'orders'), getTranslation(language, 'aov'), getTranslation(language, 'percentage'), getTranslation(language, 'total')],
-      
-      // Data rows
-      [getTranslation(language, 'preReverBilling'), clientData.totalOrdersAnnual.toLocaleString(), formatCurrency(clientData.carrelloMedio), '100.00%', formatCurrency(fatturazione)],
-      [getTranslation(language, 'preReverReturns'), annualReturns.toLocaleString(), formatCurrency(clientData.carrelloMedio), `${clientData.returnRatePercentage.toFixed(2)}%`, formatCurrency(resiValue)],
-      [getTranslation(language, 'preReverNetBilling'), '', '', '', formatCurrency(fatturazioneNettaPreRever)],
-      [getTranslation(language, 'retainedSalesWithRever'), Math.round(rdvResi).toLocaleString(), formatCurrency(clientData.carrelloMedio), '35.00%', formatCurrency(rdvValue)],
-      [getTranslation(language, 'upsellingWithRever'), Math.round(upsellingResi).toLocaleString(), formatCurrency(upsellingAOV), '3.78%', formatCurrency(upsellingValue)],
-      [getTranslation(language, 'finalNetBilling') + ' ' + (clientName || getTranslation(language, 'ecommerceName')), '', '', '', formatCurrency(fatturazioneNettaFinale)],
-      [getTranslation(language, 'netBillingGeneratedByRever'), '', '', '', formatCurrency(fatturazioneGenerataRever)],
-      [getTranslation(language, 'reverPlatformCost'), '', '', '', formatCurrency(totalPlatformCost)],
-      [getTranslation(language, 'reverROI'), '', '', '', formatPercentage(reverROIPercentage)],
-      [getTranslation(language, 'netRevenues') + ' ' + (clientName || getTranslation(language, 'ecommerceName')), '', '', '', formatCurrency(netRevenuesEcommerce)],
-      [getTranslation(language, 'netRevenueUplift'), '', '', '', formatCurrency(aumentoNetRevenues)],
-    ].map(row => row.join(',')).join('\n');
-
-    // Create and download file
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `business-case-${clientName || 'ecommerce'}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   return (
     <TooltipProvider>
@@ -450,17 +413,6 @@ const BusinessCase = ({
             </Table>
           </CardContent>
         </Card>
-
-        {/* Export Button */}
-        <div className="flex justify-center">
-          <Button
-            onClick={exportToSpreadsheet}
-            className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white"
-          >
-            <Download className="h-4 w-4" />
-            Esporta in Spreadsheet
-          </Button>
-        </div>
 
         {/* Revenue Comparison Chart */}
         <RevenueComparisonChart
