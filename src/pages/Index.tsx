@@ -41,6 +41,9 @@ const Index = () => {
   const [showUndoButton, setShowUndoButton] = useState(false);
   const [previousState, setPreviousState] = useState<AppState | null>(null);
   
+  // Track which field was last modified to determine calculation priority
+  const [lastModifiedField, setLastModifiedField] = useState<'orders' | 'returns' | 'rate' | null>(null);
+  
   const [clientData, setClientData] = useState<ClientData>({
     resiAnnuali: 0,
     resiMensili: 0,
@@ -215,6 +218,9 @@ const Index = () => {
       }
     ]);
 
+    // Reset last modified field tracker
+    setLastModifiedField(null);
+
     // Show confirmation message and undo button
     setShowResetConfirmation(true);
     setShowUndoButton(true);
@@ -257,6 +263,35 @@ const Index = () => {
           newData.resiMensili = Math.round(newData.resiAnnuali / 12);
         }
       }
+      
+      return newData;
+    });
+  };
+
+  // New function for intelligent updates in Custom Scenario
+  const updateCustomScenarioField = (field: 'totalOrdersAnnual' | 'resiAnnuali' | 'returnRatePercentage', value: number) => {
+    setLastModifiedField(
+      field === 'totalOrdersAnnual' ? 'orders' :
+      field === 'resiAnnuali' ? 'returns' : 'rate'
+    );
+
+    setClientData(prev => {
+      const newData = { ...prev, [field]: value };
+      
+      // Smart calculation logic based on which field was modified
+      if (field === 'totalOrdersAnnual' && newData.resiAnnuali > 0) {
+        // If orders changed and we have returns, calculate rate
+        newData.returnRatePercentage = (newData.resiAnnuali / value) * 100;
+      } else if (field === 'resiAnnuali' && newData.totalOrdersAnnual > 0) {
+        // If returns changed and we have orders, calculate rate
+        newData.returnRatePercentage = (value / newData.totalOrdersAnnual) * 100;
+      } else if (field === 'returnRatePercentage' && newData.totalOrdersAnnual > 0) {
+        // If rate changed and we have orders, calculate returns
+        newData.resiAnnuali = Math.round((value / 100) * newData.totalOrdersAnnual);
+      }
+      
+      // Always update monthly returns based on annual
+      newData.resiMensili = Math.round(newData.resiAnnuali / 12);
       
       return newData;
     });
@@ -619,8 +654,18 @@ const Index = () => {
                       id="customTotalOrders"
                       type="number"
                       value={clientData.totalOrdersAnnual || ''}
-                      onChange={(e) => updateClientData('totalOrdersAnnual', parseInt(e.target.value) || 0)}
+                      onChange={(e) => updateCustomScenarioField('totalOrdersAnnual', parseInt(e.target.value) || 0)}
                       placeholder="100000"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="customAnnualReturns">{getTranslation(language, 'annualReturns')}</Label>
+                    <Input
+                      id="customAnnualReturns"
+                      type="number"
+                      value={clientData.resiAnnuali || ''}
+                      onChange={(e) => updateCustomScenarioField('resiAnnuali', parseInt(e.target.value) || 0)}
+                      placeholder="23900"
                     />
                   </div>
                   <div className="space-y-2">
@@ -630,17 +675,9 @@ const Index = () => {
                       type="number"
                       step="0.1"
                       value={clientData.returnRatePercentage || ''}
-                      onChange={(e) => updateClientData('returnRatePercentage', parseFloat(e.target.value) || 0)}
+                      onChange={(e) => updateCustomScenarioField('returnRatePercentage', parseFloat(e.target.value) || 0)}
                       placeholder="23.9"
                     />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>{getTranslation(language, 'annualGTV')}</Label>
-                    <div className="p-3 bg-[#1790FF] text-white rounded-md border-2 border-[#1790FF] shadow-lg">
-                      <span className="text-lg font-semibold">
-                        {formatCurrency(gtv)}
-                      </span>
-                    </div>
                   </div>
                 </div>
 
