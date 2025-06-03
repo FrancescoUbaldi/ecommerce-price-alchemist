@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -36,6 +37,7 @@ interface BusinessCaseProps {
   };
   language: string;
   updateClientData: (field: keyof ClientData, value: number) => void;
+  readOnly?: boolean;
 }
 
 const BusinessCase = ({ 
@@ -44,7 +46,8 @@ const BusinessCase = ({
   clientData, 
   scenario, 
   language, 
-  updateClientData 
+  updateClientData,
+  readOnly = false
 }: BusinessCaseProps) => {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('it-IT', {
@@ -106,35 +109,37 @@ const BusinessCase = ({
   return (
     <TooltipProvider>
       <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>{getTranslation(language, 'businessCaseConfig')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="clientName">{getTranslation(language, 'ecommerceName')}</Label>
-                <Input
-                  id="clientName"
-                  value={clientName}
-                  onChange={(e) => setClientName(e.target.value)}
-                  placeholder={getTranslation(language, 'enterEcommerceName')}
-                />
+        {!readOnly && (
+          <Card>
+            <CardHeader>
+              <CardTitle>{getTranslation(language, 'businessCaseConfig')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="clientName">{getTranslation(language, 'ecommerceName')}</Label>
+                  <Input
+                    id="clientName"
+                    value={clientName}
+                    onChange={(e) => setClientName(e.target.value)}
+                    placeholder={getTranslation(language, 'enterEcommerceName')}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="returnRateBusiness">{getTranslation(language, 'returnRate')}</Label>
+                  <Input
+                    id="returnRateBusiness"
+                    type="number"
+                    step="0.1"
+                    value={clientData.returnRatePercentage || ''}
+                    onChange={(e) => updateClientData('returnRatePercentage', parseFloat(e.target.value) || 0)}
+                    placeholder="23.9"
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="returnRateBusiness">{getTranslation(language, 'returnRate')}</Label>
-                <Input
-                  id="returnRateBusiness"
-                  type="number"
-                  step="0.1"
-                  value={clientData.returnRatePercentage || ''}
-                  onChange={(e) => updateClientData('returnRatePercentage', parseFloat(e.target.value) || 0)}
-                  placeholder="23.9"
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Business Case table with custom border frame */}
         <div 

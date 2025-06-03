@@ -57,6 +57,72 @@ export const translations = {
     netRevenueWithRever: 'Net Revenue con REVER',
     growthIndicator: 'di crescita',
     clientsBannerHeading: "Ci hanno già scelto:",
+    shareWithClient: {
+      it: 'Condividi con cliente',
+      en: 'Share with client',
+      es: 'Compartir con cliente',
+      fr: 'Partager avec le client'
+    },
+    clientName: {
+      it: 'Nome cliente',
+      en: 'Client name',
+      es: 'Nombre del cliente',
+      fr: 'Nom du client'
+    },
+    optional: {
+      it: 'opzionale',
+      en: 'optional',
+      es: 'opcional',
+      fr: 'optionnel'
+    },
+    enterClientName: {
+      it: 'Inserisci nome cliente',
+      en: 'Enter client name',
+      es: 'Ingresa nombre del cliente',
+      fr: 'Entrez le nom du client'
+    },
+    generateLink: {
+      it: 'Genera link',
+      en: 'Generate link',
+      es: 'Generar enlace',
+      fr: 'Générer le lien'
+    },
+    generating: {
+      it: 'Generazione...',
+      en: 'Generating...',
+      es: 'Generando...',
+      fr: 'Génération...'
+    },
+    generatedLink: {
+      it: 'Link generato',
+      en: 'Generated link',
+      es: 'Enlace generado',
+      fr: 'Lien généré'
+    },
+    linkDescription: {
+      it: 'Questo link può essere condiviso con il cliente per visualizzare lo scenario e il business case in modalità read-only.',
+      en: 'This link can be shared with the client to view the scenario and business case in read-only mode.',
+      es: 'Este enlace se puede compartir con el cliente para ver el escenario y el caso de negocio en modo de solo lectura.',
+      fr: 'Ce lien peut être partagé avec le client pour voir le scénario et le business case en mode lecture seule.'
+    },
+    linkNotFound: {
+      it: 'Link non valido o scaduto',
+      en: 'Invalid or expired link',
+      es: 'Enlace inválido o expirado',
+      fr: 'Lien invalide ou expiré'
+    },
+    linkExpiredMessage: {
+      it: 'Il link che stai cercando di accedere non è valido o è scaduto.',
+      en: 'The link you are trying to access is not valid or has expired.',
+      es: 'El enlace al que intentas acceder no es válido o ha expirado.',
+      fr: 'Le lien auquel vous essayez d\'accéder n\'est pas valide ou a expiré.'
+    },
+    businessCaseFor: {
+      it: 'Business Case per',
+      en: 'Business Case for',
+      es: 'Caso de Negocio para',
+      fr: 'Business Case pour'
+    }
   },
   en: {
     title: "Price & Smile :)",
@@ -116,6 +182,72 @@ export const translations = {
     netRevenueWithRever: 'Net Revenue with REVER',
     growthIndicator: 'growth',
     clientsBannerHeading: "Trusted by:",
+    shareWithClient: {
+      it: 'Condividi con cliente',
+      en: 'Share with client',
+      es: 'Compartir con cliente',
+      fr: 'Partager avec le client'
+    },
+    clientName: {
+      it: 'Nome cliente',
+      en: 'Client name',
+      es: 'Nombre del cliente',
+      fr: 'Nom du client'
+    },
+    optional: {
+      it: 'opzionale',
+      en: 'optional',
+      es: 'opcional',
+      fr: 'optionnel'
+    },
+    enterClientName: {
+      it: 'Inserisci nome cliente',
+      en: 'Enter client name',
+      es: 'Ingresa nombre del cliente',
+      fr: 'Entrez le nom du client'
+    },
+    generateLink: {
+      it: 'Genera link',
+      en: 'Generate link',
+      es: 'Generar enlace',
+      fr: 'Générer le lien'
+    },
+    generating: {
+      it: 'Generazione...',
+      en: 'Generating...',
+      es: 'Generando...',
+      fr: 'Génération...'
+    },
+    generatedLink: {
+      it: 'Link generato',
+      en: 'Generated link',
+      es: 'Enlace generado',
+      fr: 'Lien généré'
+    },
+    linkDescription: {
+      it: 'Questo link può essere condiviso con il cliente per visualizzare lo scenario e il business case in modalità read-only.',
+      en: 'This link can be shared with the client to view the scenario and business case in read-only mode.',
+      es: 'Este enlace se puede compartir con el cliente para ver el escenario y el caso de negocio en modo de solo lectura.',
+      fr: 'Ce lien peut être partagé avec le client pour voir le scénario et le business case en mode lecture seule.'
+    },
+    linkNotFound: {
+      it: 'Link non valido o scaduto',
+      en: 'Invalid or expired link',
+      es: 'Enlace inválido o expirado',
+      fr: 'Lien invalide ou expiré'
+    },
+    linkExpiredMessage: {
+      it: 'Il link che stai cercando di accedere non è valido o è scaduto.',
+      en: 'The link you are trying to access is not valid or has expired.',
+      es: 'El enlace al que intentas acceder no es válido o ha expirado.',
+      fr: 'Le lien auquel vous essayez d\'accéder n\'est pas valide ou a expiré.'
+    },
+    businessCaseFor: {
+      it: 'Business Case per',
+      en: 'Business Case for',
+      es: 'Caso de Negocio para',
+      fr: 'Business Case pour'
+    }
   },
   es: {
     title: "Price & Smile :)",
@@ -175,6 +307,72 @@ export const translations = {
     netRevenueWithRever: 'Ingresos Netos con REVER',
     growthIndicator: 'de crecimiento',
     clientsBannerHeading: "Ya han confiado en nosotros:",
+    shareWithClient: {
+      it: 'Condividi con cliente',
+      en: 'Share with client',
+      es: 'Compartir con cliente',
+      fr: 'Partager avec le client'
+    },
+    clientName: {
+      it: 'Nome cliente',
+      en: 'Client name',
+      es: 'Nombre del cliente',
+      fr: 'Nom du client'
+    },
+    optional: {
+      it: 'opzionale',
+      en: 'optional',
+      es: 'opcional',
+      fr: 'optionnel'
+    },
+    enterClientName: {
+      it: 'Inserisci nome cliente',
+      en: 'Enter client name',
+      es: 'Ingresa nombre del cliente',
+      fr: 'Entrez le nom du client'
+    },
+    generateLink: {
+      it: 'Genera link',
+      en: 'Generate link',
+      es: 'Generar enlace',
+      fr: 'Générer le lien'
+    },
+    generating: {
+      it: 'Generazione...',
+      en: 'Generating...',
+      es: 'Generando...',
+      fr: 'Génération...'
+    },
+    generatedLink: {
+      it: 'Link generato',
+      en: 'Generated link',
+      es: 'Enlace generado',
+      fr: 'Lien généré'
+    },
+    linkDescription: {
+      it: 'Questo link può essere condiviso con il cliente per visualizzare lo scenario e il business case in modalità read-only.',
+      en: 'This link can be shared with the client to view the scenario and business case in read-only mode.',
+      es: 'Este enlace se puede compartir con el cliente para ver el escenario y el caso de negocio en modo de solo lectura.',
+      fr: 'Ce lien peut être partagé avec le client pour voir le scénario et le business case en mode lecture seule.'
+    },
+    linkNotFound: {
+      it: 'Link non valido o scaduto',
+      en: 'Invalid or expired link',
+      es: 'Enlace inválido o expirado',
+      fr: 'Lien invalide ou expiré'
+    },
+    linkExpiredMessage: {
+      it: 'Il link che stai cercando di accedere non è valido o è scaduto.',
+      en: 'The link you are trying to access is not valid or has expired.',
+      es: 'El enlace al que intentas acceder no es válido o ha expirado.',
+      fr: 'Le lien auquel vous essayez d\'accéder n\'est pas valide ou a expiré.'
+    },
+    businessCaseFor: {
+      it: 'Business Case per',
+      en: 'Business Case for',
+      es: 'Caso de Negocio para',
+      fr: 'Business Case pour'
+    }
   },
   fr: {
     title: "Price & Smile :)",
@@ -234,6 +432,72 @@ export const translations = {
     netRevenueWithRever: 'Net Revenue with REVER',
     growthIndicator: 'growth',
     clientsBannerHeading: "Ils nous ont déjà choisi:",
+    shareWithClient: {
+      it: 'Condividi con cliente',
+      en: 'Share with client',
+      es: 'Compartir con cliente',
+      fr: 'Partager avec le client'
+    },
+    clientName: {
+      it: 'Nome cliente',
+      en: 'Client name',
+      es: 'Nombre del cliente',
+      fr: 'Nom du client'
+    },
+    optional: {
+      it: 'opzionale',
+      en: 'optional',
+      es: 'opcional',
+      fr: 'optionnel'
+    },
+    enterClientName: {
+      it: 'Inserisci nome cliente',
+      en: 'Enter client name',
+      es: 'Ingresa nombre del cliente',
+      fr: 'Entrez le nom du client'
+    },
+    generateLink: {
+      it: 'Genera link',
+      en: 'Generate link',
+      es: 'Generar enlace',
+      fr: 'Générer le lien'
+    },
+    generating: {
+      it: 'Generazione...',
+      en: 'Generating...',
+      es: 'Generando...',
+      fr: 'Génération...'
+    },
+    generatedLink: {
+      it: 'Link generato',
+      en: 'Generated link',
+      es: 'Enlace generado',
+      fr: 'Lien généré'
+    },
+    linkDescription: {
+      it: 'Questo link può essere condiviso con il cliente per visualizzare lo scenario e il business case in modalità read-only.',
+      en: 'This link can be shared with the client to view the scenario and business case in read-only mode.',
+      es: 'Este enlace se puede compartir con el cliente para ver el escenario y el caso de negocio en modo de solo lectura.',
+      fr: 'Ce lien peut être partagé avec le client pour voir le scénario et le business case en mode lecture seule.'
+    },
+    linkNotFound: {
+      it: 'Link non valido o scaduto',
+      en: 'Invalid or expired link',
+      es: 'Enlace inválido o expirado',
+      fr: 'Lien invalide ou expiré'
+    },
+    linkExpiredMessage: {
+      it: 'Il link che stai cercando di accedere non è valido o è scaduto.',
+      en: 'The link you are trying to access is not valid or has expired.',
+      es: 'El enlace al que intentas acceder no es válido o ha expirado.',
+      fr: 'Le lien auquel vous essayez d\'accéder n\'est pas valide ou a expiré.'
+    },
+    businessCaseFor: {
+      it: 'Business Case per',
+      en: 'Business Case for',
+      es: 'Caso de Negocio para',
+      fr: 'Business Case pour'
+    }
   }
 };
 

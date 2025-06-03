@@ -1,5 +1,3 @@
-
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -11,6 +9,7 @@ import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
 import LanguageSelector from '@/components/LanguageSelector';
 import ComboActions from '@/components/ComboActions';
+import ShareModal from '@/components/ShareModal';
 import { getTranslation } from '@/utils/translations';
 
 interface PricingData {
@@ -520,6 +519,21 @@ const Index = () => {
     );
   };
 
+  // Check if required data is complete for sharing
+  const isDataCompleteForSharing = () => {
+    const hasRequiredClientData = (
+      (clientData.totalOrdersAnnual > 0 || clientData.resiAnnuali > 0 || clientData.returnRatePercentage > 0) &&
+      clientData.carrelloMedio > 0
+    );
+    
+    const hasRequiredScenarioData = (
+      customScenario.saasFee > 0 &&
+      customScenario.transactionFeeFixed > 0
+    );
+    
+    return hasRequiredClientData && hasRequiredScenarioData;
+  };
+
   return (
     <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -784,10 +798,19 @@ const Index = () => {
           <TabsContent value="personalizzato" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  {getTranslation(language, 'customScenario')}
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Settings className="h-5 w-5" />
+                    {getTranslation(language, 'customScenario')}
+                  </CardTitle>
+                  {isDataCompleteForSharing() && (
+                    <ShareModal
+                      clientData={clientData}
+                      customScenario={customScenario}
+                      language={language}
+                    />
+                  )}
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
@@ -1067,4 +1090,3 @@ const Index = () => {
 };
 
 export default Index;
-
