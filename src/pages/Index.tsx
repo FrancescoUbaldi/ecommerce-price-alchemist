@@ -523,18 +523,16 @@ const Index = () => {
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
+          <div className="flex-1"></div>
+          <div className="flex flex-col items-center justify-center">
             <img 
               src="/lovable-uploads/f7dbf19a-18fa-4078-980a-2e6cc9c4fd45.png" 
               alt="REVER Logo" 
-              className="h-32 w-auto"
+              className="h-32 w-auto mb-6"
             />
-          </div>
-          <div className="flex-1 flex flex-col items-center justify-center">
-            <h1 className="text-3xl font-bold text-[#1790FF] mb-1">{getTranslation(language, 'title')}</h1>
             <p className="text-gray-600 text-center">{getTranslation(language, 'subtitle')}</p>
           </div>
-          <div className="flex justify-end">
+          <div className="flex-1 flex justify-end">
             <LanguageSelector language={language} setLanguage={setLanguage} />
           </div>
         </div>
