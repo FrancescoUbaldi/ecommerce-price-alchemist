@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -525,14 +526,14 @@ const Index = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex-1"></div>
           <div className="flex flex-col items-center justify-center">
-            <div className="h-40 w-auto mb-3 overflow-hidden">
+            <div className="h-40 w-auto overflow-hidden">
               <img 
                 src="/lovable-uploads/f7dbf19a-18fa-4078-980a-2e6cc9c4fd45.png" 
                 alt="REVER Logo" 
                 className="h-48 w-auto object-cover object-top transform -translate-y-2"
               />
             </div>
-            <p className="text-gray-600 text-center">{getTranslation(language, 'subtitle')}</p>
+            <p className="text-gray-600 text-center mt-2">{getTranslation(language, 'subtitle')}</p>
           </div>
           <div className="flex-1 flex justify-end">
             <LanguageSelector language={language} setLanguage={setLanguage} />
