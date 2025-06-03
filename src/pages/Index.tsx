@@ -534,7 +534,7 @@ const Index = () => {
                 className="h-48 w-auto object-cover object-top transform -translate-y-2"
               />
             </div>
-            <p className="text-gray-600 text-center mt-0 leading-tight">{getTranslation(language, 'subtitle')}</p>
+            <p className="text-gray-600 text-center -mt-6 leading-tight relative z-10">{getTranslation(language, 'subtitle')}</p>
           </div>
           <div className="flex-1 flex justify-end">
             <LanguageSelector language={language} setLanguage={setLanguage} />
