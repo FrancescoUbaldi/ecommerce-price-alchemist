@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -46,6 +45,9 @@ const Index = () => {
   
   // Track which field was last modified to determine calculation priority
   const [lastModifiedField, setLastModifiedField] = useState<'orders' | 'returns' | 'rate' | null>(null);
+  
+  // Track field modification order for intelligent calculation
+  const [fieldModificationOrder, setFieldModificationOrder] = useState<Array<'totalOrdersAnnual' | 'resiAnnuali' | 'returnRatePercentage'>>([]);
   
   const [clientData, setClientData] = useState<ClientData>({
     resiAnnuali: 0,
@@ -221,8 +223,9 @@ const Index = () => {
       }
     ]);
 
-    // Reset last modified field tracker
+    // Reset last modified field tracker and field modification order
     setLastModifiedField(null);
+    setFieldModificationOrder([]);
 
     // Show confirmation message and undo button
     setShowResetConfirmation(true);
@@ -239,6 +242,52 @@ const Index = () => {
       setShowUndoButton(false);
       setPreviousState(null);
     }
+  };
+
+  // Intelligent calculation logic for Custom Scenario
+  const updateCustomScenarioField = (field: 'totalOrdersAnnual' | 'resiAnnuali' | 'returnRatePercentage', value: number) => {
+    // Update field modification order
+    setFieldModificationOrder(prev => {
+      const newOrder = prev.filter(f => f !== field);
+      return [field, ...newOrder];
+    });
+
+    setClientData(prev => {
+      const newData = { ...prev, [field]: value };
+      
+      // Get the two most recently modified fields
+      const currentOrder = fieldModificationOrder.filter(f => f !== field);
+      const recentFields = [field, ...currentOrder];
+      
+      // If we have at least 2 fields with values, calculate the third
+      const hasOrders = newData.totalOrdersAnnual > 0;
+      const hasReturns = newData.resiAnnuali > 0;
+      const hasRate = newData.returnRatePercentage > 0;
+      
+      const nonZeroFields = [];
+      if (hasOrders) nonZeroFields.push('totalOrdersAnnual');
+      if (hasReturns) nonZeroFields.push('resiAnnuali');
+      if (hasRate) nonZeroFields.push('returnRatePercentage');
+      
+      // Only calculate if we have exactly 2 non-zero fields
+      if (nonZeroFields.length === 2) {
+        if (!hasOrders) {
+          // Calculate orders from returns and rate
+          newData.totalOrdersAnnual = Math.round(newData.resiAnnuali / (newData.returnRatePercentage / 100));
+        } else if (!hasReturns) {
+          // Calculate returns from orders and rate
+          newData.resiAnnuali = Math.round((newData.returnRatePercentage / 100) * newData.totalOrdersAnnual);
+        } else if (!hasRate) {
+          // Calculate rate from orders and returns
+          newData.returnRatePercentage = (newData.resiAnnuali / newData.totalOrdersAnnual) * 100;
+        }
+      }
+      
+      // Always update monthly returns based on annual
+      newData.resiMensili = Math.round(newData.resiAnnuali / 12);
+      
+      return newData;
+    });
   };
 
   // Smart calculation logic - only calculate the missing field based on priority
@@ -315,11 +364,6 @@ const Index = () => {
       
       return newData;
     });
-  };
-
-  // New function for intelligent updates in Custom Scenario
-  const updateCustomScenarioField = (field: 'totalOrdersAnnual' | 'resiAnnuali' | 'returnRatePercentage', value: number) => {
-    updateClientDataSmart(field, value);
   };
 
   const calculateScenario = (scenario: PricingData) => {
