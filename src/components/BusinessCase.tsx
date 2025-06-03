@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -5,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { FileText, Download, Calculator } from 'lucide-react';
 import { jsPDF } from 'jspdf';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import RevenueComparisonChart from './RevenueComparisonChart';
 import ClientLogoBanner from './ClientLogoBanner';
 import RevenueSuggestionBox from './RevenueSuggestionBox';
@@ -173,7 +175,11 @@ const BusinessCase = ({
 
   return (
     <div className="space-y-6">
-      <ClientLogoBanner clientName={clientName} setClientName={setClientName} language={language} />
+      <ClientLogoBanner 
+        clientName={clientName} 
+        setClientName={setClientName} 
+        language={language} 
+      />
       
       <RevenueSuggestionBox
         currentRevenueData={{
@@ -247,74 +253,132 @@ const BusinessCase = ({
                 </div>
               </div>
 
-              {/* Fatturazione Section */}
+              {/* Business Case Table */}
               <div className="space-y-4">
                 <h3 className="text-xl font-bold text-center mb-6">{getTranslation(language, 'financialAnalysis')}</h3>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-lg text-gray-800">{getTranslation(language, 'preReverSection')}</h4>
-                    <div className="bg-red-50 p-4 rounded-lg space-y-3">
-                      <div className="flex justify-between">
-                        <span>{getTranslation(language, 'totalBilling')}:</span>
-                        <span className="font-medium">{formatCurrency(calculations.fatturazione)}</span>
-                      </div>
-                      <div className="flex justify-between text-red-600">
-                        <span>{getTranslation(language, 'returnsValue')}:</span>
-                        <span className="font-medium">-{formatCurrency(calculations.resiValue)}</span>
-                      </div>
-                      <div className="flex justify-between font-bold text-lg border-t pt-2">
-                        <span>{getTranslation(language, 'netRevenuePreRever')}:</span>
-                        <span>{formatCurrency(calculations.fatturazioneNettaPreRever)}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-lg text-[#1790FF]">{getTranslation(language, 'withReverSection')}</h4>
-                    <div className="bg-blue-50 p-4 rounded-lg space-y-3">
-                      <div className="flex justify-between">
-                        <span>{getTranslation(language, 'netRevenuePreRever')}:</span>
-                        <span className="font-medium">{formatCurrency(calculations.fatturazioneNettaPreRever)}</span>
-                      </div>
-                      <div className="flex justify-between text-green-600">
-                        <span>+ RDV ({formatNumber(calculations.rdvResi)} resi):</span>
-                        <span className="font-medium">+{formatCurrency(calculations.rdvValue)}</span>
-                      </div>
-                      <div className="flex justify-between text-green-600">
-                        <span>+ Upselling ({formatNumber(calculations.upsellingResi)} resi):</span>
-                        <span className="font-medium">+{formatCurrency(calculations.upsellingValue)}</span>
-                      </div>
-                      <div className="flex justify-between text-red-600">
-                        <span>{getTranslation(language, 'platformCost')}:</span>
-                        <span className="font-medium">-{formatCurrency(calculations.totalPlatformCost)}</span>
-                      </div>
-                      <div className="flex justify-between font-bold text-lg border-t pt-2 text-[#1790FF]">
-                        <span>{getTranslation(language, 'finalNetRevenue')}:</span>
-                        <span>{formatCurrency(calculations.netRevenuesEcommerce)}</span>
-                      </div>
-                    </div>
-                  </div>
+                <div className="rounded-lg border overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-[#007BFF] hover:bg-[#007BFF]">
+                        <TableHead className="text-white font-bold text-left">Voce</TableHead>
+                        <TableHead className="text-white font-bold text-center">Ordini</TableHead>
+                        <TableHead className="text-white font-bold text-center">AOV</TableHead>
+                        <TableHead className="text-white font-bold text-center">%</TableHead>
+                        <TableHead className="text-white font-bold text-right">Totale</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {/* Fatturazione */}
+                      <TableRow>
+                        <TableCell className="font-medium">Fatturazione</TableCell>
+                        <TableCell className="text-center">{formatNumber(clientData.totalOrdersAnnual)}</TableCell>
+                        <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-right font-medium">{formatCurrency(calculations.fatturazione)}</TableCell>
+                      </TableRow>
+                      
+                      {/* Resi */}
+                      <TableRow className="bg-red-50">
+                        <TableCell className="font-medium text-red-600">Resi</TableCell>
+                        <TableCell className="text-center text-red-600">{formatNumber(clientData.resiAnnuali)}</TableCell>
+                        <TableCell className="text-center text-red-600">{formatCurrency(clientData.carrelloMedio)}</TableCell>
+                        <TableCell className="text-center text-red-600">{formatPercentage(clientData.returnRatePercentage)}</TableCell>
+                        <TableCell className="text-right font-medium text-red-600">-{formatCurrency(calculations.resiValue)}</TableCell>
+                      </TableRow>
+                      
+                      {/* Fatturazione netta Pre-REVER */}
+                      <TableRow className="bg-gray-100 border-t-2 border-gray-300">
+                        <TableCell className="font-bold">Fatturazione netta (Pre-REVER)</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-right font-bold text-lg">{formatCurrency(calculations.fatturazioneNettaPreRever)}</TableCell>
+                      </TableRow>
+                      
+                      {/* Vendite ritenute */}
+                      <TableRow className="bg-green-50">
+                        <TableCell className="font-medium text-green-600">Vendite ritenute (35%)</TableCell>
+                        <TableCell className="text-center text-green-600">{formatNumber(calculations.rdvResi)}</TableCell>
+                        <TableCell className="text-center text-green-600">{formatCurrency(clientData.carrelloMedio)}</TableCell>
+                        <TableCell className="text-center text-green-600">35%</TableCell>
+                        <TableCell className="text-right font-medium text-green-600">+{formatCurrency(calculations.rdvValue)}</TableCell>
+                      </TableRow>
+                      
+                      {/* Upselling */}
+                      <TableRow className="bg-green-50">
+                        <TableCell className="font-medium text-green-600">Upselling</TableCell>
+                        <TableCell className="text-center text-green-600">{formatNumber(calculations.upsellingResi)}</TableCell>
+                        <TableCell className="text-center text-green-600">{formatCurrency(calculations.upsellingAOV)}</TableCell>
+                        <TableCell className="text-center text-green-600">3.78%</TableCell>
+                        <TableCell className="text-right font-medium text-green-600">+{formatCurrency(calculations.upsellingValue)}</TableCell>
+                      </TableRow>
+                      
+                      {/* Fatturazione netta finale */}
+                      <TableRow className="bg-blue-50 border-t-2 border-blue-300">
+                        <TableCell className="font-bold text-blue-600">Fatturazione netta finale</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-right font-bold text-lg text-blue-600">{formatCurrency(calculations.fatturazioneNettaFinale)}</TableCell>
+                      </TableRow>
+                      
+                      {/* Fatturazione generata da REVER */}
+                      <TableRow className="bg-yellow-50">
+                        <TableCell className="font-medium text-yellow-700">Fatturazione generata da REVER</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-right font-medium text-yellow-700">{formatCurrency(calculations.rdvValue + calculations.upsellingValue)}</TableCell>
+                      </TableRow>
+                      
+                      {/* Costi REVER */}
+                      <TableRow className="bg-red-50">
+                        <TableCell className="font-medium text-red-600">Costi REVER</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-right font-medium text-red-600">-{formatCurrency(calculations.totalPlatformCost)}</TableCell>
+                      </TableRow>
+                      
+                      {/* Net Revenues finale */}
+                      <TableRow className="bg-[#1790FF] text-white border-t-2 border-[#1790FF]">
+                        <TableCell className="font-bold text-white">Net Revenues (Con REVER)</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-right font-bold text-lg text-white">{formatCurrency(calculations.netRevenuesEcommerce)}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
                 </div>
               </div>
 
               {/* ROI Section */}
-              <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-xl">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-xl border-2 border-green-200">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
                   <div>
-                    <h4 className="font-semibold text-gray-700">{getTranslation(language, 'netRevenueIncrease')}</h4>
-                    <p className="text-2xl font-bold text-green-600">{formatCurrency(calculations.netRevenueIncrease)}</p>
+                    <h4 className="font-semibold text-gray-700 mb-2">{getTranslation(language, 'netRevenueIncrease')}</h4>
+                    <p className="text-3xl font-bold text-green-600">{formatCurrency(calculations.netRevenueIncrease)}</p>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-700">ROI</h4>
-                    <p className="text-2xl font-bold text-blue-600">{formatPercentage(calculations.roiPercentage)}</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-700">{getTranslation(language, 'platformCost')}</h4>
-                    <p className="text-2xl font-bold text-gray-600">{formatCurrency(calculations.totalPlatformCost)}</p>
+                    <h4 className="font-semibold text-gray-700 mb-2">ROI</h4>
+                    <p className="text-3xl font-bold text-blue-600">{formatPercentage(calculations.roiPercentage)}</p>
                   </div>
                 </div>
               </div>
+
+              {/* Payback display - only if under 6 months */}
+              {paybackMonths !== null && paybackMonths !== undefined && paybackMonths < 6 && (
+                <div className="bg-[#E6F0FF] border border-[#004085] rounded-lg px-6 py-4 animate-fade-in">
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-2xl">⏱</span>
+                    <span className="text-[#004085] font-bold text-lg">
+                      Payback stimato: {paybackMonths.toFixed(1)} mesi per recuperare l'investimento
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="mt-6 flex justify-center">
