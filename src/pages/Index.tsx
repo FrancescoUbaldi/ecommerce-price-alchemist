@@ -530,7 +530,7 @@ const Index = () => {
     const dataToShare = {
       clientName,
       clientData,
-      scenario: currentScenario,
+      scenario: customScenario,
       language
     };
     
