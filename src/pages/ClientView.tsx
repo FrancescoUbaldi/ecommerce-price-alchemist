@@ -13,17 +13,19 @@ interface ClientData {
   returnRatePercentage: number;
 }
 
+interface Scenario {
+  saasFee: number;
+  transactionFeeFixed: number;
+  rdvPercentage: number;
+  upsellingPercentage: number;
+}
+
 interface SharedData {
   id: string;
   client_name: string;
   client_email: string | null;
   client_data: ClientData;
-  scenario: {
-    saasFee: number;
-    transactionFeeFixed: number;
-    rdvPercentage: number;
-    upsellingPercentage: number;
-  };
+  scenario: Scenario;
   language: string;
   created_at: string;
 }
@@ -55,7 +57,18 @@ const ClientView = () => {
           return;
         }
 
-        setSharedData(data);
+        // Type assertion to ensure proper typing
+        const typedData: SharedData = {
+          id: data.id,
+          client_name: data.client_name,
+          client_email: data.client_email,
+          client_data: data.client_data as ClientData,
+          scenario: data.scenario as Scenario,
+          language: data.language,
+          created_at: data.created_at
+        };
+
+        setSharedData(typedData);
       } catch (error) {
         console.error('Error:', error);
         setError('Errore durante il caricamento dei dati');

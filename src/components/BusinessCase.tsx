@@ -1,11 +1,9 @@
+
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Calculator, TrendingUp, Clock } from 'lucide-react';
-import RevenueComparisonChart from './RevenueComparisonChart';
-import ClientLogoBanner from './ClientLogoBanner';
-import RevenueSuggestionBox from './RevenueSuggestionBox';
 import { getTranslation } from '@/utils/translations';
 
 interface BusinessCaseProps {
@@ -124,92 +122,134 @@ const BusinessCase = ({
         </Card>
       )}
 
-      {/* Client Logo Banner */}
-      <ClientLogoBanner clientName={clientName} language={language} />
+      {/* Client Logo Banner - with proper client name display */}
+      <div className="text-center py-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-gray-200">
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">
+          Business Case per {clientName || 'Cliente'}
+        </h2>
+        <p className="text-gray-600">
+          Analisi economica personalizzata con REVER
+        </p>
+      </div>
 
-      {/* Business Analysis Section */}
+      {/* Business Analysis Section - Original Layout */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5" />
-            {getTranslation(language, 'businessAnalysis')}
+            Analisi Business Case
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Pre-REVER vs With REVER Analysis */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-xl font-semibold mb-4">{getTranslation(language, 'preReverAnalysis')}</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span>{getTranslation(language, 'totalRevenue')}:</span>
-                  <span>{formatCurrency(fatturazione)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>{getTranslation(language, 'returnsValue')}:</span>
-                  <span>{formatCurrency(resiValue)}</span>
-                </div>
-                <div className="flex justify-between font-bold text-lg">
-                  <span>{getTranslation(language, 'netRevenue')}:</span>
-                  <span>{formatCurrency(fatturazioneNettaPreRever)}</span>
-                </div>
-              </div>
-            </div>
+        <CardContent>
+          {/* Tabella Business Case originale con 4 colonne */}
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-blue-600 text-white">
+                  <th className="p-3 text-left font-semibold border border-gray-300">Categoria</th>
+                  <th className="p-3 text-center font-semibold border border-gray-300">Ordini</th>
+                  <th className="p-3 text-center font-semibold border border-gray-300">AOV</th>
+                  <th className="p-3 text-center font-semibold border border-gray-300">%</th>
+                  <th className="p-3 text-center font-semibold border border-gray-300">Totale</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* Fatturazione Totale */}
+                <tr className="bg-gray-50">
+                  <td className="p-3 font-medium border border-gray-300">Fatturazione Totale</td>
+                  <td className="p-3 text-center border border-gray-300">{clientData.totalOrdersAnnual.toLocaleString()}</td>
+                  <td className="p-3 text-center border border-gray-300">{formatCurrency(clientData.carrelloMedio)}</td>
+                  <td className="p-3 text-center border border-gray-300">100%</td>
+                  <td className="p-3 text-center font-bold border border-gray-300">{formatCurrency(fatturazione)}</td>
+                </tr>
 
-            <div>
-              <h3 className="text-xl font-semibold mb-4">{getTranslation(language, 'withReverAnalysis')}</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span>{getTranslation(language, 'rdvRevenue')}:</span>
-                  <span>{formatCurrency(rdvValue)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>{getTranslation(language, 'upsellingRevenue')}:</span>
-                  <span>{formatCurrency(upsellingValue)}</span>
-                </div>
-                <div className="flex justify-between font-bold text-lg">
-                  <span>{getTranslation(language, 'netRevenue')}:</span>
-                  <span>{formatCurrency(fatturazioneNettaFinale)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>{getTranslation(language, 'platformCost')}:</span>
-                  <span>{formatCurrency(totalPlatformCost)}</span>
-                </div>
-                <div className="flex justify-between font-bold text-xl border-t pt-3">
-                  <span>{getTranslation(language, 'netEcommerceRevenue')}:</span>
-                  <span className="text-green-600">{formatCurrency(netRevenuesEcommerce)}</span>
-                </div>
-              </div>
+                {/* Resi */}
+                <tr>
+                  <td className="p-3 font-medium border border-gray-300">Resi</td>
+                  <td className="p-3 text-center border border-gray-300">{clientData.resiAnnuali.toLocaleString()}</td>
+                  <td className="p-3 text-center border border-gray-300">{formatCurrency(clientData.carrelloMedio)}</td>
+                  <td className="p-3 text-center border border-gray-300">{formatPercentage(clientData.returnRatePercentage)}</td>
+                  <td className="p-3 text-center font-bold text-red-600 border border-gray-300">-{formatCurrency(resiValue)}</td>
+                </tr>
+
+                {/* Fatturazione Netta (pre-REVER) */}
+                <tr className="bg-yellow-50">
+                  <td className="p-3 font-bold border border-gray-300">Fatturazione Netta (pre-REVER)</td>
+                  <td className="p-3 text-center border border-gray-300">-</td>
+                  <td className="p-3 text-center border border-gray-300">-</td>
+                  <td className="p-3 text-center border border-gray-300">-</td>
+                  <td className="p-3 text-center font-bold text-lg border border-gray-300">{formatCurrency(fatturazioneNettaPreRever)}</td>
+                </tr>
+
+                {/* RDV */}
+                <tr className="bg-green-50">
+                  <td className="p-3 font-medium border border-gray-300">RDV (Recupero)</td>
+                  <td className="p-3 text-center border border-gray-300">{rdvResi.toFixed(0)}</td>
+                  <td className="p-3 text-center border border-gray-300">{formatCurrency(clientData.carrelloMedio)}</td>
+                  <td className="p-3 text-center border border-gray-300">35%</td>
+                  <td className="p-3 text-center font-bold text-green-600 border border-gray-300">+{formatCurrency(rdvValue)}</td>
+                </tr>
+
+                {/* Upselling */}
+                <tr className="bg-green-50">
+                  <td className="p-3 font-medium border border-gray-300">Upselling</td>
+                  <td className="p-3 text-center border border-gray-300">{upsellingResi.toFixed(0)}</td>
+                  <td className="p-3 text-center border border-gray-300">{formatCurrency(upsellingAOV)}</td>
+                  <td className="p-3 text-center border border-gray-300">3.78%</td>
+                  <td className="p-3 text-center font-bold text-green-600 border border-gray-300">+{formatCurrency(upsellingValue)}</td>
+                </tr>
+
+                {/* Fatturazione Finale */}
+                <tr className="bg-blue-50">
+                  <td className="p-3 font-bold border border-gray-300">Fatturazione Finale</td>
+                  <td className="p-3 text-center border border-gray-300">-</td>
+                  <td className="p-3 text-center border border-gray-300">-</td>
+                  <td className="p-3 text-center border border-gray-300">-</td>
+                  <td className="p-3 text-center font-bold text-xl border border-gray-300">{formatCurrency(fatturazioneNettaFinale)}</td>
+                </tr>
+
+                {/* Costi Piattaforma */}
+                <tr className="bg-red-50">
+                  <td className="p-3 font-medium border border-gray-300">Costi Piattaforma REVER</td>
+                  <td className="p-3 text-center border border-gray-300">-</td>
+                  <td className="p-3 text-center border border-gray-300">-</td>
+                  <td className="p-3 text-center border border-gray-300">-</td>
+                  <td className="p-3 text-center font-bold text-red-600 border border-gray-300">-{formatCurrency(totalPlatformCost)}</td>
+                </tr>
+
+                {/* Ricavi Netti E-commerce */}
+                <tr className="bg-green-100">
+                  <td className="p-3 font-bold text-lg border border-gray-300">Ricavi Netti E-commerce</td>
+                  <td className="p-3 text-center border border-gray-300">-</td>
+                  <td className="p-3 text-center border border-gray-300">-</td>
+                  <td className="p-3 text-center border border-gray-300">-</td>
+                  <td className="p-3 text-center font-bold text-2xl text-green-600 border border-gray-300">{formatCurrency(netRevenuesEcommerce)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Incremento Ricavi */}
+          <div className="mt-6 p-4 bg-cyan-50 border border-cyan-200 rounded-lg">
+            <div className="flex justify-between items-center">
+              <span className="text-lg font-semibold text-gray-800">Incremento Ricavi:</span>
+              <span className="text-2xl font-bold text-cyan-600">{formatCurrency(netRevenueIncrease)}</span>
             </div>
           </div>
 
-          {/* Revenue Comparison Chart */}
-          <RevenueComparisonChart
-            preReverRevenue={fatturazioneNettaPreRever}
-            withReverRevenue={netRevenuesEcommerce}
-            platformCost={totalPlatformCost}
-            language={language}
-          />
-
-          {/* Key Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <h4 className="text-sm font-semibold text-gray-600">{getTranslation(language, 'gtv')}</h4>
-              <p className="text-2xl font-bold">{formatCurrency(gtv)}</p>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <h4 className="text-sm font-semibold text-gray-600">{getTranslation(language, 'revenueIncrease')}</h4>
-              <p className="text-2xl font-bold text-green-600">{formatCurrency(netRevenueIncrease)}</p>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <h4 className="text-sm font-semibold text-gray-600">{getTranslation(language, 'netEcommerceRevenue')}</h4>
-              <p className="text-2xl font-bold text-blue-600">{formatCurrency(netRevenuesEcommerce)}</p>
+          {/* ROI */}
+          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex justify-between items-center">
+              <span className="text-lg font-semibold text-gray-800">ROI (Return on Investment):</span>
+              <span className="text-2xl font-bold text-blue-600">
+                {totalPlatformCost > 0 ? formatPercentage((netRevenueIncrease / totalPlatformCost) * 100) : '0%'}
+              </span>
             </div>
           </div>
 
           {/* Payback Period */}
           {calculatePayback !== null && (
-            <div className="bg-[#E5F0FF] border border-[#1790FF] rounded-lg p-4 animate-fade-in">
+            <div className="mt-4 bg-[#E5F0FF] border border-[#1790FF] rounded-lg p-4 animate-fade-in">
               <div className="flex items-center gap-3">
                 <Clock className="h-5 w-5 text-[#1790FF]" />
                 <div className="text-[#000D1F]">
@@ -221,14 +261,6 @@ const BusinessCase = ({
                 </div>
               </div>
             </div>
-          )}
-
-          {/* Revenue Suggestion Box - hidden in read-only mode */}
-          {!isReadOnly && (
-            <RevenueSuggestionBox
-              currentRevenue={netRevenuesEcommerce}
-              language={language}
-            />
           )}
         </CardContent>
       </Card>
