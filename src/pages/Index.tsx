@@ -1,4 +1,5 @@
 
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,7 +11,6 @@ import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
 import LanguageSelector from '@/components/LanguageSelector';
 import ComboActions from '@/components/ComboActions';
-import ShareModal from '@/components/ShareModal';
 import { getTranslation } from '@/utils/translations';
 
 interface PricingData {
@@ -782,16 +782,6 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="personalizzato" className="space-y-6">
-            {/* Share Button */}
-            <div className="flex justify-end mb-4">
-              <ShareModal 
-                clientData={clientData}
-                customScenario={customScenario}
-                clientName={clientName}
-                language={language}
-              />
-            </div>
-
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -1077,3 +1067,4 @@ const Index = () => {
 };
 
 export default Index;
+
