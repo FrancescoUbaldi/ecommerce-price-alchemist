@@ -1,4 +1,3 @@
-
 export const translations = {
   it: {
     title: "Price & Smile :)",
@@ -58,9 +57,6 @@ export const translations = {
     netRevenueWithRever: 'Net Revenue con REVER',
     growthIndicator: 'di crescita',
     clientsBannerHeading: "Ci hanno già scelto:",
-    shareWithClient: 'Condividi con cliente',
-    shareDescription: 'Condividi questo link con il tuo cliente per mostrare il business case in modalità di sola lettura.',
-    linkCopied: 'Link copiato negli appunti!',
   },
   en: {
     title: "Price & Smile :)",
@@ -120,9 +116,6 @@ export const translations = {
     netRevenueWithRever: 'Net Revenue with REVER',
     growthIndicator: 'growth',
     clientsBannerHeading: "Trusted by:",
-    shareWithClient: 'Share with client',
-    shareDescription: 'Share this link with your client to show the business case in read-only mode.',
-    linkCopied: 'Link copied to clipboard!',
   },
   es: {
     title: "Price & Smile :)",
@@ -182,9 +175,6 @@ export const translations = {
     netRevenueWithRever: 'Ingresos Netos con REVER',
     growthIndicator: 'de crecimiento',
     clientsBannerHeading: "Ya han confiado en nosotros:",
-    shareWithClient: 'Compartir con cliente',
-    shareDescription: 'Comparte este enlace con tu cliente para mostrar el business case en modo de solo lectura.',
-    linkCopied: 'Enlace copiado al portapapeles!',
   },
   fr: {
     title: "Price & Smile :)",
@@ -239,14 +229,11 @@ export const translations = {
     saveCombo: "Sauvegarder Combo",
     comboSaved: "Combo sauvegardé !",
     duplicatedCombo: "Combo dupliqué - modifiable",
-    netRevenueGrowthTitle: 'Croissance du chiffre d\'affaires net avec REVER',
-    netRevenuePreRever: 'Chiffre d\'affaires net Pre REVER',
-    netRevenueWithRever: 'Chiffre d\'affaires net avec REVER',
-    growthIndicator: 'de croissance',
+    netRevenueGrowthTitle: 'Net Revenue Growth with REVER',
+    netRevenuePreRever: 'Net Revenue Pre REVER',
+    netRevenueWithRever: 'Net Revenue with REVER',
+    growthIndicator: 'growth',
     clientsBannerHeading: "Ils nous ont déjà choisi:",
-    shareWithClient: 'Partager avec le client',
-    shareDescription: 'Partagez ce lien avec votre client pour afficher le business case en mode lecture seule.',
-    linkCopied: 'Lien copié dans le presse-papiers!',
   }
 };
 
