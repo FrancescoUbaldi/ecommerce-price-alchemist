@@ -6,7 +6,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { getTranslation } from '@/utils/translations';
 import BusinessCase from '@/components/BusinessCase';
-import FeeDistributionChart from '@/components/FeeDistributionChart';
 
 interface ShareData {
   id: string;
@@ -283,15 +282,7 @@ const ClientView = () => {
                     </div>
                   </div>
 
-                  <div className="mt-6">
-                    <FeeDistributionChart
-                      saasFee={calculation.saasFee}
-                      transactionFee={calculation.transactionFee}
-                      rdvFee={calculation.rdvFee}
-                      upsellingFee={calculation.upsellingFee}
-                      totalMensile={calculation.totalMensile}
-                    />
-                  </div>
+                  {/* Fee Distribution Chart is intentionally hidden in read-only view */}
                 </div>
               </CardContent>
             </Card>
