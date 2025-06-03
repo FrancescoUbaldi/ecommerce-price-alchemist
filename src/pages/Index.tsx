@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,12 +8,12 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { getTranslation } from '@/utils/translations';
 import { BusinessCase } from '@/components/BusinessCase';
-import { LanguageSelector } from '@/components/LanguageSelector';
-import { ClientLogoBanner } from '@/components/ClientLogoBanner';
-import { ComboActions } from '@/components/ComboActions';
-import { FeeDistributionChart } from '@/components/FeeDistributionChart';
-import { RevenueComparisonChart } from '@/components/RevenueComparisonChart';
-import { RevenueSuggestionBox } from '@/components/RevenueSuggestionBox';
+import LanguageSelector from '@/components/LanguageSelector';
+import ClientLogoBanner from '@/components/ClientLogoBanner';
+import ComboActions from '@/components/ComboActions';
+import FeeDistributionChart from '@/components/FeeDistributionChart';
+import RevenueComparisonChart from '@/components/RevenueComparisonChart';
+import RevenueSuggestionBox from '@/components/RevenueSuggestionBox';
 import { Share2 } from 'lucide-react';
 import { ShareModal } from '@/components/ShareModal';
 
