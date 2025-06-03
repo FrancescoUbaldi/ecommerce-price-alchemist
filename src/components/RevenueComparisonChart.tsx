@@ -2,19 +2,21 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, Clock } from 'lucide-react';
 import { getTranslation } from '@/utils/translations';
 
 interface RevenueComparisonChartProps {
   preReverNetBilling: number;
   finalNetBilling: number;
   language: string;
+  paybackMonths?: number | null;
 }
 
 const RevenueComparisonChart = ({ 
   preReverNetBilling, 
   finalNetBilling, 
-  language 
+  language,
+  paybackMonths 
 }: RevenueComparisonChartProps) => {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('it-IT', {
@@ -95,10 +97,24 @@ const RevenueComparisonChart = ({
   return (
     <Card className="mt-6 overflow-hidden">
       <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 border-b">
-        <CardTitle className="text-lg flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-[#1790FF]" />
-          {getTranslation(language, 'netRevenueGrowthTitle')}
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-[#1790FF]" />
+            {getTranslation(language, 'netRevenueGrowthTitle')}
+          </CardTitle>
+          
+          {/* Payback display - only if under 6 months */}
+          {paybackMonths !== null && paybackMonths !== undefined && paybackMonths < 6 && (
+            <div className="bg-[#E6F0FF] border border-[#004085] rounded-lg px-4 py-2 animate-fade-in">
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-[#004085]" />
+                <span className="text-[#004085] font-medium text-sm">
+                  ⏱ Payback stimato: {paybackMonths.toFixed(1)} mesi per recuperare l'investimento
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
       </CardHeader>
       <CardContent className="p-6">
         <div className="h-80">
