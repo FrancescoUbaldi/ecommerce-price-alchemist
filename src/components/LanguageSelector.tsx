@@ -10,11 +10,11 @@ import {
 import { Globe } from 'lucide-react';
 
 interface LanguageSelectorProps {
-  currentLanguage: string;
-  onLanguageChange: (language: string) => void;
+  language: string;
+  setLanguage: (language: string) => void;
 }
 
-const LanguageSelector = ({ currentLanguage, onLanguageChange }: LanguageSelectorProps) => {
+const LanguageSelector = ({ language, setLanguage }: LanguageSelectorProps) => {
   const languages = [
     { code: 'it', name: 'Italiano' },
     { code: 'es', name: 'Español' },
@@ -25,7 +25,7 @@ const LanguageSelector = ({ currentLanguage, onLanguageChange }: LanguageSelecto
   return (
     <div className="flex items-center gap-2">
       <Globe className="h-4 w-4 text-gray-600" />
-      <Select value={currentLanguage} onValueChange={onLanguageChange}>
+      <Select value={language} onValueChange={setLanguage}>
         <SelectTrigger className="w-32">
           <SelectValue />
         </SelectTrigger>
