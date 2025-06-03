@@ -3,20 +3,12 @@ import React from 'react';
 import { Lightbulb } from 'lucide-react';
 import { getTranslation } from '@/utils/translations';
 
-interface ClientData {
-  totalOrdersAnnual: number;
-  annualReturns: number;
-  returnRate: number;
-  averageCart: number;
-}
-
 interface RevenueSuggestionBoxProps {
-  currentRevenueData: ClientData;
-  updateClientData: (field: keyof any, value: number) => void;
+  extraRevenue: number;
   language: string;
 }
 
-const RevenueSuggestionBox = ({ currentRevenueData, updateClientData, language }: RevenueSuggestionBoxProps) => {
+const RevenueSuggestionBox = ({ extraRevenue, language }: RevenueSuggestionBoxProps) => {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('it-IT', {
       style: 'currency',
@@ -25,25 +17,6 @@ const RevenueSuggestionBox = ({ currentRevenueData, updateClientData, language }
       maximumFractionDigits: 0
     }).format(value);
   };
-
-  // Calculate potential extra revenue based on current data
-  const calculateExtraRevenue = () => {
-    if (!currentRevenueData.annualReturns || !currentRevenueData.averageCart) {
-      return 0;
-    }
-
-    // Example calculation: RDV + Upselling potential
-    const rdvResi = currentRevenueData.annualReturns * 0.35;
-    const rdvValue = rdvResi * currentRevenueData.averageCart;
-    
-    const upsellingResi = currentRevenueData.annualReturns * 0.0378;
-    const upsellingAOV = currentRevenueData.averageCart * 1.3;
-    const upsellingValue = upsellingResi * upsellingAOV;
-    
-    return rdvValue + upsellingValue;
-  };
-
-  const extraRevenue = calculateExtraRevenue();
 
   // Only show if extraRevenue is positive and meaningful
   if (extraRevenue <= 0) {

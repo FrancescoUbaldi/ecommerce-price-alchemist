@@ -3,12 +3,10 @@ import React from 'react';
 import { getTranslation } from '@/utils/translations';
 
 interface ClientLogoBannerProps {
-  clientName: string;
-  setClientName: (name: string) => void;
   language: string;
 }
 
-const ClientLogoBanner = ({ clientName, setClientName, language }: ClientLogoBannerProps) => {
+const ClientLogoBanner = ({ language }: ClientLogoBannerProps) => {
   const logos = [
     { name: 'Crocs', src: '/lovable-uploads/db0d3e46-ec4e-478f-a2c5-9e5e901a4923.png' },
     { name: 'TwoJeys', src: '/lovable-uploads/9ca16c93-745b-4afa-9d56-4052c553146b.png' },
