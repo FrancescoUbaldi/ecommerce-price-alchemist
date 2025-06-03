@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import BusinessCase from '@/components/BusinessCase';
 import { getTranslation } from '@/utils/translations';
 
@@ -13,8 +14,10 @@ interface ClientData {
 }
 
 interface SharedData {
-  clientName: string;
-  clientData: ClientData;
+  id: string;
+  client_name: string;
+  client_email: string | null;
+  client_data: ClientData;
   scenario: {
     saasFee: number;
     transactionFeeFixed: number;
@@ -22,29 +25,47 @@ interface SharedData {
     upsellingPercentage: number;
   };
   language: string;
+  created_at: string;
 }
 
 const ClientView = () => {
-  const [searchParams] = useSearchParams();
-  const shareId = searchParams.get('id');
+  const { id } = useParams<{ id: string }>();
   const [sharedData, setSharedData] = useState<SharedData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (shareId) {
-      // Recupera i dati dal localStorage
-      const storedData = localStorage.getItem(`share_${shareId}`);
-      if (storedData) {
-        try {
-          const data = JSON.parse(storedData);
-          setSharedData(data);
-        } catch (error) {
-          console.error('Error parsing shared data:', error);
-        }
+    const fetchSharedData = async () => {
+      if (!id) {
+        setError('ID del link non valido');
+        setLoading(false);
+        return;
       }
-    }
-    setLoading(false);
-  }, [shareId]);
+
+      try {
+        const { data, error } = await supabase
+          .from('shared_business_cases')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (error) {
+          console.error('Error fetching shared data:', error);
+          setError('Link non trovato o scaduto');
+          return;
+        }
+
+        setSharedData(data);
+      } catch (error) {
+        console.error('Error:', error);
+        setError('Errore durante il caricamento dei dati');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSharedData();
+  }, [id]);
 
   if (loading) {
     return (
@@ -54,12 +75,12 @@ const ClientView = () => {
     );
   }
 
-  if (!sharedData) {
+  if (error || !sharedData) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-800 mb-2">Link non valido</h1>
-          <p className="text-gray-600">Il link condiviso non è più valido o è scaduto.</p>
+          <p className="text-gray-600">{error || 'Il link condiviso non è più valido o è scaduto.'}</p>
         </div>
       </div>
     );
@@ -132,9 +153,9 @@ const ClientView = () => {
 
         {/* Business Case completo */}
         <BusinessCase
-          clientName={sharedData.clientName}
+          clientName={sharedData.client_name}
           setClientName={() => {}} // Non funzionale in modalità read-only
-          clientData={sharedData.clientData}
+          clientData={sharedData.client_data}
           scenario={sharedData.scenario}
           language={sharedData.language}
           updateClientData={() => {}} // Non funzionale in modalità read-only

@@ -4,14 +4,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, RotateCcw, Check, Undo, Clock } from 'lucide-react';
+import { Settings, RotateCcw, Check, Undo, Clock, Share } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
 import LanguageSelector from '@/components/LanguageSelector';
 import ComboActions from '@/components/ComboActions';
 import { getTranslation } from '@/utils/translations';
 import ShareModal from '@/components/ShareModal';
-import { Share } from 'lucide-react';
 
 interface PricingData {
   saasFee: number;
@@ -811,13 +810,14 @@ const Index = () => {
                 <div className="flex justify-between items-center">
                   <CardTitle>{getTranslation(language, 'customScenario')}</CardTitle>
                   <Button
-                    onClick={handleShare}
+                    onClick={() => setShareModalOpen(true)}
                     variant="outline"
                     size="sm"
                     className="flex items-center gap-2"
+                    disabled={!clientName.trim() || !clientData.resiAnnuali || !clientData.carrelloMedio}
                   >
                     <Share className="h-4 w-4" />
-                    {getTranslation(language, 'shareWithClient')}
+                    Condividi con cliente
                   </Button>
                 </div>
               </CardHeader>
@@ -1099,7 +1099,9 @@ const Index = () => {
       <ShareModal
         isOpen={shareModalOpen}
         onClose={() => setShareModalOpen(false)}
-        shareUrl={shareUrl}
+        clientName={clientName}
+        clientData={clientData}
+        scenario={customScenario}
         language={language}
       />
     </div>
