@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -144,6 +143,20 @@ const ClientView = () => {
   }
 
   const calculation = calculateScenario(shareData.scenario_data, shareData.business_case_data);
+  
+  // Calculate payback period
+  const annualReturns = shareData.business_case_data.resiAnnuali > 0 ? shareData.business_case_data.resiAnnuali : shareData.business_case_data.resiMensili * 12;
+  const rdvAnnuali = annualReturns * 0.35;
+  const rdvMensili = rdvAnnuali / 12;
+  const rdvRevenue = (rdvMensili * shareData.business_case_data.carrelloMedio * shareData.scenario_data.rdvPercentage) / 100;
+  
+  const upsellingAnnuali = annualReturns * 0.0378;
+  const upsellingMensili = upsellingAnnuali / 12;
+  const incrementoCarrello = shareData.business_case_data.carrelloMedio * 0.3;
+  const upsellingRevenue = (upsellingMensili * incrementoCarrello * shareData.scenario_data.upsellingPercentage) / 100;
+  
+  const totalExtraRevenue = rdvRevenue + upsellingRevenue;
+  const paybackMonths = totalExtraRevenue > 0 ? calculation.totalMensile / totalExtraRevenue : 0;
 
   return (
     <div className="min-h-screen bg-white p-6">
@@ -281,6 +294,17 @@ const ClientView = () => {
                       </div>
                     </div>
                   </div>
+
+                  {/* Payback calculation - show only if less than 6 months */}
+                  {paybackMonths > 0 && paybackMonths < 6 && (
+                    <div className="mt-6 p-4 bg-green-100 border border-green-200 rounded-lg">
+                      <div className="flex items-center gap-2">
+                        <span className="text-green-800 font-semibold">
+                          {getTranslation(shareData.language, 'estimatedPayback')}: {paybackMonths.toFixed(1)} {getTranslation(shareData.language, 'monthsToRecoverInvestment')}
+                        </span>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Fee Distribution Chart is intentionally hidden in read-only view */}
                 </div>
