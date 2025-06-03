@@ -528,7 +528,7 @@ const Index = () => {
             <img 
               src="/lovable-uploads/f7dbf19a-18fa-4078-980a-2e6cc9c4fd45.png" 
               alt="REVER Logo" 
-              className="h-32 w-auto mb-6"
+              className="h-40 w-auto mb-3"
             />
             <p className="text-gray-600 text-center">{getTranslation(language, 'subtitle')}</p>
           </div>
