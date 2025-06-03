@@ -1,10 +1,11 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, RotateCcw, Check, Undo } from 'lucide-react';
+import { Settings, RotateCcw, Check, Undo, Clock } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
 import LanguageSelector from '@/components/LanguageSelector';
@@ -100,7 +101,7 @@ const Index = () => {
     return 0;
   }, [clientData.resiAnnuali, clientData.resiMensili, clientData.carrelloMedio]);
 
-  // Auto-adjust predefined scenarios based on Take Rate targets
+  // Auto-adjust predefined scenarios based on Take Rate targets with minimum SaaS fee
   useEffect(() => {
     if (gtv > 0) {
       // Target Take Rate ranges: ECO MODE (flexible), GAS (2.8%-4.8%), FULL GAS (>5%)
@@ -124,8 +125,8 @@ const Index = () => {
         const incrementoCarrello = clientData.carrelloMedio * 0.3;
         const upsellingFee = (upsellingMensili * incrementoCarrello * scenario.upsellingPercentage) / 100;
         
-        // Calculate required SaaS fee to reach target
-        const requiredSaasFee = Math.max(0, targetMonthlyCost - transactionFee - rdvFee - upsellingFee);
+        // Calculate required SaaS fee to reach target with minimum 69€
+        const requiredSaasFee = Math.max(69, targetMonthlyCost - transactionFee - rdvFee - upsellingFee);
         
         return { ...scenario, saasFee: Math.round(requiredSaasFee) };
       });
@@ -240,6 +241,52 @@ const Index = () => {
     }
   };
 
+  // Smart calculation logic - only calculate the missing field based on priority
+  const updateClientDataSmart = (field: keyof ClientData, value: number) => {
+    setClientData(prev => {
+      const newData = { ...prev, [field]: value };
+      
+      // Track which field was modified
+      if (field === 'totalOrdersAnnual') {
+        setLastModifiedField('orders');
+      } else if (field === 'resiAnnuali') {
+        setLastModifiedField('returns');
+      } else if (field === 'returnRatePercentage') {
+        setLastModifiedField('rate');
+      }
+      
+      // Smart calculation logic - only calculate missing field
+      const hasOrders = newData.totalOrdersAnnual > 0;
+      const hasReturns = newData.resiAnnuali > 0;
+      const hasRate = newData.returnRatePercentage > 0;
+      
+      if (field === 'totalOrdersAnnual' && hasReturns && !hasRate) {
+        // Calculate rate when orders changed and we have returns but no rate
+        newData.returnRatePercentage = (newData.resiAnnuali / value) * 100;
+      } else if (field === 'totalOrdersAnnual' && hasRate && !hasReturns) {
+        // Calculate returns when orders changed and we have rate but no returns
+        newData.resiAnnuali = Math.round((newData.returnRatePercentage / 100) * value);
+      } else if (field === 'resiAnnuali' && hasOrders && !hasRate) {
+        // Calculate rate when returns changed and we have orders but no rate
+        newData.returnRatePercentage = (value / newData.totalOrdersAnnual) * 100;
+      } else if (field === 'resiAnnuali' && hasRate && !hasOrders) {
+        // Calculate orders when returns changed and we have rate but no orders
+        newData.totalOrdersAnnual = Math.round(value / (newData.returnRatePercentage / 100));
+      } else if (field === 'returnRatePercentage' && hasOrders && !hasReturns) {
+        // Calculate returns when rate changed and we have orders but no returns
+        newData.resiAnnuali = Math.round((value / 100) * newData.totalOrdersAnnual);
+      } else if (field === 'returnRatePercentage' && hasReturns && !hasOrders) {
+        // Calculate orders when rate changed and we have returns but no orders
+        newData.totalOrdersAnnual = Math.round(newData.resiAnnuali / (value / 100));
+      }
+      
+      // Always update monthly returns based on annual
+      newData.resiMensili = Math.round(newData.resiAnnuali / 12);
+      
+      return newData;
+    });
+  };
+
   const updateClientData = (field: keyof ClientData, value: number) => {
     setClientData(prev => {
       const newData = { ...prev, [field]: value };
@@ -272,31 +319,7 @@ const Index = () => {
 
   // New function for intelligent updates in Custom Scenario
   const updateCustomScenarioField = (field: 'totalOrdersAnnual' | 'resiAnnuali' | 'returnRatePercentage', value: number) => {
-    setLastModifiedField(
-      field === 'totalOrdersAnnual' ? 'orders' :
-      field === 'resiAnnuali' ? 'returns' : 'rate'
-    );
-
-    setClientData(prev => {
-      const newData = { ...prev, [field]: value };
-      
-      // Smart calculation logic based on which field was modified
-      if (field === 'totalOrdersAnnual' && newData.resiAnnuali > 0) {
-        // If orders changed and we have returns, calculate rate
-        newData.returnRatePercentage = (newData.resiAnnuali / value) * 100;
-      } else if (field === 'resiAnnuali' && newData.totalOrdersAnnual > 0) {
-        // If returns changed and we have orders, calculate rate
-        newData.returnRatePercentage = (value / newData.totalOrdersAnnual) * 100;
-      } else if (field === 'returnRatePercentage' && newData.totalOrdersAnnual > 0) {
-        // If rate changed and we have orders, calculate returns
-        newData.resiAnnuali = Math.round((value / 100) * newData.totalOrdersAnnual);
-      }
-      
-      // Always update monthly returns based on annual
-      newData.resiMensili = Math.round(newData.resiAnnuali / 12);
-      
-      return newData;
-    });
+    updateClientDataSmart(field, value);
   };
 
   const calculateScenario = (scenario: PricingData) => {
@@ -344,6 +367,48 @@ const Index = () => {
       annualContractValue
     };
   };
+
+  // Calculate payback period for the custom scenario
+  const calculatePayback = useMemo(() => {
+    if (!clientData.carrelloMedio || !clientData.resiAnnuali || !clientData.totalOrdersAnnual) {
+      return null;
+    }
+
+    const annualReturns = clientData.resiAnnuali;
+    
+    // Pre-REVER calculations
+    const fatturazione = clientData.totalOrdersAnnual * clientData.carrelloMedio;
+    const resiValue = annualReturns * clientData.carrelloMedio;
+    const fatturazioneNettaPreRever = fatturazione - resiValue;
+    
+    // With REVER calculations
+    const rdvResi = annualReturns * 0.35;
+    const rdvValue = rdvResi * clientData.carrelloMedio;
+    
+    const upsellingResi = annualReturns * 0.0378;
+    const upsellingAOV = clientData.carrelloMedio * 1.3;
+    const upsellingValue = upsellingResi * upsellingAOV;
+    
+    const fatturazioneNettaFinale = fatturazioneNettaPreRever + rdvValue + upsellingValue;
+    
+    // REVER Platform Cost
+    const saasFeeAnnuale = customScenario.saasFee * 12;
+    const transactionFeeAnnuale = customScenario.transactionFeeFixed * annualReturns;
+    const rdvFeeAnnuale = (rdvValue * customScenario.rdvPercentage) / 100;
+    const upsellingFeeAnnuale = (upsellingValue * customScenario.upsellingPercentage) / 100;
+    const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale;
+    
+    const netRevenuesEcommerce = fatturazioneNettaFinale - totalPlatformCost;
+    const netRevenueIncrease = netRevenuesEcommerce - fatturazioneNettaPreRever;
+    
+    if (netRevenueIncrease <= 0 || totalPlatformCost <= 0) {
+      return null;
+    }
+    
+    const paybackMonths = totalPlatformCost / (netRevenueIncrease / 12);
+    
+    return paybackMonths < 6 ? paybackMonths : null;
+  }, [clientData, customScenario]);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('it-IT', {
@@ -811,6 +876,22 @@ const Index = () => {
                           </div>
                         </div>
                       </div>
+
+                      {/* Payback calculation box */}
+                      {calculatePayback !== null && (
+                        <div className="mt-6 bg-[#E5F0FF] border border-[#1790FF] rounded-lg p-4 animate-fade-in">
+                          <div className="flex items-center gap-3">
+                            <Clock className="h-5 w-5 text-[#1790FF]" />
+                            <div className="text-[#000D1F]">
+                              <span className="font-medium">⏳ Payback stimato: </span>
+                              <span className="font-bold text-[#1790FF]">
+                                {calculatePayback.toFixed(1)} mesi
+                              </span>
+                              <span> per recuperare l'investimento</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })()}
