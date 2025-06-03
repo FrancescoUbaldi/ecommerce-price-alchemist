@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import BusinessCase from '@/components/BusinessCase';
 import { getTranslation } from '@/utils/translations';
 
@@ -25,15 +25,14 @@ interface SharedData {
 }
 
 const ClientView = () => {
-  const [searchParams] = useSearchParams();
-  const shareId = searchParams.get('id');
+  const { id } = useParams<{ id: string }>();
   const [sharedData, setSharedData] = useState<SharedData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (shareId) {
+    if (id) {
       // Recupera i dati dal localStorage
-      const storedData = localStorage.getItem(`share_${shareId}`);
+      const storedData = localStorage.getItem(`share_${id}`);
       if (storedData) {
         try {
           const data = JSON.parse(storedData);
@@ -44,7 +43,7 @@ const ClientView = () => {
       }
     }
     setLoading(false);
-  }, [shareId]);
+  }, [id]);
 
   if (loading) {
     return (
