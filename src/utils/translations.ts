@@ -57,6 +57,10 @@ export const translations = {
     netRevenueWithRever: 'Net Revenue con REVER',
     growthIndicator: 'di crescita',
     clientsBannerHeading: "Ci hanno già scelto:",
+    shareWithClient: 'Condividi con cliente',
+    shareDescription: 'Condividi questo link con il tuo cliente per mostrare il business case in modalità di sola lettura.',
+    linkCopied: 'Link copiato negli appunti!',
+    customScenario: 'Scenario Personalizzato',
   },
   en: {
     title: "Price & Smile :)",
@@ -116,6 +120,10 @@ export const translations = {
     netRevenueWithRever: 'Net Revenue with REVER',
     growthIndicator: 'growth',
     clientsBannerHeading: "Trusted by:",
+    shareWithClient: 'Share with client',
+    shareDescription: 'Share this link with your client to show the business case in read-only mode.',
+    linkCopied: 'Link copied to clipboard!',
+    customScenario: 'Custom Scenario',
   },
   es: {
     title: "Price & Smile :)",
@@ -175,6 +183,10 @@ export const translations = {
     netRevenueWithRever: 'Ingresos Netos con REVER',
     growthIndicator: 'de crecimiento',
     clientsBannerHeading: "Ya han confiado en nosotros:",
+    shareWithClient: 'Condividi con cliente',
+    shareDescription: 'Condividi questo link con il tuo cliente per mostrare il business case in modalità di sola lettura.',
+    linkCopied: 'Link copiato negli appunti!',
+    customScenario: 'Escenario Personalizado',
   },
   fr: {
     title: "Price & Smile :)",
@@ -234,6 +246,10 @@ export const translations = {
     netRevenueWithRever: 'Net Revenue with REVER',
     growthIndicator: 'growth',
     clientsBannerHeading: "Ils nous ont déjà choisi:",
+    shareWithClient: 'Condividi con cliente',
+    shareDescription: 'Condividi questo link con il tuo cliente per mostrare il business case in modalità di sola lettura.',
+    linkCopied: 'Link copiato negli appunti!',
+    customScenario: 'Scenario Personnalisé',
   }
 };
 

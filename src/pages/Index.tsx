@@ -1,5 +1,3 @@
-
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,6 +10,8 @@ import BusinessCase from '@/components/BusinessCase';
 import LanguageSelector from '@/components/LanguageSelector';
 import ComboActions from '@/components/ComboActions';
 import { getTranslation } from '@/utils/translations';
+import ShareModal from '@/components/ShareModal';
+import { Share } from 'lucide-react';
 
 interface PricingData {
   saasFee: number;
@@ -44,7 +44,9 @@ const Index = () => {
   const [previousState, setPreviousState] = useState<AppState | null>(null);
   const [showComboDeletedNotification, setShowComboDeletedNotification] = useState(false);
   const [showComboUsedNotification, setShowComboUsedNotification] = useState(false);
-  
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [shareUrl, setShareUrl] = useState('');
+
   // Track which field was last modified to determine calculation priority
   const [lastModifiedField, setLastModifiedField] = useState<'orders' | 'returns' | 'rate' | null>(null);
   
@@ -520,6 +522,27 @@ const Index = () => {
     );
   };
 
+  const handleShare = () => {
+    // Genera un ID univoco per la condivisione
+    const shareId = Math.random().toString(36).substring(2, 15);
+    
+    // Prepara i dati da condividere
+    const dataToShare = {
+      clientName,
+      clientData,
+      scenario: currentScenario,
+      language
+    };
+    
+    // Salva i dati nel localStorage
+    localStorage.setItem(`share_${shareId}`, JSON.stringify(dataToShare));
+    
+    // Genera l'URL
+    const url = `${window.location.origin}/client-view?id=${shareId}`;
+    setShareUrl(url);
+    setShareModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -782,12 +805,21 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="personalizzato" className="space-y-6">
-            <Card>
+            {/* Scenario Personalizzato */}
+            <Card className="mt-8">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  {getTranslation(language, 'customScenario')}
-                </CardTitle>
+                <div className="flex justify-between items-center">
+                  <CardTitle>{getTranslation(language, 'customScenario')}</CardTitle>
+                  <Button
+                    onClick={handleShare}
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2"
+                  >
+                    <Share className="h-4 w-4" />
+                    {getTranslation(language, 'shareWithClient')}
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
@@ -1062,9 +1094,16 @@ const Index = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Share Modal */}
+      <ShareModal
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        shareUrl={shareUrl}
+        language={language}
+      />
     </div>
   );
 };
 
 export default Index;
-
