@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -100,7 +101,7 @@ const Index = () => {
     return 0;
   }, [clientData.resiAnnuali, clientData.resiMensili, clientData.carrelloMedio]);
 
-  // Auto-adjust predefined scenarios based on Take Rate targets with minimum SaaS fee of 69€
+  // Auto-adjust predefined scenarios based on Take Rate targets with minimum SaaS fee
   useEffect(() => {
     if (gtv > 0) {
       // Target Take Rate ranges: ECO MODE (flexible), GAS (2.8%-4.8%), FULL GAS (>5%)
@@ -240,7 +241,7 @@ const Index = () => {
     }
   };
 
-  // Smart calculation logic - tracks which field was modified and calculates only the missing field
+  // Smart calculation logic - only calculate the missing field based on priority
   const updateClientDataSmart = (field: keyof ClientData, value: number) => {
     setClientData(prev => {
       const newData = { ...prev, [field]: value };
@@ -259,30 +260,24 @@ const Index = () => {
       const hasReturns = newData.resiAnnuali > 0;
       const hasRate = newData.returnRatePercentage > 0;
       
-      // Count how many of the three key fields are filled
-      const filledFields = [hasOrders, hasReturns, hasRate].filter(Boolean).length;
-      
-      // Only auto-calculate if we have exactly 2 fields filled
-      if (filledFields === 2) {
-        if (field === 'totalOrdersAnnual' && hasReturns && !hasRate) {
-          // Calculate rate: (returns / orders) * 100
-          newData.returnRatePercentage = (newData.resiAnnuali / value) * 100;
-        } else if (field === 'totalOrdersAnnual' && hasRate && !hasReturns) {
-          // Calculate returns: (orders * rate) / 100
-          newData.resiAnnuali = Math.round((newData.returnRatePercentage / 100) * value);
-        } else if (field === 'resiAnnuali' && hasOrders && !hasRate) {
-          // Calculate rate: (returns / orders) * 100
-          newData.returnRatePercentage = (value / newData.totalOrdersAnnual) * 100;
-        } else if (field === 'resiAnnuali' && hasRate && !hasOrders) {
-          // Calculate orders: returns / (rate / 100)
-          newData.totalOrdersAnnual = Math.round(value / (newData.returnRatePercentage / 100));
-        } else if (field === 'returnRatePercentage' && hasOrders && !hasReturns) {
-          // Calculate returns: (orders * rate) / 100
-          newData.resiAnnuali = Math.round((value / 100) * newData.totalOrdersAnnual);
-        } else if (field === 'returnRatePercentage' && hasReturns && !hasOrders) {
-          // Calculate orders: returns / (rate / 100)
-          newData.totalOrdersAnnual = Math.round(newData.resiAnnuali / (value / 100));
-        }
+      if (field === 'totalOrdersAnnual' && hasReturns && !hasRate) {
+        // Calculate rate when orders changed and we have returns but no rate
+        newData.returnRatePercentage = (newData.resiAnnuali / value) * 100;
+      } else if (field === 'totalOrdersAnnual' && hasRate && !hasReturns) {
+        // Calculate returns when orders changed and we have rate but no returns
+        newData.resiAnnuali = Math.round((newData.returnRatePercentage / 100) * value);
+      } else if (field === 'resiAnnuali' && hasOrders && !hasRate) {
+        // Calculate rate when returns changed and we have orders but no rate
+        newData.returnRatePercentage = (value / newData.totalOrdersAnnual) * 100;
+      } else if (field === 'resiAnnuali' && hasRate && !hasOrders) {
+        // Calculate orders when returns changed and we have rate but no orders
+        newData.totalOrdersAnnual = Math.round(value / (newData.returnRatePercentage / 100));
+      } else if (field === 'returnRatePercentage' && hasOrders && !hasReturns) {
+        // Calculate returns when rate changed and we have orders but no returns
+        newData.resiAnnuali = Math.round((value / 100) * newData.totalOrdersAnnual);
+      } else if (field === 'returnRatePercentage' && hasReturns && !hasOrders) {
+        // Calculate orders when rate changed and we have returns but no orders
+        newData.totalOrdersAnnual = Math.round(newData.resiAnnuali / (value / 100));
       }
       
       // Always update monthly returns based on annual
@@ -565,7 +560,7 @@ const Index = () => {
                   id="resiAnnuali"
                   type="number"
                   value={clientData.resiAnnuali || ''}
-                  onChange={(e) => updateClientDataSmart('resiAnnuali', parseInt(e.target.value) || 0)}
+                  onChange={(e) => updateClientData('resiAnnuali', parseInt(e.target.value) || 0)}
                   placeholder="23900"
                 />
               </div>
@@ -1017,7 +1012,6 @@ const Index = () => {
               scenario={customScenario}
               language={language}
               updateClientData={updateClientData}
-              paybackMonths={calculatePayback}
             />
           </TabsContent>
         </Tabs>
