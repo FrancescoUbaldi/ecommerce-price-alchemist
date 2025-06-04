@@ -31,13 +31,16 @@ const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, languag
   const incrementoCarrello = businessCaseData.carrelloMedio * 0.3;
   const upsellingRevenue = (upsellingMensili * incrementoCarrello * scenarioData.upsellingPercentage) / 100;
   
-  // Calculate total extra revenue and payback (correct formula)
+  // Calculate total extra revenue and payback (CORRECTED formula)
   const totalExtraRevenue = rdvRevenue + upsellingRevenue;
-  const paybackMonths = totalExtraRevenue > 0 ? monthlyTotal / totalExtraRevenue : 0;
+  // Payback should be: investment cost / monthly extra revenue
+  const annualInvestment = monthlyTotal * 12;
+  const paybackMonths = totalExtraRevenue > 0 ? annualInvestment / totalExtraRevenue : 0;
 
   console.log('ReadOnlyPayback Debug:', {
     totalExtraRevenue,
     monthlyTotal,
+    annualInvestment,
     paybackMonths,
     showPayback: paybackMonths > 0 && paybackMonths < 6
   });
