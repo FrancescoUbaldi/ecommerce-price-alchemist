@@ -17,21 +17,21 @@ interface ReadOnlyPaybackProps {
 }
 
 const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, language }: ReadOnlyPaybackProps) => {
-  // Calculate payback period locally
+  // Calculate payback period using the correct business logic
   const annualReturns = businessCaseData.resiAnnuali > 0 ? businessCaseData.resiAnnuali : businessCaseData.resiMensili * 12;
   
-  // Calculate RDV revenue
+  // Calculate RDV revenue (same logic as main UI)
   const rdvAnnuali = annualReturns * 0.35;
   const rdvMensili = rdvAnnuali / 12;
   const rdvRevenue = (rdvMensili * businessCaseData.carrelloMedio * scenarioData.rdvPercentage) / 100;
   
-  // Calculate upselling revenue
+  // Calculate upselling revenue (same logic as main UI)
   const upsellingAnnuali = annualReturns * 0.0378;
   const upsellingMensili = upsellingAnnuali / 12;
   const incrementoCarrello = businessCaseData.carrelloMedio * 0.3;
   const upsellingRevenue = (upsellingMensili * incrementoCarrello * scenarioData.upsellingPercentage) / 100;
   
-  // Calculate total extra revenue and payback
+  // Calculate total extra revenue and payback (correct formula)
   const totalExtraRevenue = rdvRevenue + upsellingRevenue;
   const paybackMonths = totalExtraRevenue > 0 ? monthlyTotal / totalExtraRevenue : 0;
 
