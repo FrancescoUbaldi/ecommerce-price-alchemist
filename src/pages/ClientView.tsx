@@ -271,14 +271,7 @@ const ClientView = () => {
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span>{getTranslation(shareData.language, 'annualGTV')}:</span>
-                        <span className="font-medium">{formatCurrency(calculation.gtv)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>{getTranslation(shareData.language, 'annualACV')}:</span>
-                        <span className="font-medium">{formatCurrency(calculation.annualContractValue)}</span>
-                      </div>
+                      
                     </div>
                   </div>
 
