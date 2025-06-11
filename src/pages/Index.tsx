@@ -413,6 +413,39 @@ const Index = () => {
     };
   };
 
+  // Calculate business case data for breakdown sections
+  const calculateBusinessCaseData = () => {
+    const annualReturns = clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12;
+    const fatturazione = clientData.totalOrdersAnnual * clientData.carrelloMedio;
+    const resiValue = annualReturns * clientData.carrelloMedio;
+    const fatturazioneNettaPreRever = fatturazione - resiValue;
+    
+    const rdvResi = annualReturns * 0.35;
+    const rdvValue = rdvResi * clientData.carrelloMedio;
+    const upsellingResi = annualReturns * 0.0378;
+    const upsellingAOV = clientData.carrelloMedio * 1.3;
+    const upsellingValue = upsellingResi * upsellingAOV;
+    const fatturazioneNettaFinale = fatturazioneNettaPreRever + rdvValue + upsellingValue;
+    
+    const saasFeeAnnuale = customScenario.saasFee * 12;
+    const transactionFeeAnnuale = customScenario.transactionFeeFixed * annualReturns;
+    const rdvFeeAnnuale = (rdvValue * customScenario.rdvPercentage) / 100;
+    const upsellingFeeAnnuale = (upsellingValue * customScenario.upsellingPercentage) / 100;
+    const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale;
+    const netRevenuesEcommerce = fatturazioneNettaFinale - totalPlatformCost;
+    const aumentoNetRevenues = netRevenuesEcommerce - fatturazioneNettaPreRever;
+
+    return {
+      fatturazioneNettaPreRever,
+      netRevenuesEcommerce,
+      totalPlatformCost,
+      aumentoNetRevenues,
+      rdvFeeAnnuale,
+      upsellingFeeAnnuale,
+      annualReturns
+    };
+  };
+
   // Calculate payback period for the custom scenario
   const calculatePayback = useMemo(() => {
     if (!clientData.carrelloMedio || !clientData.resiAnnuali || !clientData.totalOrdersAnnual) {
@@ -907,6 +940,8 @@ const Index = () => {
 
                 {(() => {
                   const calculation = calculateScenario(customScenario);
+                  const businessData = calculateBusinessCaseData();
+                  
                   return (
                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
                       <h3 className="text-lg font-semibold mb-4">{getTranslation(language, 'calculationResults')}</h3>
@@ -935,14 +970,6 @@ const Index = () => {
                           </div>
                         </div>
                         <div className="space-y-3">
-                          <div className="flex justify-between">
-                            <span>{getTranslation(language, 'annualGTV')}:</span>
-                            <span className="font-medium">{formatCurrency(gtv)}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>{getTranslation(language, 'annualACV')}:</span>
-                            <span className="font-medium">{formatCurrency(calculation.annualContractValue)}</span>
-                          </div>
                         </div>
                       </div>
 
@@ -958,6 +985,41 @@ const Index = () => {
                               </span>
                               <span> per recuperare l'investimento</span>
                             </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* ROI Breakdown Section */}
+                      {businessData.fatturazioneNettaPreRever > 0 && businessData.netRevenuesEcommerce > 0 && businessData.totalPlatformCost > 0 && (
+                        <div className="mt-6 bg-white p-6 rounded-lg border">
+                          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                            📊 Breakdown ROI (annuo):
+                          </h3>
+                          <div className="space-y-2 text-gray-700">
+                            <div>• Ricavi Netti attuali (senza REVER): <span className="font-medium">{formatCurrency(businessData.fatturazioneNettaPreRever)}</span></div>
+                            <div>• Ricavi Netti con REVER: <span className="font-medium">{formatCurrency(businessData.netRevenuesEcommerce)}</span></div>
+                            <div>• Costi piattaforma REVER: <span className="font-medium">{formatCurrency(businessData.totalPlatformCost)}</span></div>
+                            <div>• Incremento netto stimato: <span className="font-medium text-green-600">{formatCurrency(businessData.aumentoNetRevenues)}</span></div>
+                          </div>
+                          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                            <p className="text-sm text-gray-600">
+                              Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(businessData.aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Monthly Costs Breakdown Section */}
+                      {customScenario.saasFee > 0 && (
+                        <div className="mt-6 bg-white p-6 rounded-lg border">
+                          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                            💰 Breakdown Costi mensili:
+                          </h3>
+                          <div className="space-y-2 text-gray-700">
+                            <div>• SaaS Fee: <span className="font-medium">{formatCurrency(customScenario.saasFee)}</span></div>
+                            <div>• Transaction Fee: <span className="font-medium">{formatCurrency(customScenario.transactionFeeFixed * (businessData.annualReturns / 12))}</span></div>
+                            <div>• RDV Fee: <span className="font-medium">{formatCurrency(businessData.rdvFeeAnnuale / 12)}</span></div>
+                            <div>• Upselling Fee: <span className="font-medium">{formatCurrency(businessData.upsellingFeeAnnuale / 12)}</span></div>
                           </div>
                         </div>
                       )}
@@ -1090,3 +1152,5 @@ const Index = () => {
 };
 
 export default Index;
+
+</initial_code>

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -145,6 +146,27 @@ const ClientView = () => {
 
   const calculation = calculateScenario(shareData.scenario_data, shareData.business_case_data);
   
+  // Calculate Business Case data for breakdowns
+  const annualReturns = shareData.business_case_data.resiAnnuali > 0 ? shareData.business_case_data.resiAnnuali : shareData.business_case_data.resiMensili * 12;
+  const fatturazione = shareData.business_case_data.totalOrdersAnnual * shareData.business_case_data.carrelloMedio;
+  const resiValue = annualReturns * shareData.business_case_data.carrelloMedio;
+  const fatturazioneNettaPreRever = fatturazione - resiValue;
+  
+  const rdvResi = annualReturns * 0.35;
+  const rdvValue = rdvResi * shareData.business_case_data.carrelloMedio;
+  const upsellingResi = annualReturns * 0.0378;
+  const upsellingAOV = shareData.business_case_data.carrelloMedio * 1.3;
+  const upsellingValue = upsellingResi * upsellingAOV;
+  const fatturazioneNettaFinale = fatturazioneNettaPreRever + rdvValue + upsellingValue;
+  
+  const saasFeeAnnuale = shareData.scenario_data.saasFee * 12;
+  const transactionFeeAnnuale = shareData.scenario_data.transactionFeeFixed * annualReturns;
+  const rdvFeeAnnuale = (rdvValue * shareData.scenario_data.rdvPercentage) / 100;
+  const upsellingFeeAnnuale = (upsellingValue * shareData.scenario_data.upsellingPercentage) / 100;
+  const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale;
+  const netRevenuesEcommerce = fatturazioneNettaFinale - totalPlatformCost;
+  const aumentoNetRevenues = netRevenuesEcommerce - fatturazioneNettaPreRever;
+  
   return (
     <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -282,9 +304,42 @@ const ClientView = () => {
                     monthlyTotal={calculation.totalMensile}
                     language={shareData.language}
                   />
-
-                  {/* Fee Distribution Chart is intentionally hidden in read-only view */}
                 </div>
+
+                {/* ROI Breakdown Section */}
+                {fatturazioneNettaPreRever > 0 && netRevenuesEcommerce > 0 && totalPlatformCost > 0 && (
+                  <div className="mt-6 bg-white p-6 rounded-lg border">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      📊 Breakdown ROI (annuo):
+                    </h3>
+                    <div className="space-y-2 text-gray-700">
+                      <div>• Ricavi Netti attuali (senza REVER): <span className="font-medium">{formatCurrency(fatturazioneNettaPreRever)}</span></div>
+                      <div>• Ricavi Netti con REVER: <span className="font-medium">{formatCurrency(netRevenuesEcommerce)}</span></div>
+                      <div>• Costi piattaforma REVER: <span className="font-medium">{formatCurrency(totalPlatformCost)}</span></div>
+                      <div>• Incremento netto stimato: <span className="font-medium text-green-600">{formatCurrency(aumentoNetRevenues)}</span></div>
+                    </div>
+                    <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                      <p className="text-sm text-gray-600">
+                        Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Monthly Costs Breakdown Section */}
+                {shareData.scenario_data.saasFee > 0 && (
+                  <div className="mt-6 bg-white p-6 rounded-lg border">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      💰 Breakdown Costi mensili:
+                    </h3>
+                    <div className="space-y-2 text-gray-700">
+                      <div>• SaaS Fee: <span className="font-medium">{formatCurrency(shareData.scenario_data.saasFee)}</span></div>
+                      <div>• Transaction Fee: <span className="font-medium">{formatCurrency(shareData.scenario_data.transactionFeeFixed * (annualReturns / 12))}</span></div>
+                      <div>• RDV Fee: <span className="font-medium">{formatCurrency(rdvFeeAnnuale / 12)}</span></div>
+                      <div>• Upselling Fee: <span className="font-medium">{formatCurrency(upsellingFeeAnnuale / 12)}</span></div>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

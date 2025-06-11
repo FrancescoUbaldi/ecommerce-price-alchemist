@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTranslation } from '@/utils/translations';
-import RevenueComparisonChart from './RevenueComparisonChart';
 import RevenueSuggestionBox from './RevenueSuggestionBox';
 import ClientLogoBanner from './ClientLogoBanner';
 
@@ -428,12 +427,40 @@ const BusinessCase = ({
           </Table>
         </div>
 
-        {/* Revenue Comparison Chart */}
-        <RevenueComparisonChart
-          preReverNetBilling={fatturazioneNettaPreRever}
-          finalNetBilling={fatturazioneNettaFinale}
-          language={language}
-        />
+        {/* ROI Breakdown Section */}
+        {fatturazioneNettaPreRever > 0 && netRevenuesEcommerce > 0 && totalPlatformCost > 0 && (
+          <div className="bg-white p-6 rounded-lg">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              📊 Breakdown ROI (annuo):
+            </h3>
+            <div className="space-y-2 text-gray-700">
+              <div>• Ricavi Netti attuali (senza REVER): <span className="font-medium">{formatCurrency(fatturazioneNettaPreRever)}</span></div>
+              <div>• Ricavi Netti con REVER: <span className="font-medium">{formatCurrency(netRevenuesEcommerce)}</span></div>
+              <div>• Costi piattaforma REVER: <span className="font-medium">{formatCurrency(totalPlatformCost)}</span></div>
+              <div>• Incremento netto stimato: <span className="font-medium text-green-600">{formatCurrency(aumentoNetRevenues)}</span></div>
+            </div>
+            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+              <p className="text-sm text-gray-600">
+                Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Monthly Costs Breakdown Section */}
+        {scenario.saasFee > 0 && (
+          <div className="bg-white p-6 rounded-lg">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              💰 Breakdown Costi mensili:
+            </h3>
+            <div className="space-y-2 text-gray-700">
+              <div>• SaaS Fee: <span className="font-medium">{formatCurrency(scenario.saasFee)}</span></div>
+              <div>• Transaction Fee: <span className="font-medium">{formatCurrency(scenario.transactionFeeFixed * (annualReturns / 12))}</span></div>
+              <div>• RDV Fee: <span className="font-medium">{formatCurrency(rdvFeeAnnuale / 12)}</span></div>
+              <div>• Upselling Fee: <span className="font-medium">{formatCurrency(upsellingFeeAnnuale / 12)}</span></div>
+            </div>
+          </div>
+        )}
 
         {/* Revenue Suggestion Box */}
         <RevenueSuggestionBox
