@@ -1117,14 +1117,6 @@ const Index = () => {
                             </div>
                           </div>
                           <div className="space-y-3">
-                            <div className="flex justify-between">
-                              <span>{getTranslation(language, 'annualGTV')}:</span>
-                              <span className="font-medium">{formatCurrency(gtv)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>{getTranslation(language, 'annualACV')}:</span>
-                              <span className="font-medium">{formatCurrency(calculation.annualContractValue)}</span>
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -1152,5 +1144,3 @@ const Index = () => {
 };
 
 export default Index;
-
-</initial_code>
