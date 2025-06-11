@@ -538,5 +538,3 @@ const BusinessCase = ({
 };
 
 export default BusinessCase;
-
-</edits_to_apply>
