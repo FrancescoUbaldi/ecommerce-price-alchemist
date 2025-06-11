@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTranslation } from '@/utils/translations';
-import RevenueSuggestionBox from './RevenueSuggestionBox';
 import ClientLogoBanner from './ClientLogoBanner';
 
 interface ClientData {
@@ -523,12 +522,6 @@ const BusinessCase = ({
             )}
           </div>
         )}
-
-        {/* Revenue Suggestion Box */}
-        <RevenueSuggestionBox
-          extraRevenue={aumentoNetRevenues}
-          language={language}
-        />
 
         {/* Client Logo Banner */}
         <ClientLogoBanner language={language} />
