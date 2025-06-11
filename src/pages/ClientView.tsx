@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -272,7 +271,7 @@ const ClientView = () => {
                       </div>
                     </div>
                     <div className="space-y-3">
-                      {/* GTV Annuale and ACV Annuale are intentionally hidden in read-only view */}
+                      
                     </div>
                   </div>
 
