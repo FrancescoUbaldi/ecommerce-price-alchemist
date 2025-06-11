@@ -104,6 +104,25 @@ const BusinessCase = ({
   // Aumento Net Revenues con REVER = Net Revenues Nome Ecommerce - Fatturazione Netta Pre REVER
   const aumentoNetRevenues = netRevenuesEcommerce - fatturazioneNettaPreRever;
 
+  // Calculate payback period
+  const calculatePayback = () => {
+    if (!clientData.carrelloMedio || !annualReturns || !clientData.totalOrdersAnnual) {
+      return null;
+    }
+
+    const netRevenueIncrease = aumentoNetRevenues;
+    
+    if (netRevenueIncrease <= 0 || totalPlatformCost <= 0) {
+      return null;
+    }
+    
+    const paybackMonths = totalPlatformCost / (netRevenueIncrease / 12);
+    
+    return paybackMonths < 6 ? paybackMonths : null;
+  };
+
+  const paybackMonths = calculatePayback();
+
   return (
     <TooltipProvider>
       <div className="space-y-6">
@@ -426,10 +445,10 @@ const BusinessCase = ({
           </Table>
         </div>
 
-        {/* ROI and Costs Breakdown Section - Side by Side */}
+        {/* Final Breakdown Section - Side by Side */}
         {fatturazioneNettaPreRever > 0 && netRevenuesEcommerce > 0 && totalPlatformCost > 0 && (
-          <div className="space-y-4">
-            <div className="flex flex-col md:flex-row gap-4 mt-6">
+          <div className="space-y-4 mt-6">
+            <div className="flex flex-col md:flex-row gap-4">
               {/* ROI Breakdown Box */}
               <div className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-xl p-5 shadow-sm w-full">
                 <h3 className="text-base font-semibold mb-4 flex items-center gap-2">
@@ -487,10 +506,21 @@ const BusinessCase = ({
             <div className="text-center">
               <div className="inline-block p-3 bg-blue-50 rounded-lg">
                 <p className="text-sm text-gray-600">
-                  Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
+                  💡 Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
                 </p>
               </div>
             </div>
+
+            {/* Payback information if applicable */}
+            {paybackMonths !== null && (
+              <div className="text-center">
+                <div className="inline-block p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-sm text-green-700 font-medium">
+                    ⏱️ Payback stimato: {paybackMonths.toFixed(1)} mesi per recuperare l'investimento
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -508,3 +538,5 @@ const BusinessCase = ({
 };
 
 export default BusinessCase;
+
+</edits_to_apply>
