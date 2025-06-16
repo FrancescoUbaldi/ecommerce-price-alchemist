@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import ClientView from "./pages/ClientView";
 import NotFound from "./pages/NotFound";
+import HideLovableBadge from "./components/HideLovableBadge";
 
 const queryClient = new QueryClient();
 
@@ -16,6 +17,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <HideLovableBadge />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/view/:id" element={<ClientView />} />
