@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Settings, RotateCcw, Check, Undo, Clock } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
@@ -46,6 +47,7 @@ const Index = () => {
   const [showComboDeletedNotification, setShowComboDeletedNotification] = useState(false);
   const [showComboUsedNotification, setShowComboUsedNotification] = useState(false);
   const [showUpfrontDiscount, setShowUpfrontDiscount] = useState(false);
+  const [absorbTransactionFee, setAbsorbTransactionFee] = useState(false);
   
   // Track which field was last modified to determine calculation priority
   const [lastModifiedField, setLastModifiedField] = useState<'orders' | 'returns' | 'rate' | null>(null);
@@ -231,6 +233,10 @@ const Index = () => {
     setLastModifiedField(null);
     setFieldModificationOrder([]);
 
+    // Reset new toggles
+    setShowUpfrontDiscount(false);
+    setAbsorbTransactionFee(false);
+
     // Show confirmation message and undo button
     setShowResetConfirmation(true);
     setShowUndoButton(true);
@@ -370,7 +376,8 @@ const Index = () => {
     });
   };
 
-  const calculateScenario = (scenario: PricingData) => {
+  // Modified calculateScenario to handle absorbed transaction fee
+  const calculateScenario = (scenario: PricingData, absorb: boolean = false) => {
     const annualReturns = clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12;
     
     if (!annualReturns || !clientData.carrelloMedio) {
@@ -388,7 +395,8 @@ const Index = () => {
 
     const resiMensili = annualReturns / 12;
     
-    const transactionFee = resiMensili * scenario.transactionFeeFixed;
+    // Transaction fee is 0 if absorbed, otherwise normal calculation
+    const transactionFee = absorb ? 0 : resiMensili * scenario.transactionFeeFixed;
     
     const rdvAnnuali = annualReturns * 0.35;
     const rdvMensili = rdvAnnuali / 12;
@@ -432,7 +440,7 @@ const Index = () => {
     const fatturazioneNettaFinale = fatturazioneNettaPreRever + rdvValue + upsellingValue;
     
     const saasFeeAnnuale = customScenario.saasFee * 12;
-    const transactionFeeAnnuale = customScenario.transactionFeeFixed * annualReturns;
+    const transactionFeeAnnuale = absorbTransactionFee ? 0 : customScenario.transactionFeeFixed * annualReturns;
     const rdvFeeAnnuale = (rdvValue * customScenario.rdvPercentage) / 100;
     const upsellingFeeAnnuale = (upsellingValue * customScenario.upsellingPercentage) / 100;
     const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale;
@@ -470,9 +478,9 @@ const Index = () => {
     
     const fatturazioneNettaFinale = fatturazioneNettaPreRever + rdvValue + upsellingValue;
     
-    // REVER Platform Cost
+    // REVER Platform Cost - considering absorbed transaction fee
     const saasFeeAnnuale = customScenario.saasFee * 12;
-    const transactionFeeAnnuale = customScenario.transactionFeeFixed * annualReturns;
+    const transactionFeeAnnuale = absorbTransactionFee ? 0 : customScenario.transactionFeeFixed * annualReturns;
     const rdvFeeAnnuale = (rdvValue * customScenario.rdvPercentage) / 100;
     const upsellingFeeAnnuale = (upsellingValue * customScenario.upsellingPercentage) / 100;
     const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale;
@@ -487,7 +495,7 @@ const Index = () => {
     const paybackMonths = totalPlatformCost / (netRevenueIncrease / 12);
     
     return paybackMonths < 6 ? paybackMonths : null;
-  }, [clientData, customScenario]);
+  }, [clientData, customScenario, absorbTransactionFee]);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('it-IT', {
@@ -843,6 +851,7 @@ const Index = () => {
                       customScenario={customScenario}
                       language={language}
                       showUpfrontDiscount={showUpfrontDiscount}
+                      absorbTransactionFee={absorbTransactionFee}
                     />
                   )}
                 </div>
@@ -881,7 +890,7 @@ const Index = () => {
                     />
                   </div>
                   <div className="space-y-2 flex flex-col justify-end">
-                    {/* Upfront discount toggle - moved to white background section */}
+                    {/* Upfront discount toggle */}
                     <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
                       <Label htmlFor="upfront-toggle" className="text-sm font-medium">
                         Pagamento anticipato
@@ -921,7 +930,19 @@ const Index = () => {
                         transactionFeeFixed: parseFloat(e.target.value) || 0
                       })}
                       placeholder="0.50"
+                      className={absorbTransactionFee ? 'text-gray-400' : ''}
                     />
+                    {/* Checkbox to absorb transaction fee */}
+                    <div className="flex items-center space-x-2 mt-2">
+                      <Checkbox
+                        id="absorb-transaction-fee"
+                        checked={absorbTransactionFee}
+                        onCheckedChange={setAbsorbTransactionFee}
+                      />
+                      <Label htmlFor="absorb-transaction-fee" className="text-sm text-gray-700">
+                        Assorbi costi Transaction Fee
+                      </Label>
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="customRdvFee">{getTranslation(language, 'rdvFee')}</Label>
@@ -954,7 +975,7 @@ const Index = () => {
                 </div>
 
                 {(() => {
-                  const calculation = calculateScenario(customScenario);
+                  const calculation = calculateScenario(customScenario, absorbTransactionFee);
                   const businessData = calculateBusinessCaseData();
                   
                   return (
@@ -969,7 +990,9 @@ const Index = () => {
                           </div>
                           <div className="flex justify-between">
                             <span>Transaction Fee:</span>
-                            <span className="font-medium">{formatCurrency(calculation.transactionFee)}</span>
+                            <span className={`font-medium ${absorbTransactionFee ? 'text-gray-400 line-through' : ''}`}>
+                              {formatCurrency(absorbTransactionFee ? 0 : calculation.transactionFee)}
+                            </span>
                           </div>
                           <div className="flex justify-between">
                             <span>RDV Fee:</span>
@@ -985,7 +1008,7 @@ const Index = () => {
                           </div>
                         </div>
                         <div className="space-y-3">
-                          {/* Upfront discount options - kept in original position */}
+                          {/* Upfront discount options */}
                           {showUpfrontDiscount && calculation.totalMensile > 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
                               <h4 className="font-semibold mb-3 text-gray-800">💸 Sconto upfront:</h4>
