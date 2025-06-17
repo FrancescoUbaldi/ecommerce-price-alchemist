@@ -1,10 +1,10 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
 import { Settings, RotateCcw, Check, Undo, Clock } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
@@ -45,6 +45,7 @@ const Index = () => {
   const [previousState, setPreviousState] = useState<AppState | null>(null);
   const [showComboDeletedNotification, setShowComboDeletedNotification] = useState(false);
   const [showComboUsedNotification, setShowComboUsedNotification] = useState(false);
+  const [showUpfrontDiscount, setShowUpfrontDiscount] = useState(false);
   
   // Track which field was last modified to determine calculation priority
   const [lastModifiedField, setLastModifiedField] = useState<'orders' | 'returns' | 'rate' | null>(null);
@@ -838,13 +839,27 @@ const Index = () => {
                     <Settings className="h-5 w-5" />
                     {getTranslation(language, 'customScenario')}
                   </CardTitle>
-                  {isDataCompleteForSharing() && (
-                    <ShareModal
-                      clientData={clientData}
-                      customScenario={customScenario}
-                      language={language}
-                    />
-                  )}
+                  <div className="flex items-center gap-4">
+                    {/* Account Executive Toggle for Upfront Discount */}
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="upfront-discount"
+                        checked={showUpfrontDiscount}
+                        onCheckedChange={setShowUpfrontDiscount}
+                      />
+                      <Label htmlFor="upfront-discount" className="text-sm">
+                        💳 Mostra sconto pagamento anticipato
+                      </Label>
+                    </div>
+                    {isDataCompleteForSharing() && (
+                      <ShareModal
+                        clientData={clientData}
+                        customScenario={customScenario}
+                        language={language}
+                        showUpfrontDiscount={showUpfrontDiscount}
+                      />
+                    )}
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
@@ -966,9 +981,28 @@ const Index = () => {
                             <span>Upselling Fee:</span>
                             <span className="font-medium">{formatCurrency(calculation.upsellingFee)}</span>
                           </div>
-                          <div className="flex justify-between font-bold text-xl border-t pt-3">
+                          <div className="flex justify-between items-center font-bold text-xl border-t pt-3">
                             <span>{getTranslation(language, 'monthlyTotal')}:</span>
-                            <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
+                            <div className="flex items-center">
+                              <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
+                              {showUpfrontDiscount && calculation.totalMensile > 0 && (
+                                <div className="ml-3 bg-[#f5f5f5] rounded-lg p-2 text-sm">
+                                  <div className="font-medium text-gray-700 mb-1">💡 Sconto upfront:</div>
+                                  <div className="space-y-1">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs text-gray-600">6 mesi (-10%):</span>
+                                      <span className="line-through text-red-600 text-xs">{formatCurrency(calculation.totalMensile)}</span>
+                                      <span className="text-green-700 font-semibold text-xs">→ {formatCurrency(calculation.totalMensile * 0.9)}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs text-gray-600">12 mesi (-15%):</span>
+                                      <span className="line-through text-red-600 text-xs">{formatCurrency(calculation.totalMensile)}</span>
+                                      <span className="text-green-700 font-semibold text-xs">→ {formatCurrency(calculation.totalMensile * 0.85)}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
                         <div className="space-y-3">

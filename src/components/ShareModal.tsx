@@ -1,146 +1,104 @@
 
 import React, { useState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Share, Copy, Check } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { Share2, Copy, Check } from 'lucide-react';
 import { getTranslation } from '@/utils/translations';
 
-interface ShareModalProps {
-  clientData: {
-    resiAnnuali: number;
-    resiMensili: number;
-    carrelloMedio: number;
-    totalOrdersAnnual: number;
-    returnRatePercentage: number;
-  };
-  customScenario: {
-    saasFee: number;
-    transactionFeeFixed: number;
-    rdvPercentage: number;
-    upsellingPercentage: number;
-    name: string;
-  };
-  language: string;
+interface ClientData {
+  resiAnnuali: number;
+  resiMensili: number;
+  carrelloMedio: number;
+  totalOrdersAnnual: number;
+  returnRatePercentage: number;
 }
 
-const ShareModal = ({ clientData, customScenario, language }: ShareModalProps) => {
+interface PricingData {
+  saasFee: number;
+  transactionFeeFixed: number;
+  rdvPercentage: number;
+  upsellingPercentage: number;
+  name: string;
+}
+
+interface ShareModalProps {
+  clientData: ClientData;
+  customScenario: PricingData;
+  language: string;
+  showUpfrontDiscount?: boolean;
+}
+
+const ShareModal: React.FC<ShareModalProps> = ({ 
+  clientData, 
+  customScenario, 
+  language,
+  showUpfrontDiscount = false
+}) => {
   const [clientName, setClientName] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [generatedLink, setGeneratedLink] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const generateLink = async () => {
-    setIsGenerating(true);
-    try {
-      const shareData = {
-        name: clientName || null,
-        language,
-        scenario_data: customScenario,
-        business_case_data: clientData
-      };
-
-      const { data, error } = await supabase
-        .from('client_shares')
-        .insert(shareData)
-        .select('id')
-        .single();
-
-      if (error) throw error;
-
-      const link = `${window.location.origin}/view/${data.id}`;
-      setGeneratedLink(link);
-    } catch (error) {
-      console.error('Error generating link:', error);
-    } finally {
-      setIsGenerating(false);
-    }
+  const generateShareableLink = () => {
+    const data = {
+      clientName,
+      clientData,
+      customScenario,
+      showUpfrontDiscount
+    };
+    
+    const encodedData = btoa(JSON.stringify(data));
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/view/${encodedData}`;
   };
 
   const copyToClipboard = async () => {
+    const link = generateShareableLink();
     try {
-      await navigator.clipboard.writeText(generatedLink);
+      await navigator.clipboard.writeText(link);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      console.error('Failed to copy:', error);
-    }
-  };
-
-  const resetModal = () => {
-    setClientName('');
-    setGeneratedLink('');
-    setCopied(false);
-  };
-
-  const handleOpenChange = (open: boolean) => {
-    setIsOpen(open);
-    if (!open) {
-      resetModal();
+    } catch (err) {
+      console.error('Failed to copy: ', err);
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-[#1790FF] hover:bg-[#1470CC] text-white">
-          <Share className="h-4 w-4 mr-2" />
-          {getTranslation(language, 'shareWithClient')}
+        <Button variant="outline" size="sm" className="flex items-center gap-2">
+          <Share2 className="h-4 w-4" />
+          {getTranslation(language, 'share')}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{getTranslation(language, 'shareWithClient')}</DialogTitle>
+          <DialogTitle>{getTranslation(language, 'shareBusinessCase')}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          {!generatedLink ? (
-            <>
-              <div className="space-y-2">
-                <Label htmlFor="clientName">{getTranslation(language, 'clientName')} ({getTranslation(language, 'optional')})</Label>
-                <Input
-                  id="clientName"
-                  value={clientName}
-                  onChange={(e) => setClientName(e.target.value)}
-                  placeholder={getTranslation(language, 'enterClientName')}
-                />
-              </div>
-              <Button 
-                onClick={generateLink} 
-                disabled={isGenerating}
-                className="w-full bg-[#1790FF] hover:bg-[#1470CC] text-white"
-              >
-                {isGenerating ? getTranslation(language, 'generating') : getTranslation(language, 'generateLink')}
-              </Button>
-            </>
-          ) : (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label>{getTranslation(language, 'generatedLink')}</Label>
-                <div className="flex space-x-2">
-                  <Input value={generatedLink} readOnly className="flex-1" />
-                  <Button 
-                    onClick={copyToClipboard}
-                    variant="outline"
-                    className="px-3"
-                  >
-                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                  </Button>
-                </div>
-              </div>
-              <p className="text-sm text-gray-600">
-                {getTranslation(language, 'linkDescription')}
-              </p>
-            </div>
-          )}
+          <div className="space-y-2">
+            <Label htmlFor="client-name">{getTranslation(language, 'clientName')}</Label>
+            <Input
+              id="client-name"
+              value={clientName}
+              onChange={(e) => setClientName(e.target.value)}
+              placeholder={getTranslation(language, 'enterClientName')}
+            />
+          </div>
+          <div className="flex items-center space-x-2">
+            <Input
+              readOnly
+              value={generateShareableLink()}
+              className="flex-1"
+            />
+            <Button onClick={copyToClipboard} size="sm" variant="outline">
+              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            </Button>
+          </div>
+          <p className="text-sm text-gray-600">
+            {getTranslation(language, 'shareLinkDescription')}
+          </p>
         </div>
       </DialogContent>
     </Dialog>
