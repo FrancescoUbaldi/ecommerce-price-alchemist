@@ -61,7 +61,6 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet"
 import { Copy, Check } from "lucide-react"
-import { useCopyToClipboard } from '@uidotdev/usehooks';
 
 import { supabase } from '@/integrations/supabase/client';
 import { getTranslation } from '@/utils/translations';
@@ -87,11 +86,21 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState('business-case');
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareUrl, setShareUrl] = useState('');
-  const [copied, copy] = useCopyToClipboard();
+  const [copied, setCopied] = useState(false);
   const [showUpfrontOptions, setShowUpfrontOptions] = useState(false);
 
   const updateClientData = (field: keyof typeof clientData, value: number) => {
     setClientData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
   };
 
   const shareBusinessCase = async () => {
@@ -288,16 +297,8 @@ const Index = () => {
               </div>
             </div>
             <DialogFooter>
-              <Button type="button" onClick={() => {
-                copy(shareUrl);
-                toast({
-                  title: getTranslation(currentLanguage, 'linkCopied'),
-                  description: getTranslation(currentLanguage, 'pasteAndShare'),
-                });
-              }}
-                disabled={copied.value === shareUrl}
-              >
-                {copied.value === shareUrl ? (
+              <Button type="button" onClick={() => copyToClipboard(shareUrl)} disabled={copied}>
+                {copied ? (
                   <>
                     <Check className="mr-2 h-4 w-4" />
                     {getTranslation(currentLanguage, 'copied')}
