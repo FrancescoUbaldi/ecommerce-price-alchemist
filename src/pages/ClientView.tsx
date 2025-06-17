@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -322,21 +321,6 @@ const ClientView = () => {
                       <p className="text-sm text-gray-600">
                         Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
                       </p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Monthly Costs Breakdown Section */}
-                {shareData.scenario_data.saasFee > 0 && (
-                  <div className="mt-6 bg-white p-6 rounded-lg border">
-                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                      💰 Breakdown Costi mensili:
-                    </h3>
-                    <div className="space-y-2 text-gray-700">
-                      <div>• SaaS Fee: <span className="font-medium">{formatCurrency(shareData.scenario_data.saasFee)}</span></div>
-                      <div>• Transaction Fee: <span className="font-medium">{formatCurrency(shareData.scenario_data.transactionFeeFixed * (annualReturns / 12))}</span></div>
-                      <div>• RDV Fee: <span className="font-medium">{formatCurrency(rdvFeeAnnuale / 12)}</span></div>
-                      <div>• Upselling Fee: <span className="font-medium">{formatCurrency(upsellingFeeAnnuale / 12)}</span></div>
                     </div>
                   </div>
                 )}

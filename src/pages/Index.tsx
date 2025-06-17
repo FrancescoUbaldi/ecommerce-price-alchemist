@@ -10,6 +10,7 @@ import BusinessCase from '@/components/BusinessCase';
 import LanguageSelector from '@/components/LanguageSelector';
 import ComboActions from '@/components/ComboActions';
 import ShareModal from '@/components/ShareModal';
+import ReadOnlyPayback from '@/components/ReadOnlyPayback';
 import { getTranslation } from '@/utils/translations';
 
 interface PricingData {
@@ -439,10 +440,7 @@ const Index = () => {
       fatturazioneNettaPreRever,
       netRevenuesEcommerce,
       totalPlatformCost,
-      aumentoNetRevenues,
-      rdvFeeAnnuale,
-      upsellingFeeAnnuale,
-      annualReturns
+      aumentoNetRevenues
     };
   };
 
@@ -846,7 +844,7 @@ const Index = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
                   <div className="space-y-2">
                     <Label htmlFor="customTotalOrders">{getTranslation(language, 'totalAnnualOrders')}</Label>
                     <Input
@@ -973,6 +971,14 @@ const Index = () => {
                         </div>
                       </div>
 
+                      {/* Use the ReadOnlyPayback component */}
+                      <ReadOnlyPayback
+                        businessCaseData={clientData}
+                        scenarioData={customScenario}
+                        monthlyTotal={calculation.totalMensile}
+                        language={language}
+                      />
+
                       {/* Payback calculation box */}
                       {calculatePayback !== null && (
                         <div className="mt-6 bg-[#E5F0FF] border border-[#1790FF] rounded-lg p-4 animate-fade-in">
@@ -1005,21 +1011,6 @@ const Index = () => {
                             <p className="text-sm text-gray-600">
                               Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(businessData.aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
                             </p>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Monthly Costs Breakdown Section */}
-                      {customScenario.saasFee > 0 && (
-                        <div className="mt-6 bg-white p-6 rounded-lg border">
-                          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                            💰 Breakdown Costi mensili:
-                          </h3>
-                          <div className="space-y-2 text-gray-700">
-                            <div>• SaaS Fee: <span className="font-medium">{formatCurrency(customScenario.saasFee)}</span></div>
-                            <div>• Transaction Fee: <span className="font-medium">{formatCurrency(customScenario.transactionFeeFixed * (businessData.annualReturns / 12))}</span></div>
-                            <div>• RDV Fee: <span className="font-medium">{formatCurrency(businessData.rdvFeeAnnuale / 12)}</span></div>
-                            <div>• Upselling Fee: <span className="font-medium">{formatCurrency(businessData.upsellingFeeAnnuale / 12)}</span></div>
                           </div>
                         </div>
                       )}
