@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
 import { Settings, RotateCcw, Check, Undo, Clock } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
@@ -44,6 +45,7 @@ const Index = () => {
   const [previousState, setPreviousState] = useState<AppState | null>(null);
   const [showComboDeletedNotification, setShowComboDeletedNotification] = useState(false);
   const [showComboUsedNotification, setShowComboUsedNotification] = useState(false);
+  const [showUpfrontDiscount, setShowUpfrontDiscount] = useState(false);
   
   // Track which field was last modified to determine calculation priority
   const [lastModifiedField, setLastModifiedField] = useState<'orders' | 'returns' | 'rate' | null>(null);
@@ -423,6 +425,7 @@ const Index = () => {
     
     const rdvResi = annualReturns * 0.35;
     const rdvValue = rdvResi * clientData.carrelloMedio;
+    
     const upsellingResi = annualReturns * 0.0378;
     const upsellingAOV = clientData.carrelloMedio * 1.3;
     const upsellingValue = upsellingResi * upsellingAOV;
@@ -968,6 +971,46 @@ const Index = () => {
                           </div>
                         </div>
                         <div className="space-y-3">
+                          {/* Upfront discount toggle - only visible in edit mode */}
+                          <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
+                            <Label htmlFor="upfront-toggle" className="text-sm font-medium">
+                              Mostra sconto pagamento anticipato
+                            </Label>
+                            <Switch
+                              id="upfront-toggle"
+                              checked={showUpfrontDiscount}
+                              onCheckedChange={setShowUpfrontDiscount}
+                            />
+                          </div>
+
+                          {/* Upfront discount options */}
+                          {showUpfrontDiscount && calculation.totalMensile > 0 && (
+                            <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                              <h4 className="font-semibold mb-3 text-gray-800">💸 Sconto upfront:</h4>
+                              <div className="space-y-2 text-sm">
+                                <div className="flex items-center justify-between">
+                                  <span>6 mesi (-10%):</span>
+                                  <div className="text-right">
+                                    <span className="line-through text-red-500">{formatCurrency(calculation.totalMensile)}</span>
+                                    <span className="ml-2 font-medium">➜ {formatCurrency(calculation.totalMensile * 0.9)}</span>
+                                  </div>
+                                </div>
+                                <div className="text-xs text-gray-600 text-right">
+                                  Totale annuo: {formatCurrency(calculation.totalMensile * 0.9 * 12)}
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span>12 mesi (-15%):</span>
+                                  <div className="text-right">
+                                    <span className="line-through text-red-500">{formatCurrency(calculation.totalMensile)}</span>
+                                    <span className="ml-2 font-medium">➜ {formatCurrency(calculation.totalMensile * 0.85)}</span>
+                                  </div>
+                                </div>
+                                <div className="text-xs text-gray-600 text-right">
+                                  Totale annuo: {formatCurrency(calculation.totalMensile * 0.85 * 12)}
+                                </div>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
 
