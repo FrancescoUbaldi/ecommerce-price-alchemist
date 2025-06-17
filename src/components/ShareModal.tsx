@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -31,9 +30,10 @@ interface ShareModalProps {
   };
   language: string;
   showUpfrontDiscount?: boolean;
+  absorbTransactionFee?: boolean;
 }
 
-const ShareModal = ({ clientData, customScenario, language, showUpfrontDiscount = false }: ShareModalProps) => {
+const ShareModal = ({ clientData, customScenario, language, showUpfrontDiscount = false, absorbTransactionFee = false }: ShareModalProps) => {
   const [clientName, setClientName] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [generatedLink, setGeneratedLink] = useState('');
@@ -48,7 +48,8 @@ const ShareModal = ({ clientData, customScenario, language, showUpfrontDiscount 
         language,
         scenario_data: {
           ...customScenario,
-          showUpfrontDiscount
+          showUpfrontDiscount,
+          absorbTransactionFee
         },
         business_case_data: clientData
       };
