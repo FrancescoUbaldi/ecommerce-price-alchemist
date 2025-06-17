@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -1010,7 +1009,7 @@ const Index = () => {
                         </div>
                       </div>
 
-                      {/* Use the ReadOnlyPayback component */}
+                      {/* Use the new ReadOnlyPayback component */}
                       <ReadOnlyPayback
                         businessCaseData={clientData}
                         scenarioData={customScenario}
