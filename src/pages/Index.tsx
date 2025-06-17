@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
 import { Settings, RotateCcw, Check, Undo, Clock } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
@@ -45,7 +44,6 @@ const Index = () => {
   const [previousState, setPreviousState] = useState<AppState | null>(null);
   const [showComboDeletedNotification, setShowComboDeletedNotification] = useState(false);
   const [showComboUsedNotification, setShowComboUsedNotification] = useState(false);
-  const [showUpfrontDiscount, setShowUpfrontDiscount] = useState(false);
   
   // Track which field was last modified to determine calculation priority
   const [lastModifiedField, setLastModifiedField] = useState<'orders' | 'returns' | 'rate' | null>(null);
@@ -839,27 +837,13 @@ const Index = () => {
                     <Settings className="h-5 w-5" />
                     {getTranslation(language, 'customScenario')}
                   </CardTitle>
-                  <div className="flex items-center gap-4">
-                    {/* Account Executive Toggle for Upfront Discount */}
-                    <div className="flex items-center space-x-2">
-                      <Switch
-                        id="upfront-discount"
-                        checked={showUpfrontDiscount}
-                        onCheckedChange={setShowUpfrontDiscount}
-                      />
-                      <Label htmlFor="upfront-discount" className="text-sm">
-                        💳 Mostra sconto pagamento anticipato
-                      </Label>
-                    </div>
-                    {isDataCompleteForSharing() && (
-                      <ShareModal
-                        clientData={clientData}
-                        customScenario={customScenario}
-                        language={language}
-                        showUpfrontDiscount={showUpfrontDiscount}
-                      />
-                    )}
-                  </div>
+                  {isDataCompleteForSharing() && (
+                    <ShareModal
+                      clientData={clientData}
+                      customScenario={customScenario}
+                      language={language}
+                    />
+                  )}
                 </div>
               </CardHeader>
               <CardContent>
@@ -981,28 +965,9 @@ const Index = () => {
                             <span>Upselling Fee:</span>
                             <span className="font-medium">{formatCurrency(calculation.upsellingFee)}</span>
                           </div>
-                          <div className="flex justify-between items-center font-bold text-xl border-t pt-3">
+                          <div className="flex justify-between font-bold text-xl border-t pt-3">
                             <span>{getTranslation(language, 'monthlyTotal')}:</span>
-                            <div className="flex items-center">
-                              <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
-                              {showUpfrontDiscount && calculation.totalMensile > 0 && (
-                                <div className="ml-3 bg-[#f5f5f5] rounded-lg p-2 text-sm">
-                                  <div className="font-medium text-gray-700 mb-1">💡 Sconto upfront:</div>
-                                  <div className="space-y-1">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-xs text-gray-600">6 mesi (-10%):</span>
-                                      <span className="line-through text-red-600 text-xs">{formatCurrency(calculation.totalMensile)}</span>
-                                      <span className="text-green-700 font-semibold text-xs">→ {formatCurrency(calculation.totalMensile * 0.9)}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-xs text-gray-600">12 mesi (-15%):</span>
-                                      <span className="line-through text-red-600 text-xs">{formatCurrency(calculation.totalMensile)}</span>
-                                      <span className="text-green-700 font-semibold text-xs">→ {formatCurrency(calculation.totalMensile * 0.85)}</span>
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
+                            <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
                           </div>
                         </div>
                         <div className="space-y-3">
@@ -1021,27 +986,24 @@ const Index = () => {
                 })()}
 
                 {/* ROI Breakdown Section */}
-                {(() => {
-                  const businessData = calculateBusinessCaseData();
-                  return businessData.fatturazioneNettaPreRever > 0 && businessData.netRevenuesEcommerce > 0 && businessData.totalPlatformCost > 0 && (
-                    <div className="mt-6 bg-white p-6 rounded-lg border">
-                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                        📊 Breakdown ROI (annuo):
-                      </h3>
-                      <div className="space-y-2 text-gray-700">
-                        <div>• Ricavi Netti attuali (senza REVER): <span className="font-medium">{formatCurrency(businessData.fatturazioneNettaPreRever)}</span></div>
-                        <div>• Ricavi Netti con REVER: <span className="font-medium">{formatCurrency(businessData.netRevenuesEcommerce)}</span></div>
-                        <div>• Costi piattaforma REVER: <span className="font-medium">{formatCurrency(businessData.totalPlatformCost)}</span></div>
-                        <div>• Incremento netto stimato: <span className="font-medium text-green-600">{formatCurrency(businessData.aumentoNetRevenues)}</span></div>
-                      </div>
-                      <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                        <p className="text-sm text-gray-600">
-                          Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(businessData.aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
-                        </p>
-                      </div>
+                {businessData.fatturazioneNettaPreRever > 0 && businessData.netRevenuesEcommerce > 0 && businessData.totalPlatformCost > 0 && (
+                  <div className="mt-6 bg-white p-6 rounded-lg border">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      📊 Breakdown ROI (annuo):
+                    </h3>
+                    <div className="space-y-2 text-gray-700">
+                      <div>• Ricavi Netti attuali (senza REVER): <span className="font-medium">{formatCurrency(businessData.fatturazioneNettaPreRever)}</span></div>
+                      <div>• Ricavi Netti con REVER: <span className="font-medium">{formatCurrency(businessData.netRevenuesEcommerce)}</span></div>
+                      <div>• Costi piattaforma REVER: <span className="font-medium">{formatCurrency(businessData.totalPlatformCost)}</span></div>
+                      <div>• Incremento netto stimato: <span className="font-medium text-green-600">{formatCurrency(businessData.aumentoNetRevenues)}</span></div>
                     </div>
-                  );
-                })()}
+                    <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                      <p className="text-sm text-gray-600">
+                        Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(businessData.aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 <ComboActions
                   currentScenario={customScenario}
