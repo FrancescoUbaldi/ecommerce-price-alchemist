@@ -983,78 +983,39 @@ const Index = () => {
                           </div>
                           <div className="flex justify-between items-center font-bold text-xl border-t pt-3">
                             <span>{getTranslation(language, 'monthlyTotal')}:</span>
-                            <div className="flex flex-col items-end">
-                              <div className="flex items-center">
-                                <div className="flex flex-col items-end">
-                                  <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
-                                  <span className="text-sm text-gray-600 font-normal">
-                                    💰 Totale annuale: <strong>{formatCurrency(calculation.totalMensile * 12)}</strong>
-                                  </span>
-                                </div>
-                                {showUpfrontDiscount && calculation.totalMensile > 0 && (
-                                  <div className="ml-3 bg-[#f5f5f5] rounded-lg p-3 text-sm">
-                                    <div className="font-medium text-gray-700 mb-2">💳 Sconto upfront:</div>
-                                    <div className="space-y-2">
-                                      <div>
-                                        <div className="flex items-center gap-2 mb-1">
-                                          <span className="text-xs text-gray-600">6 mesi (-10%):</span>
-                                          <span className="line-through text-red-600 text-xs">{formatCurrency(calculation.totalMensile)}</span>
-                                          <span className="text-green-700 font-semibold text-xs">→ {formatCurrency(calculation.totalMensile * 0.9)}</span>
-                                        </div>
-                                        <div className="text-xs text-gray-600">
-                                          Totale 12 mesi: <strong className="text-gray-800">{formatCurrency(calculation.totalMensile * 0.9 * 12)}</strong>
-                                        </div>
-                                      </div>
-                                      <div>
-                                        <div className="flex items-center gap-2 mb-1">
-                                          <span className="text-xs text-gray-600">12 mesi (-15%):</span>
-                                          <span className="line-through text-red-600 text-xs">{formatCurrency(calculation.totalMensile)}</span>
-                                          <span className="text-green-700 font-semibold text-xs">→ {formatCurrency(calculation.totalMensile * 0.85)}</span>
-                                        </div>
-                                        <div className="text-xs text-gray-600">
-                                          Totale 12 mesi: <strong className="text-gray-800">{formatCurrency(calculation.totalMensile * 0.85 * 12)}</strong>
-                                        </div>
-                                      </div>
+                            <div className="flex items-center">
+                              <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
+                              {showUpfrontDiscount && calculation.totalMensile > 0 && (
+                                <div className="ml-3 bg-[#f5f5f5] rounded-lg p-2 text-sm">
+                                  <div className="font-medium text-gray-700 mb-1">💡 Sconto upfront:</div>
+                                  <div className="space-y-1">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs text-gray-600">6 mesi (-10%):</span>
+                                      <span className="line-through text-red-600 text-xs">{formatCurrency(calculation.totalMensile)}</span>
+                                      <span className="text-green-700 font-semibold text-xs">→ {formatCurrency(calculation.totalMensile * 0.9)}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs text-gray-600">12 mesi (-15%):</span>
+                                      <span className="line-through text-red-600 text-xs">{formatCurrency(calculation.totalMensile)}</span>
+                                      <span className="text-green-700 font-semibold text-xs">→ {formatCurrency(calculation.totalMensile * 0.85)}</span>
                                     </div>
                                   </div>
-                                )}
-                              </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
                         <div className="space-y-3">
-                          <div className="flex justify-between">
-                            <span>ACV (Annual Contract Value):</span>
-                            <span className="font-medium">{formatCurrency(calculation.annualContractValue)}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Take Rate:</span>
-                            <span className="font-medium text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
-                          </div>
                         </div>
                       </div>
 
-                      {/* Payback Period Display */}
-                      {calculatePayback && (
-                        <div className="mt-6 p-4 bg-green-100 border border-green-200 rounded-lg">
-                          <div className="flex items-center gap-2">
-                            <Clock className="h-5 w-5 text-green-600" />
-                            <span className="text-green-800 font-semibold">
-                              ⏱️ {getTranslation(language, 'estimatedPayback')}: {calculatePayback.toFixed(1)} {getTranslation(language, 'monthsToRecoverInvestment')}
-                            </span>
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="mt-6">
-                        <FeeDistributionChart
-                          saasFee={calculation.saasFee}
-                          transactionFee={calculation.transactionFee}
-                          rdvFee={calculation.rdvFee}
-                          upsellingFee={calculation.upsellingFee}
-                          totalMensile={calculation.totalMensile}
-                        />
-                      </div>
+                      {/* Use the new ReadOnlyPayback component */}
+                      <ReadOnlyPayback
+                        businessCaseData={clientData}
+                        scenarioData={customScenario}
+                        monthlyTotal={calculation.totalMensile}
+                        language={language}
+                      />
                     </div>
                   );
                 })()}
