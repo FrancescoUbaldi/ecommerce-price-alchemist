@@ -295,7 +295,7 @@ const ClientView = () => {
           scenario={customScenario}
           language="it"
           updateClientData={() => {}} // Read-only in shared view
-          isReadOnly={true}
+          readOnly={true}
         />
       </div>
     </div>
