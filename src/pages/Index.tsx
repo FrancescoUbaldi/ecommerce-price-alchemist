@@ -11,7 +11,6 @@ import LanguageSelector from '@/components/LanguageSelector';
 import ComboActions from '@/components/ComboActions';
 import ShareModal from '@/components/ShareModal';
 import { getTranslation } from '@/utils/translations';
-import ReadOnlyPayback from '@/components/ReadOnlyPayback';
 
 interface PricingData {
   saasFee: number;
@@ -974,36 +973,59 @@ const Index = () => {
                         </div>
                       </div>
 
-                      {/* Use the new ReadOnlyPayback component */}
-                      <ReadOnlyPayback
-                        businessCaseData={clientData}
-                        scenarioData={customScenario}
-                        monthlyTotal={calculation.totalMensile}
-                        language={language}
-                      />
+                      {/* Payback calculation box */}
+                      {calculatePayback !== null && (
+                        <div className="mt-6 bg-[#E5F0FF] border border-[#1790FF] rounded-lg p-4 animate-fade-in">
+                          <div className="flex items-center gap-3">
+                            <Clock className="h-5 w-5 text-[#1790FF]" />
+                            <div className="text-[#000D1F]">
+                              <span className="font-medium">⏳ Payback stimato: </span>
+                              <span className="font-bold text-[#1790FF]">
+                                {calculatePayback.toFixed(1)} mesi
+                              </span>
+                              <span> per recuperare l'investimento</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* ROI Breakdown Section */}
+                      {businessData.fatturazioneNettaPreRever > 0 && businessData.netRevenuesEcommerce > 0 && businessData.totalPlatformCost > 0 && (
+                        <div className="mt-6 bg-white p-6 rounded-lg border">
+                          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                            📊 Breakdown ROI (annuo):
+                          </h3>
+                          <div className="space-y-2 text-gray-700">
+                            <div>• Ricavi Netti attuali (senza REVER): <span className="font-medium">{formatCurrency(businessData.fatturazioneNettaPreRever)}</span></div>
+                            <div>• Ricavi Netti con REVER: <span className="font-medium">{formatCurrency(businessData.netRevenuesEcommerce)}</span></div>
+                            <div>• Costi piattaforma REVER: <span className="font-medium">{formatCurrency(businessData.totalPlatformCost)}</span></div>
+                            <div>• Incremento netto stimato: <span className="font-medium text-green-600">{formatCurrency(businessData.aumentoNetRevenues)}</span></div>
+                          </div>
+                          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                            <p className="text-sm text-gray-600">
+                              Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(businessData.aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Monthly Costs Breakdown Section */}
+                      {customScenario.saasFee > 0 && (
+                        <div className="mt-6 bg-white p-6 rounded-lg border">
+                          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                            💰 Breakdown Costi mensili:
+                          </h3>
+                          <div className="space-y-2 text-gray-700">
+                            <div>• SaaS Fee: <span className="font-medium">{formatCurrency(customScenario.saasFee)}</span></div>
+                            <div>• Transaction Fee: <span className="font-medium">{formatCurrency(customScenario.transactionFeeFixed * (businessData.annualReturns / 12))}</span></div>
+                            <div>• RDV Fee: <span className="font-medium">{formatCurrency(businessData.rdvFeeAnnuale / 12)}</span></div>
+                            <div>• Upselling Fee: <span className="font-medium">{formatCurrency(businessData.upsellingFeeAnnuale / 12)}</span></div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })()}
-
-                {/* ROI Breakdown Section */}
-                {businessData.fatturazioneNettaPreRever > 0 && businessData.netRevenuesEcommerce > 0 && businessData.totalPlatformCost > 0 && (
-                  <div className="mt-6 bg-white p-6 rounded-lg border">
-                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                      📊 Breakdown ROI (annuo):
-                    </h3>
-                    <div className="space-y-2 text-gray-700">
-                      <div>• Ricavi Netti attuali (senza REVER): <span className="font-medium">{formatCurrency(businessData.fatturazioneNettaPreRever)}</span></div>
-                      <div>• Ricavi Netti con REVER: <span className="font-medium">{formatCurrency(businessData.netRevenuesEcommerce)}</span></div>
-                      <div>• Costi piattaforma REVER: <span className="font-medium">{formatCurrency(businessData.totalPlatformCost)}</span></div>
-                      <div>• Incremento netto stimato: <span className="font-medium text-green-600">{formatCurrency(businessData.aumentoNetRevenues)}</span></div>
-                    </div>
-                    <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                      <p className="text-sm text-gray-600">
-                        Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(businessData.aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
-                      </p>
-                    </div>
-                  </div>
-                )}
 
                 <ComboActions
                   currentScenario={customScenario}
