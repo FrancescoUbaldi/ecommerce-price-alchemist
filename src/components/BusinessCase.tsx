@@ -444,75 +444,18 @@ const BusinessCase = ({
           </Table>
         </div>
 
-        {/* Final Breakdown Section - Side by Side */}
+        {/* Single informational text - removed breakdown boxes */}
         {fatturazioneNettaPreRever > 0 && netRevenuesEcommerce > 0 && totalPlatformCost > 0 && (
-          <div className="space-y-4 mt-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              {/* ROI Breakdown Box */}
-              <div className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-xl p-5 shadow-sm w-full">
-                <h3 className="text-base font-semibold mb-4 flex items-center gap-2">
-                  📊 Breakdown ROI (annuo):
-                </h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Ricavi Netti attuali (senza REVER):</span>
-                    <span className="font-medium text-right">{formatCurrency(fatturazioneNettaPreRever)}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Ricavi Netti con REVER:</span>
-                    <span className="font-medium text-right">{formatCurrency(netRevenuesEcommerce)}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Costi piattaforma REVER:</span>
-                    <span className="font-medium text-right">-{formatCurrency(totalPlatformCost)}</span>
-                  </div>
-                  <div className="bg-[#ECFDF5] text-green-700 font-semibold p-2 rounded-md mt-2">
-                    <div className="flex justify-between items-center">
-                      <span>✅ Incremento netto stimato:</span>
-                      <span className="text-right">+{formatCurrency(aumentoNetRevenues)}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Monthly Costs Breakdown Box */}
-              <div className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-xl p-5 shadow-sm w-full">
-                <h3 className="text-base font-semibold mb-4 flex items-center gap-2">
-                  💰 Breakdown Costi mensili:
-                </h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700">SaaS Fee:</span>
-                    <span className="font-medium text-right">{formatCurrency(scenario.saasFee)}/mese</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Transaction Fee:</span>
-                    <span className="font-medium text-right">{formatCurrency(scenario.transactionFeeFixed)}/reso</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700">RDV Fee:</span>
-                    <span className="font-medium text-right">{scenario.rdvPercentage}%</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Upselling Fee:</span>
-                    <span className="font-medium text-right">{scenario.upsellingPercentage}%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Single informational text below the boxes */}
-            <div className="text-center">
-              <div className="inline-block p-3 bg-blue-50 rounded-lg">
-                <p className="text-sm text-gray-600">
-                  💡 Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
-                </p>
-              </div>
+          <div className="text-center">
+            <div className="inline-block p-3 bg-blue-50 rounded-lg">
+              <p className="text-sm text-gray-600">
+                💡 Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
+              </p>
             </div>
 
             {/* Payback information if applicable */}
             {paybackMonths !== null && (
-              <div className="text-center">
+              <div className="mt-4">
                 <div className="inline-block p-3 bg-green-50 border border-green-200 rounded-lg">
                   <p className="text-sm text-green-700 font-medium">
                     ⏱️ Payback stimato: {paybackMonths.toFixed(1)} mesi per recuperare l'investimento
