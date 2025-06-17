@@ -1,9 +1,7 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import {
   Table,
   TableBody,
@@ -37,8 +35,6 @@ interface BusinessCaseProps {
   language: string;
   updateClientData: (field: keyof ClientData, value: number) => void;
   readOnly?: boolean;
-  showUpfrontOptions?: boolean;
-  setShowUpfrontOptions?: (show: boolean) => void;
 }
 
 const BusinessCase = ({ 
@@ -48,9 +44,7 @@ const BusinessCase = ({
   scenario, 
   language, 
   updateClientData,
-  readOnly = false,
-  showUpfrontOptions = false,
-  setShowUpfrontOptions
+  readOnly = false
 }: BusinessCaseProps) => {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('it-IT', {
@@ -127,7 +121,6 @@ const BusinessCase = ({
   };
 
   const paybackMonths = calculatePayback();
-  const monthlyTotal = totalPlatformCost / 12;
 
   return (
     <TooltipProvider>
@@ -451,36 +444,64 @@ const BusinessCase = ({
           </Table>
         </div>
 
-        {/* Final Breakdown Section */}
+        {/* Final Breakdown Section - Side by Side */}
         {fatturazioneNettaPreRever > 0 && netRevenuesEcommerce > 0 && totalPlatformCost > 0 && (
           <div className="space-y-4 mt-6">
-            <div className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-xl p-5 shadow-sm w-full">
-              <h3 className="text-base font-semibold mb-4 flex items-center gap-2">
-                📊 Breakdown ROI (annuo):
-              </h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-700">Ricavi Netti attuali (senza REVER):</span>
-                  <span className="font-medium text-right">{formatCurrency(fatturazioneNettaPreRever)}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-700">Ricavi Netti con REVER:</span>
-                  <span className="font-medium text-right">{formatCurrency(netRevenuesEcommerce)}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-700">Costi piattaforma REVER:</span>
-                  <span className="font-medium text-right">-{formatCurrency(totalPlatformCost)}</span>
-                </div>
-                <div className="bg-[#ECFDF5] text-green-700 font-semibold p-2 rounded-md mt-2">
+            <div className="flex flex-col md:flex-row gap-4">
+              {/* ROI Breakdown Box */}
+              <div className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-xl p-5 shadow-sm w-full">
+                <h3 className="text-base font-semibold mb-4 flex items-center gap-2">
+                  📊 Breakdown ROI (annuo):
+                </h3>
+                <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span>✅ Incremento netto stimato:</span>
-                    <span className="text-right">+{formatCurrency(aumentoNetRevenues)}</span>
+                    <span className="text-gray-700">Ricavi Netti attuali (senza REVER):</span>
+                    <span className="font-medium text-right">{formatCurrency(fatturazioneNettaPreRever)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Ricavi Netti con REVER:</span>
+                    <span className="font-medium text-right">{formatCurrency(netRevenuesEcommerce)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Costi piattaforma REVER:</span>
+                    <span className="font-medium text-right">-{formatCurrency(totalPlatformCost)}</span>
+                  </div>
+                  <div className="bg-[#ECFDF5] text-green-700 font-semibold p-2 rounded-md mt-2">
+                    <div className="flex justify-between items-center">
+                      <span>✅ Incremento netto stimato:</span>
+                      <span className="text-right">+{formatCurrency(aumentoNetRevenues)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Monthly Costs Breakdown Box */}
+              <div className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-xl p-5 shadow-sm w-full">
+                <h3 className="text-base font-semibold mb-4 flex items-center gap-2">
+                  💰 Breakdown Costi mensili:
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">SaaS Fee:</span>
+                    <span className="font-medium text-right">{formatCurrency(scenario.saasFee)}/mese</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Transaction Fee:</span>
+                    <span className="font-medium text-right">{formatCurrency(scenario.transactionFeeFixed)}/reso</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">RDV Fee:</span>
+                    <span className="font-medium text-right">{scenario.rdvPercentage}%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Upselling Fee:</span>
+                    <span className="font-medium text-right">{scenario.upsellingPercentage}%</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Single informational text below the box */}
+            {/* Single informational text below the boxes */}
             <div className="text-center">
               <div className="inline-block p-3 bg-blue-50 rounded-lg">
                 <p className="text-sm text-gray-600">
@@ -489,20 +510,6 @@ const BusinessCase = ({
               </div>
             </div>
 
-            {/* Upfront Payment Toggle (only for Account Executive - not in read-only) */}
-            {!readOnly && setShowUpfrontOptions && (
-              <div className="flex items-center space-x-2 mb-4">
-                <Switch
-                  id="upfront-toggle"
-                  checked={showUpfrontOptions}
-                  onCheckedChange={setShowUpfrontOptions}
-                />
-                <Label htmlFor="upfront-toggle" className="text-sm font-medium">
-                  Mostra opzioni pagamento anticipato
-                </Label>
-              </div>
-            )}
-
             {/* Payback information if applicable */}
             {paybackMonths !== null && (
               <div className="text-center">
@@ -510,55 +517,6 @@ const BusinessCase = ({
                   <p className="text-sm text-green-700 font-medium">
                     ⏱️ Payback stimato: {paybackMonths.toFixed(1)} mesi per recuperare l'investimento
                   </p>
-                </div>
-              </div>
-            )}
-
-            {/* Upfront Payment Options */}
-            {showUpfrontOptions && (
-              <div 
-                className="bg-[#f9f9f9] rounded-xl p-6 mt-4"
-                style={{
-                  borderRadius: '12px'
-                }}
-              >
-                <h3 className="text-lg font-semibold mb-4">
-                  🧾 Pagamento anticipato (opzionale)
-                </h3>
-                <p className="text-gray-700 mb-4">
-                  Ecco quanto potrebbe risparmiare il cliente scegliendo un pagamento upfront:
-                </p>
-                
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">6 mesi upfront (sconto 10%)</span>
-                    <div className="text-right">
-                      <span 
-                        className="text-gray-500 mr-2"
-                        style={{ textDecoration: 'line-through', color: '#888' }}
-                      >
-                        {formatCurrency(monthlyTotal * 6)}
-                      </span>
-                      <span className="font-bold text-green-600">
-                        {formatCurrency(monthlyTotal * 6 * 0.9)}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">12 mesi upfront (sconto 15%)</span>
-                    <div className="text-right">
-                      <span 
-                        className="text-gray-500 mr-2"
-                        style={{ textDecoration: 'line-through', color: '#888' }}
-                      >
-                        {formatCurrency(monthlyTotal * 12)}
-                      </span>
-                      <span className="font-bold text-green-600">
-                        {formatCurrency(monthlyTotal * 12 * 0.85)}
-                      </span>
-                    </div>
-                  </div>
                 </div>
               </div>
             )}
