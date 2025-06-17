@@ -879,6 +879,19 @@ const Index = () => {
                       placeholder="23.9"
                     />
                   </div>
+                  <div className="space-y-2 flex flex-col justify-end">
+                    {/* Upfront discount toggle - moved to white background section */}
+                    <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
+                      <Label htmlFor="upfront-toggle" className="text-sm font-medium">
+                        Mostra sconto pagamento anticipato
+                      </Label>
+                      <Switch
+                        id="upfront-toggle"
+                        checked={showUpfrontDiscount}
+                        onCheckedChange={setShowUpfrontDiscount}
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -971,19 +984,7 @@ const Index = () => {
                           </div>
                         </div>
                         <div className="space-y-3">
-                          {/* Upfront discount toggle - only visible in edit mode */}
-                          <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
-                            <Label htmlFor="upfront-toggle" className="text-sm font-medium">
-                              Mostra sconto pagamento anticipato
-                            </Label>
-                            <Switch
-                              id="upfront-toggle"
-                              checked={showUpfrontDiscount}
-                              onCheckedChange={setShowUpfrontDiscount}
-                            />
-                          </div>
-
-                          {/* Upfront discount options */}
+                          {/* Upfront discount options - kept in original position */}
                           {showUpfrontDiscount && calculation.totalMensile > 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
                               <h4 className="font-semibold mb-3 text-gray-800">💸 Sconto upfront:</h4>
