@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -7,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Settings, RotateCcw, Check, Undo, Clock } from 'lucide-react';
+import { Settings, RotateCcw, Check, Undo, Clock, Calendar, Shield } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
 import LanguageSelector from '@/components/LanguageSelector';
@@ -15,6 +14,9 @@ import ComboActions from '@/components/ComboActions';
 import ShareModal from '@/components/ShareModal';
 import ReadOnlyPayback from '@/components/ReadOnlyPayback';
 import { getTranslation } from '@/utils/translations';
+import Tooltip from '@/components/ui/tooltip';
+import TooltipTrigger from '@/components/ui/tooltip-trigger';
+import TooltipContent from '@/components/ui/tooltip-content';
 
 interface PricingData {
   saasFee: number;
@@ -892,14 +894,40 @@ const Index = () => {
                   </div>
                   <div className="space-y-2 flex flex-col justify-end">
                     {/* Upfront discount toggle */}
-                    <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
-                      <Label htmlFor="upfront-toggle" className="text-sm font-medium">
-                        Pagamento anticipato
-                      </Label>
+                    <div className="flex items-center justify-between p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                      <div className="flex items-center gap-3">
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Calendar className="h-5 w-5 text-yellow-600" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{getTranslation(language, 'tooltipUpfront')}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        <span className="font-medium text-gray-800">{getTranslation(language, 'advancedPayment')}</span>
+                      </div>
                       <Switch
-                        id="upfront-toggle"
                         checked={showUpfrontDiscount}
-                        onCheckedChange={setShowUpfrontDiscount}
+                        onCheckedChange={(val: boolean) => setShowUpfrontDiscount(val)}
+                      />
+                    </div>
+
+                    {/* Absorb Transaction Fee Toggle */}
+                    <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
+                      <div className="flex items-center gap-3">
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Shield className="h-5 w-5 text-blue-600" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{getTranslation(language, 'tooltipAbsorb')}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        <span className="font-medium text-gray-800">{getTranslation(language, 'absorbTransactionFee')}</span>
+                      </div>
+                      <Switch
+                        checked={absorbTransactionFee}
+                        onCheckedChange={(val: boolean) => setAbsorbTransactionFee(val)}
                       />
                     </div>
                   </div>
@@ -1016,33 +1044,37 @@ const Index = () => {
                           {/* Upfront discount options */}
                           {showUpfrontDiscount && calculation.totalMensile > 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-                              <h4 className="font-semibold mb-3 text-gray-800">💸 Sconto upfront:</h4>
+                              <h4 className="font-semibold mb-3 text-gray-800">💸 {getTranslation(language, 'upfrontDiscount')}:</h4>
                               <div className="space-y-2 text-sm">
-                                <div className="flex items-center justify-between">
-                                  <span>6 mesi (-10% SaaS):</span>
+                                <div className="flex justify-between items-center">
+                                  <span>{getTranslation(language, 'sixMonthsDiscount')}:</span>
                                   <div className="text-right">
-                                    <span className="line-through text-red-500">{formatCurrency(calculation.saasFee)}</span>
-                                    <span className="ml-2 font-medium">➜ {formatCurrency(calculation.saasFee * 0.9)}</span>
+                                    <span className="line-through text-red-500 mr-2">{formatCurrency(customScenario.saasFee)}</span>
+                                    <span className="font-semibold text-green-600">
+                                      {formatCurrency(customScenario.saasFee * 0.9)}
+                                    </span>
                                   </div>
                                 </div>
                                 <div className="text-xs text-gray-600 text-right">
-                                  Nuovo mensile: {formatCurrency(calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.9))}
+                                  {getTranslation(language, 'newMonthly')}: {formatCurrency(calculation.totalMensile - customScenario.saasFee + (customScenario.saasFee * 0.9))}
                                 </div>
                                 <div className="text-xs text-gray-600 text-right">
-                                  Totale annuo: {formatCurrency((calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.9)) * 12)}
+                                  {getTranslation(language, 'annualTotal')}: {formatCurrency((calculation.totalMensile - customScenario.saasFee + (customScenario.saasFee * 0.9)) * 12)}
                                 </div>
-                                <div className="flex items-center justify-between">
-                                  <span>12 mesi (-15% SaaS):</span>
+                                <div className="flex justify-between items-center">
+                                  <span>{getTranslation(language, 'twelveMonthsDiscount')}:</span>
                                   <div className="text-right">
-                                    <span className="line-through text-red-500">{formatCurrency(calculation.saasFee)}</span>
-                                    <span className="ml-2 font-medium">➜ {formatCurrency(calculation.saasFee * 0.85)}</span>
+                                    <span className="line-through text-red-500 mr-2">{formatCurrency(customScenario.saasFee)}</span>
+                                    <span className="font-semibold text-green-600">
+                                      {formatCurrency(customScenario.saasFee * 0.85)}
+                                    </span>
                                   </div>
                                 </div>
                                 <div className="text-xs text-gray-600 text-right">
-                                  Nuovo mensile: {formatCurrency(calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.85))}
+                                  {getTranslation(language, 'newMonthly')}: {formatCurrency(calculation.totalMensile - customScenario.saasFee + (customScenario.saasFee * 0.85))}
                                 </div>
                                 <div className="text-xs text-gray-600 text-right">
-                                  Totale annuo: {formatCurrency((calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.85)) * 12)}
+                                  {getTranslation(language, 'annualTotal')}: {formatCurrency((calculation.totalMensile - customScenario.saasFee + (customScenario.saasFee * 0.85)) * 12)}
                                 </div>
                               </div>
                             </div>

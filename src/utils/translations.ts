@@ -68,7 +68,19 @@ export const translations = {
     linkDescription: 'Questo link può essere condiviso con il cliente per visualizzare lo scenario e il business case in modalità read-only.',
     linkNotFound: 'Link non valido o scaduto',
     linkExpiredMessage: 'Il link che stai cercando di accedere non è valido o è scaduto.',
-    businessCaseFor: 'Business Case per'
+    businessCaseFor: 'Business Case per',
+    // New translations for missing elements
+    advancedPayment: "Pagamento anticipato",
+    sixMonthsDiscount: "6 mesi (-10%)",
+    twelveMonthsDiscount: "12 mesi (-15%)",
+    upfrontDiscount: "Sconto upfront",
+    absorbTransactionFee: "Assorbi costi Transaction Fee",
+    estimatedPayback: "Stima Payback",
+    absorbed: "Assorbito",
+    newMonthly: "Nuovo mensile",
+    annualTotal: "Totale annuo",
+    tooltipUpfront: "Applica uno sconto sulla SaaS Fee per pagamenti anticipati",
+    tooltipAbsorb: "REVER assorbe i costi di transaction fee per rendere l'offerta più competitiva"
   },
   en: {
     title: "Price & Smile :)",
@@ -138,7 +150,19 @@ export const translations = {
     linkDescription: 'This link can be shared with the client to view the scenario and business case in read-only mode.',
     linkNotFound: 'Invalid or expired link',
     linkExpiredMessage: 'The link you are trying to access is not valid or has expired.',
-    businessCaseFor: 'Business Case for'
+    businessCaseFor: 'Business Case for',
+    // New translations for missing elements
+    advancedPayment: "Advanced Payment",
+    sixMonthsDiscount: "6 months (-10%)",
+    twelveMonthsDiscount: "12 months (-15%)",
+    upfrontDiscount: "Upfront discount",
+    absorbTransactionFee: "Absorb Transaction Fee costs",
+    estimatedPayback: "Estimated Payback",
+    absorbed: "Absorbed",
+    newMonthly: "New monthly",
+    annualTotal: "Annual total",
+    tooltipUpfront: "Apply a discount on SaaS Fee for upfront payments",
+    tooltipAbsorb: "REVER absorbs transaction fee costs to make the offer more competitive"
   },
   es: {
     title: "Price & Smile :)",
@@ -208,7 +232,19 @@ export const translations = {
     linkDescription: 'Este enlace se puede compartir con el cliente para ver el escenario y el caso de negocio en modo de solo lectura.',
     linkNotFound: 'Enlace inválido o expirado',
     linkExpiredMessage: 'El enlace al que intentas acceder no es válido o ha expirado.',
-    businessCaseFor: 'Caso de Negocio para'
+    businessCaseFor: 'Caso de Negocio para',
+    // New translations for missing elements
+    advancedPayment: "Pago Anticipado",
+    sixMonthsDiscount: "6 meses (-10%)",
+    twelveMonthsDiscount: "12 meses (-15%)",
+    upfrontDiscount: "Descuento upfront",
+    absorbTransactionFee: "Absorber costos Transaction Fee",
+    estimatedPayback: "Estimación Payback",
+    absorbed: "Absorbido",
+    newMonthly: "Nuevo mensual",
+    annualTotal: "Total anual",
+    tooltipUpfront: "Aplicar descuento en SaaS Fee por pagos anticipados",
+    tooltipAbsorb: "REVER absorbe los costos de transaction fee para hacer la oferta más competitiva"
   },
   fr: {
     title: "Price & Smile :)",
@@ -263,10 +299,10 @@ export const translations = {
     saveCombo: "Sauvegarder Combo",
     comboSaved: "Combo sauvegardé !",
     duplicatedCombo: "Combo dupliqué - modifiable",
-    netRevenueGrowthTitle: 'Net Revenue Growth with REVER',
-    netRevenuePreRever: 'Net Revenue Pre REVER',
-    netRevenueWithRever: 'Net Revenue with REVER',
-    growthIndicator: 'growth',
+    netRevenueGrowthTitle: 'Croissance des Revenus Nets avec REVER',
+    netRevenuePreRever: 'Revenus Nets Pre REVER',
+    netRevenueWithRever: 'Revenus Nets avec REVER',
+    growthIndicator: 'de croissance',
     clientsBannerHeading: "Ils nous ont déjà choisi:",
     shareWithClient: 'Partager avec le client',
     clientName: 'Nom du client',
@@ -278,7 +314,19 @@ export const translations = {
     linkDescription: 'Ce lien peut être partagé avec le client pour voir le scénario et le business case en mode lecture seule.',
     linkNotFound: 'Lien invalide ou expiré',
     linkExpiredMessage: 'Le lien auquel vous essayez d\'accéder n\'est pas valide ou a expiré.',
-    businessCaseFor: 'Business Case pour'
+    businessCaseFor: 'Business Case pour',
+    // New translations for missing elements
+    advancedPayment: "Paiement Anticipé",
+    sixMonthsDiscount: "6 mois (-10%)",
+    twelveMonthsDiscount: "12 mois (-15%)",
+    upfrontDiscount: "Remise upfront",
+    absorbTransactionFee: "Absorber les coûts Transaction Fee",
+    estimatedPayback: "Estimation Payback",
+    absorbed: "Absorbé",
+    newMonthly: "Nouveau mensuel",
+    annualTotal: "Total annuel",
+    tooltipUpfront: "Appliquer une remise sur les SaaS Fee pour les paiements anticipés",
+    tooltipAbsorb: "REVER absorbe les coûts de transaction fee pour rendre l'offre plus compétitive"
   }
 };
 
