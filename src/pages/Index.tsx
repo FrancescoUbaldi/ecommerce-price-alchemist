@@ -884,7 +884,7 @@ const Index = () => {
                     {/* Upfront discount toggle - moved to white background section */}
                     <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
                       <Label htmlFor="upfront-toggle" className="text-sm font-medium">
-                        Mostra sconto pagamento anticipato
+                        Pagamento anticipato
                       </Label>
                       <Switch
                         id="upfront-toggle"
