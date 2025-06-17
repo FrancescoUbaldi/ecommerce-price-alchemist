@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -47,7 +48,7 @@ const Index = () => {
   const [showComboDeletedNotification, setShowComboDeletedNotification] = useState(false);
   const [showComboUsedNotification, setShowComboUsedNotification] = useState(false);
   const [showUpfrontDiscount, setShowUpfrontDiscount] = useState(false);
-  const [absorbTransactionFee, setAbsorbTransactionFee] = useState(false);
+  const [absorbTransactionFee, setAbsorbTransactionFee] = useState<boolean>(false);
   
   // Track which field was last modified to determine calculation priority
   const [lastModifiedField, setLastModifiedField] = useState<'orders' | 'returns' | 'rate' | null>(null);
@@ -937,7 +938,11 @@ const Index = () => {
                       <Checkbox
                         id="absorb-transaction-fee"
                         checked={absorbTransactionFee}
-                        onCheckedChange={setAbsorbTransactionFee}
+                        onCheckedChange={(checked: boolean | 'indeterminate') => {
+                          if (typeof checked === 'boolean') {
+                            setAbsorbTransactionFee(checked);
+                          }
+                        }}
                       />
                       <Label htmlFor="absorb-transaction-fee" className="text-sm text-gray-700">
                         Assorbi costi Transaction Fee
@@ -1014,24 +1019,30 @@ const Index = () => {
                               <h4 className="font-semibold mb-3 text-gray-800">💸 Sconto upfront:</h4>
                               <div className="space-y-2 text-sm">
                                 <div className="flex items-center justify-between">
-                                  <span>6 mesi (-10%):</span>
+                                  <span>6 mesi (-10% SaaS):</span>
                                   <div className="text-right">
-                                    <span className="line-through text-red-500">{formatCurrency(calculation.totalMensile)}</span>
-                                    <span className="ml-2 font-medium">➜ {formatCurrency(calculation.totalMensile * 0.9)}</span>
+                                    <span className="line-through text-red-500">{formatCurrency(calculation.saasFee)}</span>
+                                    <span className="ml-2 font-medium">➜ {formatCurrency(calculation.saasFee * 0.9)}</span>
                                   </div>
                                 </div>
                                 <div className="text-xs text-gray-600 text-right">
-                                  Totale annuo: {formatCurrency(calculation.totalMensile * 0.9 * 12)}
+                                  Nuovo mensile: {formatCurrency(calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.9))}
+                                </div>
+                                <div className="text-xs text-gray-600 text-right">
+                                  Totale annuo: {formatCurrency((calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.9)) * 12)}
                                 </div>
                                 <div className="flex items-center justify-between">
-                                  <span>12 mesi (-15%):</span>
+                                  <span>12 mesi (-15% SaaS):</span>
                                   <div className="text-right">
-                                    <span className="line-through text-red-500">{formatCurrency(calculation.totalMensile)}</span>
-                                    <span className="ml-2 font-medium">➜ {formatCurrency(calculation.totalMensile * 0.85)}</span>
+                                    <span className="line-through text-red-500">{formatCurrency(calculation.saasFee)}</span>
+                                    <span className="ml-2 font-medium">➜ {formatCurrency(calculation.saasFee * 0.85)}</span>
                                   </div>
                                 </div>
                                 <div className="text-xs text-gray-600 text-right">
-                                  Totale annuo: {formatCurrency(calculation.totalMensile * 0.85 * 12)}
+                                  Nuovo mensile: {formatCurrency(calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.85))}
+                                </div>
+                                <div className="text-xs text-gray-600 text-right">
+                                  Totale annuo: {formatCurrency((calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.85)) * 12)}
                                 </div>
                               </div>
                             </div>
