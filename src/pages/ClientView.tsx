@@ -17,6 +17,7 @@ interface ShareData {
     rdvPercentage: number;
     upsellingPercentage: number;
     name: string;
+    showUpfrontDiscount?: boolean;
   };
   business_case_data: {
     resiAnnuali: number;
@@ -292,7 +293,38 @@ const ClientView = () => {
                       </div>
                     </div>
                     <div className="space-y-3">
-                      
+                      {/* Upfront discount options - shown only if it was active when link was generated */}
+                      {shareData.scenario_data.showUpfrontDiscount && calculation.totalMensile > 0 && (
+                        <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                          <h4 className="font-semibold mb-3 text-gray-800">💸 Sconto upfront:</h4>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex justify-between items-center">
+                              <span>6 mesi (-10%):</span>
+                              <div className="text-right">
+                                <span className="line-through text-red-500 mr-2">{formatCurrency(calculation.totalMensile)}</span>
+                                <span className="font-semibold text-green-600">
+                                  {formatCurrency(calculation.totalMensile * 0.9)}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="text-xs text-gray-600 text-right">
+                              Totale annuo: {formatCurrency(calculation.totalMensile * 0.9 * 12)}
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span>12 mesi (-15%):</span>
+                              <div className="text-right">
+                                <span className="line-through text-red-500 mr-2">{formatCurrency(calculation.totalMensile)}</span>
+                                <span className="font-semibold text-green-600">
+                                  {formatCurrency(calculation.totalMensile * 0.85)}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="text-xs text-gray-600 text-right">
+                              Totale annuo: {formatCurrency(calculation.totalMensile * 0.85 * 12)}
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
 

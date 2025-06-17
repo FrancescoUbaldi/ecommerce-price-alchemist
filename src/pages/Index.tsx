@@ -842,6 +842,7 @@ const Index = () => {
                       clientData={clientData}
                       customScenario={customScenario}
                       language={language}
+                      showUpfrontDiscount={showUpfrontDiscount}
                     />
                   )}
                 </div>

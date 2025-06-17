@@ -30,9 +30,10 @@ interface ShareModalProps {
     name: string;
   };
   language: string;
+  showUpfrontDiscount?: boolean;
 }
 
-const ShareModal = ({ clientData, customScenario, language }: ShareModalProps) => {
+const ShareModal = ({ clientData, customScenario, language, showUpfrontDiscount = false }: ShareModalProps) => {
   const [clientName, setClientName] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [generatedLink, setGeneratedLink] = useState('');
@@ -45,7 +46,10 @@ const ShareModal = ({ clientData, customScenario, language }: ShareModalProps) =
       const shareData = {
         name: clientName || null,
         language,
-        scenario_data: customScenario,
+        scenario_data: {
+          ...customScenario,
+          showUpfrontDiscount
+        },
         business_case_data: clientData
       };
 
