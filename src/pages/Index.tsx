@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -986,24 +987,27 @@ const Index = () => {
                 })()}
 
                 {/* ROI Breakdown Section */}
-                {businessData.fatturazioneNettaPreRever > 0 && businessData.netRevenuesEcommerce > 0 && businessData.totalPlatformCost > 0 && (
-                  <div className="mt-6 bg-white p-6 rounded-lg border">
-                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                      📊 Breakdown ROI (annuo):
-                    </h3>
-                    <div className="space-y-2 text-gray-700">
-                      <div>• Ricavi Netti attuali (senza REVER): <span className="font-medium">{formatCurrency(businessData.fatturazioneNettaPreRever)}</span></div>
-                      <div>• Ricavi Netti con REVER: <span className="font-medium">{formatCurrency(businessData.netRevenuesEcommerce)}</span></div>
-                      <div>• Costi piattaforma REVER: <span className="font-medium">{formatCurrency(businessData.totalPlatformCost)}</span></div>
-                      <div>• Incremento netto stimato: <span className="font-medium text-green-600">{formatCurrency(businessData.aumentoNetRevenues)}</span></div>
+                {(() => {
+                  const businessData = calculateBusinessCaseData();
+                  return businessData.fatturazioneNettaPreRever > 0 && businessData.netRevenuesEcommerce > 0 && businessData.totalPlatformCost > 0 && (
+                    <div className="mt-6 bg-white p-6 rounded-lg border">
+                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                        📊 Breakdown ROI (annuo):
+                      </h3>
+                      <div className="space-y-2 text-gray-700">
+                        <div>• Ricavi Netti attuali (senza REVER): <span className="font-medium">{formatCurrency(businessData.fatturazioneNettaPreRever)}</span></div>
+                        <div>• Ricavi Netti con REVER: <span className="font-medium">{formatCurrency(businessData.netRevenuesEcommerce)}</span></div>
+                        <div>• Costi piattaforma REVER: <span className="font-medium">{formatCurrency(businessData.totalPlatformCost)}</span></div>
+                        <div>• Incremento netto stimato: <span className="font-medium text-green-600">{formatCurrency(businessData.aumentoNetRevenues)}</span></div>
+                      </div>
+                      <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                        <p className="text-sm text-gray-600">
+                          Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(businessData.aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
+                        </p>
+                      </div>
                     </div>
-                    <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                      <p className="text-sm text-gray-600">
-                        Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(businessData.aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
-                      </p>
-                    </div>
-                  </div>
-                )}
+                  );
+                })()}
 
                 <ComboActions
                   currentScenario={customScenario}
