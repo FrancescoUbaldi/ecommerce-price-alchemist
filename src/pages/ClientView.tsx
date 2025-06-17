@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Calendar, TrendingUp, DollarSign, Users } from 'lucide-react';
+import { ArrowLeft, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import FeeDistributionChart from '@/components/FeeDistributionChart';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import BusinessCase from '@/components/BusinessCase';
+import ReadOnlyPayback from '@/components/ReadOnlyPayback';
 import { getTranslation } from '@/utils/translations';
 
 interface ClientData {
@@ -75,7 +76,7 @@ const ClientView = () => {
 
   const { clientName, clientData, customScenario, showUpfrontDiscount } = sharedData;
 
-  // Calculate scenario results
+  // Calculate scenario results (same logic as main UI)
   const calculateScenario = (scenario: PricingData) => {
     const annualReturns = clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12;
     
@@ -127,24 +128,12 @@ const ClientView = () => {
   };
 
   const calculation = calculateScenario(customScenario);
-  const gtv = clientData.resiAnnuali > 0 
-    ? clientData.resiAnnuali * clientData.carrelloMedio 
-    : clientData.resiMensili * 12 * clientData.carrelloMedio;
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('it-IT', {
       style: 'currency',
       currency: 'EUR',
       minimumFractionDigits: 2
-    }).format(value);
-  };
-
-  const formatCurrencyNoDecimals = (value: number) => {
-    return new Intl.NumberFormat('it-IT', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
     }).format(value);
   };
 
@@ -188,115 +177,105 @@ const ClientView = () => {
               Business Case: {clientName || 'Cliente'}
             </h1>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-gray-500" />
-              <span>Resi Annuali: <strong>{clientData.resiAnnuali.toLocaleString()}</strong></span>
-            </div>
-            <div className="flex items-center gap-2">
-              <DollarSign className="h-4 w-4 text-gray-500" />
-              <span>Carrello Medio: <strong>{formatCurrency(clientData.carrelloMedio)}</strong></span>
-            </div>
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-gray-500" />
-              <span>GTV Annuale: <strong>{formatCurrencyNoDecimals(gtv)}</strong></span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>📊</span>
-              <span>Take Rate: <strong>{formatPercentage(calculation.takeRate)}</strong></span>
-            </div>
-          </div>
         </div>
 
-        {/* Scenario Results */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <span className="text-2xl">📊</span>
-              Scenario Personalizzato - Risultati
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
-              <h3 className="text-lg font-semibold mb-4">Risultati Calcolo</h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span>SaaS Fee:</span>
-                    <span className="font-medium">{formatCurrency(calculation.saasFee)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Transaction Fee:</span>
-                    <span className="font-medium">{formatCurrency(calculation.transactionFee)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>RDV Fee:</span>
-                    <span className="font-medium">{formatCurrency(calculation.rdvFee)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Upselling Fee:</span>
-                    <span className="font-medium">{formatCurrency(calculation.upsellingFee)}</span>
-                  </div>
-                  <div className="flex justify-between items-center font-bold text-xl border-t pt-3">
-                    <span>Totale Mensile:</span>
-                    <div className="flex items-center">
-                      <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
-                      {showUpfrontDiscount && calculation.totalMensile > 0 && (
-                        <div className="ml-3 bg-[#f5f5f5] rounded-lg p-2 text-sm">
-                          <div className="font-medium text-gray-700 mb-1">💡 Sconto upfront:</div>
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-gray-600">6 mesi (-10%):</span>
-                              <span className="line-through text-red-600 text-xs">{formatCurrency(calculation.totalMensile)}</span>
-                              <span className="text-green-700 font-semibold text-xs">→ {formatCurrency(calculation.totalMensile * 0.9)}</span>
+        {/* Main Content - Replicate exact tab structure from main UI */}
+        <Tabs defaultValue="custom" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="custom">Scenario Personalizzato</TabsTrigger>
+            <TabsTrigger value="business">Business Case</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="custom" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <span className="text-2xl">📊</span>
+                  Scenario Personalizzato - {customScenario.name}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-4">Risultati Calcolo</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span>SaaS Fee:</span>
+                        <span className="font-medium">{formatCurrency(calculation.saasFee)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Transaction Fee:</span>
+                        <span className="font-medium">{formatCurrency(calculation.transactionFee)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>RDV Fee:</span>
+                        <span className="font-medium">{formatCurrency(calculation.rdvFee)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Upselling Fee:</span>
+                        <span className="font-medium">{formatCurrency(calculation.upsellingFee)}</span>
+                      </div>
+                      <div className="flex justify-between items-center font-bold text-xl border-t pt-3">
+                        <span>Totale Mensile:</span>
+                        <div className="flex items-center">
+                          <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
+                          {showUpfrontDiscount && calculation.totalMensile > 0 && (
+                            <div className="ml-3 bg-[#f5f5f5] rounded-lg p-2 text-sm">
+                              <div className="font-medium text-gray-700 mb-1">💡 Sconto upfront:</div>
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs text-gray-600">6 mesi (-10%):</span>
+                                  <span className="line-through text-red-600 text-xs">{formatCurrency(calculation.totalMensile)}</span>
+                                  <span className="text-green-700 font-semibold text-xs">→ {formatCurrency(calculation.totalMensile * 0.9)}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs text-gray-600">12 mesi (-15%):</span>
+                                  <span className="line-through text-red-600 text-xs">{formatCurrency(calculation.totalMensile)}</span>
+                                  <span className="text-green-700 font-semibold text-xs">→ {formatCurrency(calculation.totalMensile * 0.85)}</span>
+                                </div>
+                              </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-gray-600">12 mesi (-15%):</span>
-                              <span className="line-through text-red-600 text-xs">{formatCurrency(calculation.totalMensile)}</span>
-                              <span className="text-green-700 font-semibold text-xs">→ {formatCurrency(calculation.totalMensile * 0.85)}</span>
-                            </div>
-                          </div>
+                          )}
                         </div>
-                      )}
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span>ACV (Annual Contract Value):</span>
+                        <span className="font-medium">{formatCurrency(calculation.annualContractValue)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Take Rate:</span>
+                        <span className="font-medium text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span>ACV (Annual Contract Value):</span>
-                    <span className="font-medium">{formatCurrency(calculation.annualContractValue)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Take Rate:</span>
-                    <span className="font-medium text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
-                  </div>
-                </div>
-              </div>
 
-              <div className="mt-6">
-                <FeeDistributionChart
-                  saasFee={calculation.saasFee}
-                  transactionFee={calculation.transactionFee}
-                  rdvFee={calculation.rdvFee}
-                  upsellingFee={calculation.upsellingFee}
-                  totalMensile={calculation.totalMensile}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+                  {/* ReadOnlyPayback component */}
+                  <ReadOnlyPayback
+                    businessCaseData={clientData}
+                    scenarioData={customScenario}
+                    monthlyTotal={calculation.totalMensile}
+                    language="it"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-        {/* Business Case */}
-        <BusinessCase
-          clientName={clientName}
-          setClientName={() => {}} // Read-only in shared view
-          clientData={clientData}
-          scenario={customScenario}
-          language="it"
-          updateClientData={() => {}} // Read-only in shared view
-          readOnly={true}
-        />
+          <TabsContent value="business" className="space-y-6">
+            <BusinessCase
+              clientName={clientName}
+              setClientName={() => {}} // Read-only in shared view
+              clientData={clientData}
+              scenario={customScenario}
+              language="it"
+              updateClientData={() => {}} // Read-only in shared view
+              readOnly={true}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
