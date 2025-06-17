@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,6 +25,7 @@ interface ShareData {
     totalOrdersAnnual: number;
     returnRatePercentage: number;
   };
+  show_upfront_options?: boolean;
 }
 
 const ClientView = () => {
@@ -353,6 +353,7 @@ const ClientView = () => {
               language={shareData.language}
               updateClientData={() => {}} // Read-only
               readOnly={true}
+              showUpfrontOptions={shareData.show_upfront_options || false}
             />
           </TabsContent>
         </Tabs>
