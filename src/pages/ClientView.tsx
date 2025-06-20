@@ -372,17 +372,17 @@ const ClientView = () => {
                 {fatturazioneNettaPreRever > 0 && netRevenuesEcommerce > 0 && totalPlatformCost > 0 && (
                   <div className="mt-6 bg-white p-6 rounded-lg border">
                     <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                      📊 {getTranslation(shareData.language, 'roiBreakdownTitle')}
+                      📊 Breakdown ROI (annuo):
                     </h3>
                     <div className="space-y-2 text-gray-700">
-                      <div>• {getTranslation(shareData.language, 'currentNetRevenues')}: <span className="font-medium">{formatCurrency(fatturazioneNettaPreRever)}</span></div>
-                      <div>• {getTranslation(shareData.language, 'netRevenuesWithRever')}: <span className="font-medium">{formatCurrency(netRevenuesEcommerce)}</span></div>
-                      <div>• {getTranslation(shareData.language, 'reverPlatformCosts')}: <span className="font-medium">{formatCurrency(totalPlatformCost)}</span></div>
-                      <div>• {getTranslation(shareData.language, 'estimatedNetIncrease')}: <span className="font-medium text-green-600">{formatCurrency(aumentoNetRevenues)}</span></div>
+                      <div>• Ricavi Netti attuali (senza REVER): <span className="font-medium">{formatCurrency(fatturazioneNettaPreRever)}</span></div>
+                      <div>• Ricavi Netti con REVER: <span className="font-medium">{formatCurrency(netRevenuesEcommerce)}</span></div>
+                      <div>• Costi piattaforma REVER: <span className="font-medium">{formatCurrency(totalPlatformCost)}</span></div>
+                      <div>• Incremento netto stimato: <span className="font-medium text-green-600">{formatCurrency(aumentoNetRevenues)}</span></div>
                     </div>
                     <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                       <p className="text-sm text-gray-600">
-                        {getTranslation(shareData.language, 'configurationSuggestion')} <span className="font-semibold text-blue-700">{formatCurrency(aumentoNetRevenues)}</span> {getTranslation(shareData.language, 'configurationSuggestionEnd')}
+                        Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
                       </p>
                     </div>
                   </div>

@@ -80,17 +80,7 @@ export const translations = {
     newMonthly: "Nuovo mensile",
     annualTotal: "Totale annuo",
     tooltipUpfront: "Applica uno sconto sulla SaaS Fee per pagamenti anticipati",
-    tooltipAbsorb: "REVER assorbe i costi di transaction fee per rendere l'offerta più competitiva",
-    // ROI Breakdown translations
-    roiBreakdownTitle: "Breakdown ROI (annuo):",
-    currentNetRevenues: "Ricavi Netti attuali (senza REVER)",
-    netRevenuesWithRever: "Ricavi Netti con REVER",
-    reverPlatformCosts: "Costi piattaforma REVER",
-    estimatedNetIncrease: "Incremento netto stimato",
-    configurationSuggestion: "Con questa configurazione, REVER può generare un extra fatturato netto di",
-    configurationSuggestionEnd: "all'anno rispetto al tuo scenario attuale.",
-    useThisCombo: "Usa questa Combo",
-    deleteCombo: "Elimina Combo"
+    tooltipAbsorb: "REVER assorbe i costi di transaction fee per rendere l'offerta più competitiva"
   },
   en: {
     title: "Price & Smile :)",
@@ -172,17 +162,7 @@ export const translations = {
     newMonthly: "New monthly",
     annualTotal: "Annual total",
     tooltipUpfront: "Apply a discount on SaaS Fee for upfront payments",
-    tooltipAbsorb: "REVER absorbs transaction fee costs to make the offer more competitive",
-    // ROI Breakdown translations
-    roiBreakdownTitle: "ROI Breakdown (annual):",
-    currentNetRevenues: "Current Net Revenues (without REVER)",
-    netRevenuesWithRever: "Net Revenues with REVER",
-    reverPlatformCosts: "REVER Platform Costs",
-    estimatedNetIncrease: "Estimated Net Increase",
-    configurationSuggestion: "With this configuration, REVER can generate an extra net revenue of",
-    configurationSuggestionEnd: "per year compared to your current scenario.",
-    useThisCombo: "Use this Combo",
-    deleteCombo: "Delete Combo"
+    tooltipAbsorb: "REVER absorbs transaction fee costs to make the offer more competitive"
   },
   es: {
     title: "Price & Smile :)",
@@ -264,17 +244,7 @@ export const translations = {
     newMonthly: "Nuevo mensual",
     annualTotal: "Total anual",
     tooltipUpfront: "Aplicar descuento en SaaS Fee por pagos anticipados",
-    tooltipAbsorb: "REVER absorbe los costos de transaction fee para hacer la oferta más competitiva",
-    // ROI Breakdown translations
-    roiBreakdownTitle: "Desglose ROI (anual):",
-    currentNetRevenues: "Ingresos Netos actuales (sin REVER)",
-    netRevenuesWithRever: "Ingresos Netos con REVER",
-    reverPlatformCosts: "Costos plataforma REVER",
-    estimatedNetIncrease: "Incremento neto estimado",
-    configurationSuggestion: "Con esta configuración, REVER puede generar ingresos netos adicionales de",
-    configurationSuggestionEnd: "al año en comparación con tu escenario actual.",
-    useThisCombo: "Usar este Combo",
-    deleteCombo: "Eliminar Combo"
+    tooltipAbsorb: "REVER absorbe los costos de transaction fee para hacer la oferta más competitiva"
   },
   fr: {
     title: "Price & Smile :)",
@@ -356,17 +326,7 @@ export const translations = {
     newMonthly: "Nouveau mensuel",
     annualTotal: "Total annuel",
     tooltipUpfront: "Appliquer une remise sur les SaaS Fee pour les paiements anticipés",
-    tooltipAbsorb: "REVER absorbe les coûts de transaction fee pour rendre l'offre plus compétitive",
-    // ROI Breakdown translations
-    roiBreakdownTitle: "Répartition ROI (annuel):",
-    currentNetRevenues: "Revenus Nets actuels (sans REVER)",
-    netRevenuesWithRever: "Revenus Nets avec REVER",
-    reverPlatformCosts: "Coûts plateforme REVER",
-    estimatedNetIncrease: "Augmentation nette estimée",
-    configurationSuggestion: "Avec cette configuration, REVER peut générer un chiffre d'affaires net supplémentaire de",
-    configurationSuggestionEnd: "par an par rapport à votre scénario actuel.",
-    useThisCombo: "Utiliser ce Combo",
-    deleteCombo: "Supprimer Combo"
+    tooltipAbsorb: "REVER absorbe les coûts de transaction fee pour rendre l'offre plus compétitive"
   }
 };
 

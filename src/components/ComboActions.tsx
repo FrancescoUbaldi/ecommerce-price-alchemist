@@ -108,7 +108,7 @@ const ComboActions = ({
           className="flex items-center gap-2 bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
         >
           <Play className="h-4 w-4" />
-          {getTranslation(language, 'useThisCombo')}
+          Usa questa Combo
         </Button>
       )}
 
@@ -119,7 +119,7 @@ const ComboActions = ({
           className="flex items-center gap-2 bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
         >
           <span className="text-lg">🗑️</span>
-          {getTranslation(language, 'deleteCombo')}
+          Elimina Combo
         </Button>
       )}
     </div>
