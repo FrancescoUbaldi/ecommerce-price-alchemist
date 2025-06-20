@@ -14,7 +14,9 @@ import ComboActions from '@/components/ComboActions';
 import ShareModal from '@/components/ShareModal';
 import ReadOnlyPayback from '@/components/ReadOnlyPayback';
 import { getTranslation } from '@/utils/translations';
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
+import Tooltip from '@/components/ui/tooltip';
+import TooltipTrigger from '@/components/ui/tooltip-trigger';
+import TooltipContent from '@/components/ui/tooltip-content';
 
 interface PricingData {
   saasFee: number;
@@ -578,440 +580,619 @@ const Index = () => {
   };
 
   return (
-    <TooltipProvider>
-      <div className="min-h-screen bg-white p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex-1"></div>
-            <div className="flex flex-col items-center justify-center">
-              <div className="h-40 w-auto overflow-hidden mb-1">
-                <img 
-                  src="/lovable-uploads/f7dbf19a-18fa-4078-980a-2e6cc9c4fd45.png" 
-                  alt="REVER Logo" 
-                  className="h-48 w-auto object-cover object-top transform -translate-y-2"
-                />
-              </div>
-              <p className="text-gray-600 text-center -mt-6 leading-tight relative z-10">{getTranslation(language, 'subtitle')}</p>
+    <div className="min-h-screen bg-white p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex-1"></div>
+          <div className="flex flex-col items-center justify-center">
+            <div className="h-40 w-auto overflow-hidden mb-1">
+              <img 
+                src="/lovable-uploads/f7dbf19a-18fa-4078-980a-2e6cc9c4fd45.png" 
+                alt="REVER Logo" 
+                className="h-48 w-auto object-cover object-top transform -translate-y-2"
+              />
             </div>
-            <div className="flex-1 flex justify-end">
-              <LanguageSelector language={language} setLanguage={setLanguage} />
-            </div>
+            <p className="text-gray-600 text-center -mt-6 leading-tight relative z-10">{getTranslation(language, 'subtitle')}</p>
           </div>
+          <div className="flex-1 flex justify-end">
+            <LanguageSelector language={language} setLanguage={setLanguage} />
+          </div>
+        </div>
 
-          {/* Notifications */}
-          {showComboDeletedNotification && (
-            <div className="fixed top-4 right-4 bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-md shadow-lg animate-fade-in z-50">
-              ✅ Combo eliminata con successo
-            </div>
-          )}
+        {/* Notifications */}
+        {showComboDeletedNotification && (
+          <div className="fixed top-4 right-4 bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-md shadow-lg animate-fade-in z-50">
+            ✅ Combo eliminata con successo
+          </div>
+        )}
 
-          {showComboUsedNotification && (
-            <div className="fixed top-4 right-4 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-lg animate-fade-in z-50">
-              ✅ Business Case aggiornato con questa configurazione
-            </div>
-          )}
+        {showComboUsedNotification && (
+          <div className="fixed top-4 right-4 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-lg animate-fade-in z-50">
+            ✅ Business Case aggiornato con questa configurazione
+          </div>
+        )}
 
-          {/* Client Data */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  {getTranslation(language, 'clientData')}
-                </CardTitle>
-                <div className="flex flex-col items-end relative">
-                  <Button 
-                    onClick={resetData}
-                    variant="outline" 
-                    size="sm"
-                    className="flex items-center gap-2"
-                  >
-                    <RotateCcw className="h-4 w-4" />
-                    {getTranslation(language, 'reset')}
-                  </Button>
-                  
-                  {/* Enhanced reset confirmation message */}
-                  {showResetConfirmation && (
-                    <div className="mt-2 flex items-center gap-2 bg-[#DFF6E1] px-3 py-2 rounded-md border border-green-200 animate-fade-in">
-                      <Check className="h-4 w-4 text-green-600" />
-                      <span className="text-sm text-green-700 font-medium">
-                        ✅ Tutti i dati sono stati azzerati con successo
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Enhanced Undo button with fade animation */}
-                  {showUndoButton && (
-                    <Button 
-                      onClick={undoReset}
-                      variant="outline" 
-                      size="sm"
-                      className="mt-2 flex items-center gap-2 bg-blue-50 border-blue-200 hover:bg-blue-100 animate-fade-in"
-                    >
-                      <Undo className="h-4 w-4" />
-                      ↩️ Annulla reset
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                <div className="space-y-2">
-                  <Label htmlFor="resiAnnuali">{getTranslation(language, 'annualReturns')}</Label>
-                  <Input
-                    id="resiAnnuali"
-                    type="number"
-                    value={clientData.resiAnnuali || ''}
-                    onChange={(e) => updateClientData('resiAnnuali', parseInt(e.target.value) || 0)}
-                    placeholder="23900"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="resiMensili">{getTranslation(language, 'monthlyReturns')}</Label>
-                  <Input
-                    id="resiMensili"
-                    type="number"
-                    value={clientData.resiMensili || ''}
-                    onChange={(e) => updateClientData('resiMensili', parseInt(e.target.value) || 0)}
-                    placeholder="1992"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="carrelloMedio">{getTranslation(language, 'averageCart')}</Label>
-                  <Input
-                    id="carrelloMedio"
-                    type="number"
-                    value={clientData.carrelloMedio || ''}
-                    onChange={(e) => updateClientData('carrelloMedio', parseFloat(e.target.value) || 0)}
-                    placeholder="35.50"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>{getTranslation(language, 'annualGTV')}</Label>
-                  <div className="p-3 bg-[#1790FF] text-white rounded-md border-2 border-[#1790FF] shadow-lg">
-                    <span className="text-lg font-semibold">
-                      {formatCurrencyNoDecimals(gtv)}
+        {/* Client Data */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="h-5 w-5" />
+                {getTranslation(language, 'clientData')}
+              </CardTitle>
+              <div className="flex flex-col items-end relative">
+                <Button 
+                  onClick={resetData}
+                  variant="outline" 
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  {getTranslation(language, 'reset')}
+                </Button>
+                
+                {/* Enhanced reset confirmation message */}
+                {showResetConfirmation && (
+                  <div className="mt-2 flex items-center gap-2 bg-[#DFF6E1] px-3 py-2 rounded-md border border-green-200 animate-fade-in">
+                    <Check className="h-4 w-4 text-green-600" />
+                    <span className="text-sm text-green-700 font-medium">
+                      ✅ Tutti i dati sono stati azzerati con successo
                     </span>
                   </div>
+                )}
+
+                {/* Enhanced Undo button with fade animation */}
+                {showUndoButton && (
+                  <Button 
+                    onClick={undoReset}
+                    variant="outline" 
+                    size="sm"
+                    className="mt-2 flex items-center gap-2 bg-blue-50 border-blue-200 hover:bg-blue-100 animate-fade-in"
+                  >
+                    <Undo className="h-4 w-4" />
+                    ↩️ Annulla reset
+                  </Button>
+                )}
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+              <div className="space-y-2">
+                <Label htmlFor="resiAnnuali">{getTranslation(language, 'annualReturns')}</Label>
+                <Input
+                  id="resiAnnuali"
+                  type="number"
+                  value={clientData.resiAnnuali || ''}
+                  onChange={(e) => updateClientData('resiAnnuali', parseInt(e.target.value) || 0)}
+                  placeholder="23900"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="resiMensili">{getTranslation(language, 'monthlyReturns')}</Label>
+                <Input
+                  id="resiMensili"
+                  type="number"
+                  value={clientData.resiMensili || ''}
+                  onChange={(e) => updateClientData('resiMensili', parseInt(e.target.value) || 0)}
+                  placeholder="1992"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="carrelloMedio">{getTranslation(language, 'averageCart')}</Label>
+                <Input
+                  id="carrelloMedio"
+                  type="number"
+                  value={clientData.carrelloMedio || ''}
+                  onChange={(e) => updateClientData('carrelloMedio', parseFloat(e.target.value) || 0)}
+                  placeholder="35.50"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>{getTranslation(language, 'annualGTV')}</Label>
+                <div className="p-3 bg-[#1790FF] text-white rounded-md border-2 border-[#1790FF] shadow-lg">
+                  <span className="text-lg font-semibold">
+                    {formatCurrencyNoDecimals(gtv)}
+                  </span>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </CardContent>
+        </Card>
 
-          <Tabs defaultValue="predefiniti" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-gray-100 p-1 rounded-lg">
-              <TabsTrigger 
-                value="predefiniti"
-                className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 data-[state=inactive]:hover:bg-gray-200 transition-all duration-300 cursor-pointer rounded-md font-medium"
-              >
-                {getTranslation(language, 'predefinedScenarios')}
-              </TabsTrigger>
-              <TabsTrigger 
-                value="personalizzato"
-                className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 data-[state=inactive]:hover:bg-gray-200 transition-all duration-300 cursor-pointer rounded-md font-medium"
-              >
-                {getTranslation(language, 'customScenario')}
-                {showScenarioNotification && (
-                  <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-xs px-2 py-1 rounded animate-fade-in">
-                    {getTranslation(language, 'scenarioApplied')}
-                  </span>
-                )}
-              </TabsTrigger>
-              <TabsTrigger 
-                value="business-case"
-                className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 data-[state=inactive]:hover:bg-gray-200 transition-all duration-300 cursor-pointer rounded-md font-medium"
-              >
-                {getTranslation(language, 'businessCase')}
-              </TabsTrigger>
-            </TabsList>
+        <Tabs defaultValue="predefiniti" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 bg-gray-100 p-1 rounded-lg">
+            <TabsTrigger 
+              value="predefiniti"
+              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 data-[state=inactive]:hover:bg-gray-200 transition-all duration-300 cursor-pointer rounded-md font-medium"
+            >
+              {getTranslation(language, 'predefinedScenarios')}
+            </TabsTrigger>
+            <TabsTrigger 
+              value="personalizzato"
+              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 data-[state=inactive]:hover:bg-gray-200 transition-all duration-300 cursor-pointer rounded-md font-medium"
+            >
+              {getTranslation(language, 'customScenario')}
+              {showScenarioNotification && (
+                <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-xs px-2 py-1 rounded animate-fade-in">
+                  {getTranslation(language, 'scenarioApplied')}
+                </span>
+              )}
+            </TabsTrigger>
+            <TabsTrigger 
+              value="business-case"
+              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 data-[state=inactive]:hover:bg-gray-200 transition-all duration-300 cursor-pointer rounded-md font-medium"
+            >
+              {getTranslation(language, 'businessCase')}
+            </TabsTrigger>
+          </TabsList>
 
-            <TabsContent value="predefiniti" className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {predefinedScenarios.map((scenario, index) => {
-                  const calculation = calculateScenario(scenario);
-                  
-                  return (
-                    <Card 
-                      key={index} 
-                      className="border-2 hover:border-[#1790FF] transition-colors"
-                    >
-                      <CardHeader>
-                        <CardTitle className="text-lg flex items-center justify-between">
-                          <span className="flex items-center gap-2">
-                            <span className="text-2xl">{getScenarioEmoji(index)}</span>
-                            {scenario.name}
-                          </span>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="bg-gray-50 p-3 rounded-lg space-y-3 text-sm">
-                          <div className="space-y-1">
-                            <label className="text-xs text-gray-600">{getTranslation(language, 'saasFee')}</label>
-                            <Input
-                              type="number"
-                              value={scenario.saasFee}
-                              onChange={(e) => updatePredefinedScenario(index, 'saasFee', parseFloat(e.target.value) || 0)}
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                          <div className="space-y-1">
-                            <label className="text-xs text-gray-600">{getTranslation(language, 'transactionFee')}</label>
-                            <Input
-                              type="number"
-                              step="0.10"
-                              value={scenario.transactionFeeFixed}
-                              onChange={(e) => updatePredefinedScenario(index, 'transactionFeeFixed', parseFloat(e.target.value) || 0)}
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                          <div className="space-y-1">
-                            <label className="text-xs text-gray-600">{getTranslation(language, 'rdvFee')}</label>
-                            <Input
-                              type="number"
-                              step="0.1"
-                              value={scenario.rdvPercentage}
-                              onChange={(e) => updatePredefinedScenario(index, 'rdvPercentage', parseFloat(e.target.value) || 0)}
-                              className="h-8 text-sm"
-                            />
-                          </div>
-                          <div className="space-y-1">
-                            <label className="text-xs text-gray-600">{getTranslation(language, 'upsellingFee')}</label>
-                            <Input
-                              type="number"
-                              step="0.1"
-                              value={scenario.upsellingPercentage}
-                              onChange={(e) => updatePredefinedScenario(index, 'upsellingPercentage', parseFloat(e.target.value) || 0)}
-                              className="h-8 text-sm"
-                            />
-                          </div>
+          <TabsContent value="predefiniti" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {predefinedScenarios.map((scenario, index) => {
+                const calculation = calculateScenario(scenario);
+                
+                return (
+                  <Card 
+                    key={index} 
+                    className="border-2 hover:border-[#1790FF] transition-colors"
+                  >
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center justify-between">
+                        <span className="flex items-center gap-2">
+                          <span className="text-2xl">{getScenarioEmoji(index)}</span>
+                          {scenario.name}
+                        </span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="bg-gray-50 p-3 rounded-lg space-y-3 text-sm">
+                        <div className="space-y-1">
+                          <label className="text-xs text-gray-600">{getTranslation(language, 'saasFee')}</label>
+                          <Input
+                            type="number"
+                            value={scenario.saasFee}
+                            onChange={(e) => updatePredefinedScenario(index, 'saasFee', parseFloat(e.target.value) || 0)}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs text-gray-600">{getTranslation(language, 'transactionFee')}</label>
+                          <Input
+                            type="number"
+                            step="0.10"
+                            value={scenario.transactionFeeFixed}
+                            onChange={(e) => updatePredefinedScenario(index, 'transactionFeeFixed', parseFloat(e.target.value) || 0)}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs text-gray-600">{getTranslation(language, 'rdvFee')}</label>
+                          <Input
+                            type="number"
+                            step="0.1"
+                            value={scenario.rdvPercentage}
+                            onChange={(e) => updatePredefinedScenario(index, 'rdvPercentage', parseFloat(e.target.value) || 0)}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs text-gray-600">{getTranslation(language, 'upsellingFee')}</label>
+                          <Input
+                            type="number"
+                            step="0.1"
+                            value={scenario.upsellingPercentage}
+                            onChange={(e) => updatePredefinedScenario(index, 'upsellingPercentage', parseFloat(e.target.value) || 0)}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2 border-t pt-3">
+                        <div className="flex justify-between text-sm">
+                          <span>SaaS Fee:</span>
+                          <span>{formatCurrency(calculation.saasFee)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>Transaction Fee:</span>
+                          <span>{formatCurrency(calculation.transactionFee)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>RDV Fee:</span>
+                          <span>{formatCurrency(calculation.rdvFee)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>Upselling Fee:</span>
+                          <span>{formatCurrency(calculation.upsellingFee)}</span>
+                        </div>
+                        <div className="flex justify-between font-bold text-lg border-t pt-2">
+                          <span>{getTranslation(language, 'monthlyTotal')}:</span>
+                          <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
+                        </div>
+                        
+                        <div className="flex justify-between font-semibold text-lg border-t pt-2">
+                          <span>{getTranslation(language, 'takeRate')}:</span>
+                          <span className="text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
                         </div>
 
-                        <div className="space-y-2 border-t pt-3">
-                          <div className="flex justify-between text-sm">
+                        <div className="mt-4">
+                          <FeeDistributionChart
+                            saasFee={calculation.saasFee}
+                            transactionFee={calculation.transactionFee}
+                            rdvFee={calculation.rdvFee}
+                            upsellingFee={calculation.upsellingFee}
+                            totalMensile={calculation.totalMensile}
+                          />
+                        </div>
+                        
+                        <Button 
+                          onClick={() => selectPredefinedScenario(scenario)}
+                          className="w-full mt-3 bg-[#1790FF] hover:bg-[#1470CC] text-white"
+                        >
+                          {getTranslation(language, 'useThisScenario')}
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="personalizzato" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Settings className="h-5 w-5" />
+                    {getTranslation(language, 'customScenario')}
+                  </CardTitle>
+                  {isDataCompleteForSharing() && (
+                    <ShareModal
+                      clientData={clientData}
+                      customScenario={customScenario}
+                      language={language}
+                      showUpfrontDiscount={showUpfrontDiscount}
+                      absorbTransactionFee={absorbTransactionFee}
+                    />
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+                  <div className="space-y-2">
+                    <Label htmlFor="customTotalOrders">{getTranslation(language, 'totalAnnualOrders')}</Label>
+                    <Input
+                      id="customTotalOrders"
+                      type="number"
+                      value={clientData.totalOrdersAnnual || ''}
+                      onChange={(e) => updateCustomScenarioField('totalOrdersAnnual', parseInt(e.target.value) || 0)}
+                      placeholder="100000"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="customAnnualReturns">{getTranslation(language, 'annualReturns')}</Label>
+                    <Input
+                      id="customAnnualReturns"
+                      type="number"
+                      value={clientData.resiAnnuali || ''}
+                      onChange={(e) => updateCustomScenarioField('resiAnnuali', parseInt(e.target.value) || 0)}
+                      placeholder="23900"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="customReturnRatePersonal">{getTranslation(language, 'returnRate')}</Label>
+                    <Input
+                      id="customReturnRatePersonal"
+                      type="number"
+                      step="0.1"
+                      value={clientData.returnRatePercentage || ''}
+                      onChange={(e) => updateCustomScenarioField('returnRatePercentage', parseFloat(e.target.value) || 0)}
+                      placeholder="23.9"
+                    />
+                  </div>
+                  <div className="space-y-2 flex flex-col justify-end">
+                    {/* Upfront discount toggle */}
+                    <div className="flex items-center justify-between p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                      <div className="flex items-center gap-3">
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Calendar className="h-5 w-5 text-yellow-600" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{getTranslation(language, 'tooltipUpfront')}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        <span className="font-medium text-gray-800">{getTranslation(language, 'advancedPayment')}</span>
+                      </div>
+                      <Switch
+                        checked={showUpfrontDiscount}
+                        onCheckedChange={(val: boolean) => setShowUpfrontDiscount(val)}
+                      />
+                    </div>
+
+                    {/* Absorb Transaction Fee Toggle */}
+                    <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
+                      <div className="flex items-center gap-3">
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Shield className="h-5 w-5 text-blue-600" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{getTranslation(language, 'tooltipAbsorb')}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        <span className="font-medium text-gray-800">{getTranslation(language, 'absorbTransactionFee')}</span>
+                      </div>
+                      <Switch
+                        checked={absorbTransactionFee}
+                        onCheckedChange={(val: boolean) => setAbsorbTransactionFee(val)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="customSaasFee">{getTranslation(language, 'saasFee')}</Label>
+                    <Input
+                      id="customSaasFee"
+                      type="number"
+                      value={customScenario.saasFee || ''}
+                      onChange={(e) => setCustomScenario({
+                        ...customScenario,
+                        saasFee: parseFloat(e.target.value) || 0
+                      })}
+                      placeholder="0"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="customTransactionFee">{getTranslation(language, 'transactionFee')}</Label>
+                    <Input
+                      id="customTransactionFee"
+                      type="number"
+                      step="0.10"
+                      value={customScenario.transactionFeeFixed || ''}
+                      onChange={(e) => setCustomScenario({
+                        ...customScenario,
+                        transactionFeeFixed: parseFloat(e.target.value) || 0
+                      })}
+                      placeholder="0.50"
+                      className={absorbTransactionFee ? 'text-gray-400' : ''}
+                    />
+                    {/* Checkbox to absorb transaction fee */}
+                    <div className="flex items-center space-x-2 mt-2">
+                      <Checkbox
+                        id="absorb-transaction-fee"
+                        checked={absorbTransactionFee}
+                        onCheckedChange={(checked: boolean | 'indeterminate') => {
+                          if (typeof checked === 'boolean') {
+                            setAbsorbTransactionFee(checked);
+                          }
+                        }}
+                      />
+                      <Label htmlFor="absorb-transaction-fee" className="text-sm text-gray-700">
+                        Assorbi costi Transaction Fee
+                      </Label>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="customRdvFee">{getTranslation(language, 'rdvFee')}</Label>
+                    <Input
+                      id="customRdvFee"
+                      type="number"
+                      step="0.1"
+                      value={customScenario.rdvPercentage || ''}
+                      onChange={(e) => setCustomScenario({
+                        ...customScenario,
+                        rdvPercentage: parseFloat(e.target.value) || 0
+                      })}
+                      placeholder="0"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="customUpsellingFee">{getTranslation(language, 'upsellingFee')}</Label>
+                    <Input
+                      id="customUpsellingFee"
+                      type="number"
+                      step="0.1"
+                      value={customScenario.upsellingPercentage || ''}
+                      onChange={(e) => setCustomScenario({
+                        ...customScenario,
+                        upsellingPercentage: parseFloat(e.target.value) || 0
+                      })}
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+
+                {(() => {
+                  const calculation = calculateScenario(customScenario, absorbTransactionFee);
+                  const businessData = calculateBusinessCaseData();
+                  
+                  return (
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
+                      <h3 className="text-lg font-semibold mb-4">{getTranslation(language, 'calculationResults')}</h3>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-3">
+                          <div className="flex justify-between">
                             <span>SaaS Fee:</span>
-                            <span>{formatCurrency(calculation.saasFee)}</span>
+                            <span className="font-medium">{formatCurrency(calculation.saasFee)}</span>
                           </div>
-                          <div className="flex justify-between text-sm">
+                          <div className="flex justify-between">
                             <span>Transaction Fee:</span>
-                            <span>{formatCurrency(calculation.transactionFee)}</span>
+                            <span className={`font-medium ${absorbTransactionFee ? 'text-gray-400 line-through' : ''}`}>
+                              {formatCurrency(absorbTransactionFee ? 0 : calculation.transactionFee)}
+                            </span>
                           </div>
-                          <div className="flex justify-between text-sm">
+                          <div className="flex justify-between">
                             <span>RDV Fee:</span>
-                            <span>{formatCurrency(calculation.rdvFee)}</span>
+                            <span className="font-medium">{formatCurrency(calculation.rdvFee)}</span>
                           </div>
-                          <div className="flex justify-between text-sm">
+                          <div className="flex justify-between">
                             <span>Upselling Fee:</span>
-                            <span>{formatCurrency(calculation.upsellingFee)}</span>
+                            <span className="font-medium">{formatCurrency(calculation.upsellingFee)}</span>
                           </div>
-                          <div className="flex justify-between font-bold text-lg border-t pt-2">
+                          <div className="flex justify-between font-bold text-xl border-t pt-3">
                             <span>{getTranslation(language, 'monthlyTotal')}:</span>
                             <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
                           </div>
-                          
-                          <div className="flex justify-between font-semibold text-lg border-t pt-2">
-                            <span>{getTranslation(language, 'takeRate')}:</span>
-                            <span className="text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
-                          </div>
-
-                          <div className="mt-4">
-                            <FeeDistributionChart
-                              saasFee={calculation.saasFee}
-                              transactionFee={calculation.transactionFee}
-                              rdvFee={calculation.rdvFee}
-                              upsellingFee={calculation.upsellingFee}
-                              totalMensile={calculation.totalMensile}
-                            />
-                          </div>
-                          
-                          <Button 
-                            onClick={() => selectPredefinedScenario(scenario)}
-                            className="w-full mt-3 bg-[#1790FF] hover:bg-[#1470CC] text-white"
-                          >
-                            {getTranslation(language, 'useThisScenario')}
-                          </Button>
                         </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            </TabsContent>
+                        <div className="space-y-3">
+                          {/* Upfront discount options */}
+                          {showUpfrontDiscount && calculation.totalMensile > 0 && (
+                            <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                              <h4 className="font-semibold mb-3 text-gray-800">💸 {getTranslation(language, 'upfrontDiscount')}:</h4>
+                              <div className="space-y-2 text-sm">
+                                <div className="flex justify-between items-center">
+                                  <span>{getTranslation(language, 'sixMonthsDiscount')}:</span>
+                                  <div className="text-right">
+                                    <span className="line-through text-red-500 mr-2">{formatCurrency(customScenario.saasFee)}</span>
+                                    <span className="font-semibold text-green-600">
+                                      {formatCurrency(customScenario.saasFee * 0.9)}
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="text-xs text-gray-600 text-right">
+                                  {getTranslation(language, 'newMonthly')}: {formatCurrency(calculation.totalMensile - customScenario.saasFee + (customScenario.saasFee * 0.9))}
+                                </div>
+                                <div className="text-xs text-gray-600 text-right">
+                                  {getTranslation(language, 'annualTotal')}: {formatCurrency((calculation.totalMensile - customScenario.saasFee + (customScenario.saasFee * 0.9)) * 12)}
+                                </div>
+                                <div className="flex justify-between items-center">
+                                  <span>{getTranslation(language, 'twelveMonthsDiscount')}:</span>
+                                  <div className="text-right">
+                                    <span className="line-through text-red-500 mr-2">{formatCurrency(customScenario.saasFee)}</span>
+                                    <span className="font-semibold text-green-600">
+                                      {formatCurrency(customScenario.saasFee * 0.85)}
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="text-xs text-gray-600 text-right">
+                                  {getTranslation(language, 'newMonthly')}: {formatCurrency(calculation.totalMensile - customScenario.saasFee + (customScenario.saasFee * 0.85))}
+                                </div>
+                                <div className="text-xs text-gray-600 text-right">
+                                  {getTranslation(language, 'annualTotal')}: {formatCurrency((calculation.totalMensile - customScenario.saasFee + (customScenario.saasFee * 0.85)) * 12)}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
 
-            <TabsContent value="personalizzato" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2">
-                      <Settings className="h-5 w-5" />
-                      {getTranslation(language, 'customScenario')}
-                    </CardTitle>
-                    {isDataCompleteForSharing() && (
-                      <ShareModal
-                        clientData={clientData}
-                        customScenario={customScenario}
+                      {/* Use the ReadOnlyPayback component */}
+                      <ReadOnlyPayback
+                        businessCaseData={clientData}
+                        scenarioData={customScenario}
+                        monthlyTotal={calculation.totalMensile}
                         language={language}
-                        showUpfrontDiscount={showUpfrontDiscount}
-                        absorbTransactionFee={absorbTransactionFee}
                       />
-                    )}
-                  </div>
+
+                      {/* Payback calculation box */}
+                      {calculatePayback !== null && (
+                        <div className="mt-6 bg-[#E5F0FF] border border-[#1790FF] rounded-lg p-4 animate-fade-in">
+                          <div className="flex items-center gap-3">
+                            <Clock className="h-5 w-5 text-[#1790FF]" />
+                            <div className="text-[#000D1F]">
+                              <span className="font-medium">⏳ Payback stimato: </span>
+                              <span className="font-bold text-[#1790FF]">
+                                {calculatePayback.toFixed(1)} mesi
+                              </span>
+                              <span> per recuperare l'investimento</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* ROI Breakdown Section */}
+                      {businessData.fatturazioneNettaPreRever > 0 && businessData.netRevenuesEcommerce > 0 && businessData.totalPlatformCost > 0 && (
+                        <div className="mt-6 bg-white p-6 rounded-lg border">
+                          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                            📊 Breakdown ROI (annuo):
+                          </h3>
+                          <div className="space-y-2 text-gray-700">
+                            <div>• Ricavi Netti attuali (senza REVER): <span className="font-medium">{formatCurrency(businessData.fatturazioneNettaPreRever)}</span></div>
+                            <div>• Ricavi Netti con REVER: <span className="font-medium">{formatCurrency(businessData.netRevenuesEcommerce)}</span></div>
+                            <div>• Costi piattaforma REVER: <span className="font-medium">{formatCurrency(businessData.totalPlatformCost)}</span></div>
+                            <div>• Incremento netto stimato: <span className="font-medium text-green-600">{formatCurrency(businessData.aumentoNetRevenues)}</span></div>
+                          </div>
+                          <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                            <p className="text-sm text-gray-600">
+                              Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(businessData.aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+
+                <ComboActions
+                  currentScenario={customScenario}
+                  onDuplicate={handleDuplicateScenario}
+                  language={language}
+                  duplicateCount={duplicatedScenarios.length}
+                />
+              </CardContent>
+            </Card>
+
+            {duplicatedScenarios.map((scenario, index) => (
+              <Card key={index} className="border-dashed border-2">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <div className="h-5 w-5" />
+                    {scenario.name} #{index + 1}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
-                    <div className="space-y-2">
-                      <Label htmlFor="customTotalOrders">{getTranslation(language, 'totalAnnualOrders')}</Label>
-                      <Input
-                        id="customTotalOrders"
-                        type="number"
-                        value={clientData.totalOrdersAnnual || ''}
-                        onChange={(e) => updateCustomScenarioField('totalOrdersAnnual', parseInt(e.target.value) || 0)}
-                        placeholder="100000"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="customAnnualReturns">{getTranslation(language, 'annualReturns')}</Label>
-                      <Input
-                        id="customAnnualReturns"
-                        type="number"
-                        value={clientData.resiAnnuali || ''}
-                        onChange={(e) => updateCustomScenarioField('resiAnnuali', parseInt(e.target.value) || 0)}
-                        placeholder="23900"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="customReturnRatePersonal">{getTranslation(language, 'returnRate')}</Label>
-                      <Input
-                        id="customReturnRatePersonal"
-                        type="number"
-                        step="0.1"
-                        value={clientData.returnRatePercentage || ''}
-                        onChange={(e) => updateCustomScenarioField('returnRatePercentage', parseFloat(e.target.value) || 0)}
-                        placeholder="23.9"
-                      />
-                    </div>
-                    <div className="space-y-2 flex flex-col justify-end">
-                      {/* Upfront discount toggle */}
-                      <div className="flex items-center justify-between p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                        <div className="flex items-center gap-3">
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <Calendar className="h-5 w-5 text-yellow-600" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>{getTranslation(language, 'tooltipUpfront')}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                          <span className="font-medium text-gray-800">{getTranslation(language, 'advancedPayment')}</span>
-                        </div>
-                        <Switch
-                          checked={showUpfrontDiscount}
-                          onCheckedChange={(val: boolean) => setShowUpfrontDiscount(val)}
-                        />
-                      </div>
-
-                      {/* Absorb Transaction Fee Toggle */}
-                      <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
-                        <div className="flex items-center gap-3">
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <Shield className="h-5 w-5 text-blue-600" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>{getTranslation(language, 'tooltipAbsorb')}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                          <span className="font-medium text-gray-800">{getTranslation(language, 'absorbTransactionFee')}</span>
-                        </div>
-                        <Switch
-                          checked={absorbTransactionFee}
-                          onCheckedChange={(val: boolean) => setAbsorbTransactionFee(val)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                     <div className="space-y-2">
-                      <Label htmlFor="customSaasFee">{getTranslation(language, 'saasFee')}</Label>
+                      <Label>{getTranslation(language, 'saasFee')}</Label>
                       <Input
-                        id="customSaasFee"
                         type="number"
-                        value={customScenario.saasFee || ''}
-                        onChange={(e) => setCustomScenario({
-                          ...customScenario,
-                          saasFee: parseFloat(e.target.value) || 0
-                        })}
+                        value={scenario.saasFee || ''}
+                        onChange={(e) => updateDuplicatedScenario(index, 'saasFee', parseFloat(e.target.value) || 0)}
                         placeholder="0"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="customTransactionFee">{getTranslation(language, 'transactionFee')}</Label>
+                      <Label>{getTranslation(language, 'transactionFee')}</Label>
                       <Input
-                        id="customTransactionFee"
                         type="number"
                         step="0.10"
-                        value={customScenario.transactionFeeFixed || ''}
-                        onChange={(e) => setCustomScenario({
-                          ...customScenario,
-                          transactionFeeFixed: parseFloat(e.target.value) || 0
-                        })}
+                        value={scenario.transactionFeeFixed || ''}
+                        onChange={(e) => updateDuplicatedScenario(index, 'transactionFeeFixed', parseFloat(e.target.value) || 0)}
                         placeholder="0.50"
-                        className={absorbTransactionFee ? 'text-gray-400' : ''}
                       />
-                      {/* Checkbox to absorb transaction fee */}
-                      <div className="flex items-center space-x-2 mt-2">
-                        <Checkbox
-                          id="absorb-transaction-fee"
-                          checked={absorbTransactionFee}
-                          onCheckedChange={(checked: boolean | 'indeterminate') => {
-                            if (typeof checked === 'boolean') {
-                              setAbsorbTransactionFee(checked);
-                            }
-                          }}
-                        />
-                        <Label htmlFor="absorb-transaction-fee" className="text-sm text-gray-700">
-                          {getTranslation(language, 'absorbTransactionFee')}
-                        </Label>
-                      </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="customRdvFee">{getTranslation(language, 'rdvFee')}</Label>
+                      <Label>{getTranslation(language, 'rdvFee')}</Label>
                       <Input
-                        id="customRdvFee"
                         type="number"
                         step="0.1"
-                        value={customScenario.rdvPercentage || ''}
-                        onChange={(e) => setCustomScenario({
-                          ...customScenario,
-                          rdvPercentage: parseFloat(e.target.value) || 0
-                        })}
+                        value={scenario.rdvPercentage || ''}
+                        onChange={(e) => updateDuplicatedScenario(index, 'rdvPercentage', parseFloat(e.target.value) || 0)}
                         placeholder="0"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="customUpsellingFee">{getTranslation(language, 'upsellingFee')}</Label>
+                      <Label>{getTranslation(language, 'upsellingFee')}</Label>
                       <Input
-                        id="customUpsellingFee"
                         type="number"
                         step="0.1"
-                        value={customScenario.upsellingPercentage || ''}
-                        onChange={(e) => setCustomScenario({
-                          ...customScenario,
-                          upsellingPercentage: parseFloat(e.target.value) || 0
-                        })}
+                        value={scenario.upsellingPercentage || ''}
+                        onChange={(e) => updateDuplicatedScenario(index, 'upsellingPercentage', parseFloat(e.target.value) || 0)}
                         placeholder="0"
                       />
                     </div>
                   </div>
 
                   {(() => {
-                    const calculation = calculateScenario(customScenario, absorbTransactionFee);
-                    const businessData = calculateBusinessCaseData();
-                    
+                    const calculation = calculateScenario(scenario);
                     return (
-                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
+                      <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-lg">
                         <h3 className="text-lg font-semibold mb-4">{getTranslation(language, 'calculationResults')}</h3>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1022,12 +1203,7 @@ const Index = () => {
                             </div>
                             <div className="flex justify-between">
                               <span>Transaction Fee:</span>
-                              <span className={`font-medium ${absorbTransactionFee ? 'text-gray-400 line-through' : ''}`}>
-                                {formatCurrency(absorbTransactionFee ? 0 : calculation.transactionFee)}
-                              </span>
-                              {absorbTransactionFee && (
-                                <span className="text-blue-600 font-medium ml-2">{getTranslation(language, 'absorbed')}</span>
-                              )}
+                              <span className="font-medium">{formatCurrency(calculation.transactionFee)}</span>
                             </div>
                             <div className="flex justify-between">
                               <span>RDV Fee:</span>
@@ -1043,208 +1219,29 @@ const Index = () => {
                             </div>
                           </div>
                           <div className="space-y-3">
-                            {/* Upfront discount options */}
-                            {showUpfrontDiscount && calculation.totalMensile > 0 && (
-                              <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-                                <h4 className="font-semibold mb-3 text-gray-800">💸 {getTranslation(language, 'upfrontDiscount')}:</h4>
-                                <div className="space-y-2 text-sm">
-                                  <div className="flex justify-between items-center">
-                                    <span>{getTranslation(language, 'sixMonthsDiscount')}:</span>
-                                    <div className="text-right">
-                                      <span className="line-through text-red-500 mr-2">{formatCurrency(customScenario.saasFee)}</span>
-                                      <span className="font-semibold text-green-600">
-                                        {formatCurrency(customScenario.saasFee * 0.9)}
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="text-xs text-gray-600 text-right">
-                                    {getTranslation(language, 'newMonthly')}: {formatCurrency(calculation.totalMensile - customScenario.saasFee + (customScenario.saasFee * 0.9))}
-                                  </div>
-                                  <div className="text-xs text-gray-600 text-right">
-                                    {getTranslation(language, 'annualTotal')}: {formatCurrency((calculation.totalMensile - customScenario.saasFee + (customScenario.saasFee * 0.9)) * 12)}
-                                  </div>
-                                  <div className="flex justify-between items-center">
-                                    <span>{getTranslation(language, 'twelveMonthsDiscount')}:</span>
-                                    <div className="text-right">
-                                      <span className="line-through text-red-500 mr-2">{formatCurrency(customScenario.saasFee)}</span>
-                                      <span className="font-semibold text-green-600">
-                                        {formatCurrency(customScenario.saasFee * 0.85)}
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="text-xs text-gray-600 text-right">
-                                    {getTranslation(language, 'newMonthly')}: {formatCurrency(calculation.totalMensile - customScenario.saasFee + (customScenario.saasFee * 0.85))}
-                                  </div>
-                                  <div className="text-xs text-gray-600 text-right">
-                                    {getTranslation(language, 'annualTotal')}: {formatCurrency((calculation.totalMensile - customScenario.saasFee + (customScenario.saasFee * 0.85)) * 12)}
-                                  </div>
-                                </div>
-                              </div>
-                            )}
                           </div>
                         </div>
-
-                        {/* Use the ReadOnlyPayback component */}
-                        <ReadOnlyPayback
-                          businessCaseData={clientData}
-                          scenarioData={customScenario}
-                          monthlyTotal={calculation.totalMensile}
-                          language={language}
-                        />
-
-                        {/* Payback calculation box */}
-                        {calculatePayback !== null && (
-                          <div className="mt-6 bg-[#E5F0FF] border border-[#1790FF] rounded-lg p-4 animate-fade-in">
-                            <div className="flex items-center gap-3">
-                              <Clock className="h-5 w-5 text-[#1790FF]" />
-                              <div className="text-[#000D1F]">
-                                <span className="font-medium">⏳ {getTranslation(language, 'estimatedPayback')}: </span>
-                                <span className="font-bold text-[#1790FF]">
-                                  {calculatePayback.toFixed(1)} {getTranslation(language, 'estimatedPayback').includes('mesi') ? 'mesi' : 'months'}
-                                </span>
-                                <span> per recuperare l'investimento</span>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* ROI Breakdown Section */}
-                        {businessData.fatturazioneNettaPreRever > 0 && businessData.netRevenuesEcommerce > 0 && businessData.totalPlatformCost > 0 && (
-                          <div className="mt-6 bg-white p-6 rounded-lg border">
-                            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                              📊 Breakdown ROI (annuo):
-                            </h3>
-                            <div className="space-y-2 text-gray-700">
-                              <div>• Ricavi Netti attuali (senza REVER): <span className="font-medium">{formatCurrency(businessData.fatturazioneNettaPreRever)}</span></div>
-                              <div>• Ricavi Netti con REVER: <span className="font-medium">{formatCurrency(businessData.netRevenuesEcommerce)}</span></div>
-                              <div>• Costi piattaforma REVER: <span className="font-medium">{formatCurrency(businessData.totalPlatformCost)}</span></div>
-                              <div>• Incremento netto stimato: <span className="font-medium text-green-600">{formatCurrency(businessData.aumentoNetRevenues)}</span></div>
-                            </div>
-                            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                              <p className="text-sm text-gray-600">
-                                {getTranslation(language, 'revenueSuggestion')} <span className="font-semibold text-blue-700">{formatCurrency(businessData.aumentoNetRevenues)}</span> {getTranslation(language, 'revenueSuggestionEnd')}
-                              </p>
-                            </div>
-                          </div>
-                        )}
                       </div>
                     );
                   })()}
-
-                  <ComboActions
-                    currentScenario={customScenario}
-                    onDuplicate={handleDuplicateScenario}
-                    language={language}
-                    duplicateCount={duplicatedScenarios.length}
-                  />
                 </CardContent>
               </Card>
+            ))}
+          </TabsContent>
 
-              {duplicatedScenarios.map((scenario, index) => (
-                <Card key={index} className="border-dashed border-2">
-                  <CardHeader>
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <div className="h-5 w-5" />
-                      {scenario.name} #{index + 1}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                      <div className="space-y-2">
-                        <Label>{getTranslation(language, 'saasFee')}</Label>
-                        <Input
-                          type="number"
-                          value={scenario.saasFee || ''}
-                          onChange={(e) => updateDuplicatedScenario(index, 'saasFee', parseFloat(e.target.value) || 0)}
-                          placeholder="0"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>{getTranslation(language, 'transactionFee')}</Label>
-                        <Input
-                          type="number"
-                          step="0.10"
-                          value={scenario.transactionFeeFixed || ''}
-                          onChange={(e) => updateDuplicatedScenario(index, 'transactionFeeFixed', parseFloat(e.target.value) || 0)}
-                          placeholder="0.50"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>{getTranslation(language, 'rdvFee')}</Label>
-                        <Input
-                          type="number"
-                          step="0.1"
-                          value={scenario.rdvPercentage || ''}
-                          onChange={(e) => updateDuplicatedScenario(index, 'rdvPercentage', parseFloat(e.target.value) || 0)}
-                          placeholder="0"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>{getTranslation(language, 'upsellingFee')}</Label>
-                        <Input
-                          type="number"
-                          step="0.1"
-                          value={scenario.upsellingPercentage || ''}
-                          onChange={(e) => updateDuplicatedScenario(index, 'upsellingPercentage', parseFloat(e.target.value) || 0)}
-                          placeholder="0"
-                        />
-                      </div>
-                    </div>
-
-                    {(() => {
-                      const calculation = calculateScenario(scenario);
-                      return (
-                        <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-lg">
-                          <h3 className="text-lg font-semibold mb-4">{getTranslation(language, 'calculationResults')}</h3>
-                          
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-3">
-                              <div className="flex justify-between">
-                                <span>SaaS Fee:</span>
-                                <span className="font-medium">{formatCurrency(calculation.saasFee)}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span>Transaction Fee:</span>
-                                <span className="font-medium">{formatCurrency(calculation.transactionFee)}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span>RDV Fee:</span>
-                                <span className="font-medium">{formatCurrency(calculation.rdvFee)}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span>Upselling Fee:</span>
-                                <span className="font-medium">{formatCurrency(calculation.upsellingFee)}</span>
-                              </div>
-                              <div className="flex justify-between font-bold text-xl border-t pt-3">
-                                <span>{getTranslation(language, 'monthlyTotal')}:</span>
-                                <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
-                              </div>
-                            </div>
-                            <div className="space-y-3">
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                  </CardContent>
-                </Card>
-              ))}
-            </TabsContent>
-
-            <TabsContent value="business-case" className="space-y-6">
-              <BusinessCase
-                clientName={clientName}
-                setClientName={setClientName}
-                clientData={clientData}
-                scenario={customScenario}
-                language={language}
-                updateClientData={updateClientData}
-              />
-            </TabsContent>
-          </Tabs>
-        </div>
+          <TabsContent value="business-case" className="space-y-6">
+            <BusinessCase
+              clientName={clientName}
+              setClientName={setClientName}
+              clientData={clientData}
+              scenario={customScenario}
+              language={language}
+              updateClientData={updateClientData}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
-    </TooltipProvider>
+    </div>
   );
 };
 
