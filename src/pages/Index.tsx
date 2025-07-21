@@ -537,7 +537,7 @@ const Index = () => {
       // GAS (index 1)
       [
         'Copertura internazionale',
-        'Rimborso: "item verified", "item sent"',
+        'Rimborso: "verified", "sent"',
         'Gift cards',
         '1:1 exchanges',
         '-'
@@ -545,7 +545,7 @@ const Index = () => {
       // FULL GAS (index 2)
       [
         'Copertura internazionale',
-        'Rimborso: "item verified", "item sent", "on start"',
+        'Rimborso: "verified", "sent", "start"',
         'Gift cards + RDV surplus',
         '1:n exchanges',
         'Full catalogo'
@@ -824,9 +824,9 @@ const Index = () => {
                         <h4 className="text-sm font-semibold text-gray-700">Caratteristiche Incluse</h4>
                         <div className="space-y-2">
                           {getScenarioFeatures(index).map((feature, featureIndex) => (
-                            <div key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600">
-                              <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
-                              <span>{feature}</span>
+                             <div key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600 h-5">
+                               <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
+                               <span className="truncate">{feature}</span>
                             </div>
                           ))}
                         </div>
