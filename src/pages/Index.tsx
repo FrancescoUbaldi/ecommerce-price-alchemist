@@ -902,13 +902,14 @@ const Index = () => {
                     <Settings className="h-5 w-5" />
                     {getTranslation(language, 'customScenario')}
                   </CardTitle>
-                  {isDataCompleteForSharing() && (
+                   {isDataCompleteForSharing() && (
                     <ShareModal
                       clientData={clientData}
                       customScenario={customScenario}
                       language={language}
                       showUpfrontDiscount={showUpfrontDiscount}
                       absorbTransactionFee={absorbTransactionFee}
+                      customFeatures={customFeatures}
                     />
                   )}
                 </div>
@@ -1133,12 +1134,18 @@ const Index = () => {
                       {/* Caratteristiche Incluse Section */}
                       {customFeatures.length > 0 && (
                         <div className="mt-6 bg-white p-6 rounded-lg border">
-                          <h4 className="text-sm font-semibold text-gray-700 mb-4">Caratteristiche Incluse</h4>
-                          <div className="space-y-2">
+                          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                            ✅ Caratteristiche Incluse nel piano selezionato
+                          </h3>
+                          <div className="space-y-3">
                             {customFeatures.map((feature, featureIndex) => (
-                              <div key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600 h-5">
-                                <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
-                                <span className="truncate">{feature}</span>
+                              <div key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600">
+                                {feature === "–" ? (
+                                  <span className="text-gray-400 font-medium">–</span>
+                                ) : (
+                                  <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
+                                )}
+                                <span className={feature === "–" ? "text-gray-400" : ""}>{feature}</span>
                               </div>
                             ))}
                           </div>

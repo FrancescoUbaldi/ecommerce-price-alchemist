@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { Check } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
@@ -19,6 +20,7 @@ interface ShareData {
     name: string;
     showUpfrontDiscount?: boolean;
     absorbTransactionFee?: boolean;
+    features?: string[];
   };
   business_case_data: {
     resiAnnuali: number;
@@ -363,6 +365,27 @@ const ClientView = () => {
                     monthlyTotal={calculation.totalMensile}
                     language={shareData.language}
                   />
+
+                  {/* Caratteristiche Incluse Section */}
+                  {shareData.scenario_data.features && shareData.scenario_data.features.length > 0 && (
+                    <div className="mt-6 bg-white p-6 rounded-lg border">
+                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                        ✅ Caratteristiche Incluse nel piano selezionato
+                      </h3>
+                      <div className="space-y-3">
+                        {shareData.scenario_data.features.map((feature: string, featureIndex: number) => (
+                          <div key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600">
+                            {feature === "–" ? (
+                              <span className="text-gray-400 font-medium">–</span>
+                            ) : (
+                              <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
+                            )}
+                            <span className={feature === "–" ? "text-gray-400" : ""}>{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* ROI Breakdown Section */}
