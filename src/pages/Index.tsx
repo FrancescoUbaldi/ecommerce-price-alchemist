@@ -530,14 +530,17 @@ const Index = () => {
       [
         'Copertura nazionale',
         'Rimborso: "item verified"',
-        'Only refunds'
+        'Only refunds',
+        '-',
+        '-'
       ],
       // GAS (index 1)
       [
         'Copertura internazionale',
         'Rimborso: "item verified", "item sent"',
         'Gift cards',
-        '1:1 exchanges'
+        '1:1 exchanges',
+        '-'
       ],
       // FULL GAS (index 2)
       [
