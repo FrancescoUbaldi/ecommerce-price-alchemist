@@ -524,6 +524,34 @@ const Index = () => {
     return emojis[index] || '📊';
   };
 
+  const getScenarioFeatures = (index: number) => {
+    const featuresByScenario = [
+      // ECO MODE (index 0)
+      [
+        'Copertura nazionale',
+        'Rimborso: "item verified"',
+        'Only refunds'
+      ],
+      // GAS (index 1)
+      [
+        'Copertura internazionale',
+        'Rimborso: "item verified", "item sent"',
+        'Gift cards',
+        '1:1 exchanges'
+      ],
+      // FULL GAS (index 2)
+      [
+        'Copertura internazionale',
+        'Rimborso: "item verified", "item sent", "on start"',
+        'Gift cards + RDV surplus',
+        '1:n exchanges',
+        'Full catalogo'
+      ]
+    ];
+    
+    return featuresByScenario[index] || [];
+  };
+
   const getTakeRateStatus = (takeRate: number, scenarioName: string) => {
     if (scenarioName === "GAS") {
       return takeRate >= 2.8 && takeRate <= 4.8 ? "✅ In range (2.8%-4.8%)" : "⚠️ Out of range";
@@ -784,6 +812,19 @@ const Index = () => {
                             onChange={(e) => updatePredefinedScenario(index, 'upsellingPercentage', parseFloat(e.target.value) || 0)}
                             className="h-8 text-sm"
                           />
+                        </div>
+                      </div>
+
+                      {/* Caratteristiche Incluse */}
+                      <div className="space-y-3 border-t pt-3">
+                        <h4 className="text-sm font-semibold text-gray-700">Caratteristiche Incluse</h4>
+                        <div className="space-y-2">
+                          {getScenarioFeatures(index).map((feature, featureIndex) => (
+                            <div key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600">
+                              <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
+                              <span>{feature}</span>
+                            </div>
+                          ))}
                         </div>
                       </div>
 
