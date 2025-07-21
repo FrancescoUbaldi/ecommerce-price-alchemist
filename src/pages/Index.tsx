@@ -762,9 +762,9 @@ const Index = () => {
                 return (
                   <Card 
                     key={index} 
-                    className="border-2 hover:border-[#1790FF] transition-colors"
+                    className="border-2 hover:border-[#1790FF] transition-colors flex flex-col h-full"
                   >
-                    <CardHeader>
+                    <CardHeader className="flex-shrink-0">
                       <CardTitle className="text-lg flex items-center justify-between">
                         <span className="flex items-center gap-2">
                           <span className="text-2xl">{getScenarioEmoji(index)}</span>
@@ -772,8 +772,9 @@ const Index = () => {
                         </span>
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="bg-gray-50 p-3 rounded-lg space-y-3 text-sm">
+                    <CardContent className="flex flex-col flex-grow">
+                      {/* Input Fields Section - Fixed Height */}
+                      <div className="bg-gray-50 p-3 rounded-lg space-y-3 text-sm h-64 flex-shrink-0">
                         <div className="space-y-1">
                           <label className="text-xs text-gray-600">{getTranslation(language, 'saasFee')}</label>
                           <Input
@@ -815,8 +816,8 @@ const Index = () => {
                         </div>
                       </div>
 
-                      {/* Caratteristiche Incluse */}
-                      <div className="space-y-3 border-t pt-3">
+                      {/* Caratteristiche Incluse Section - Fixed Height */}
+                      <div className="space-y-3 border-t pt-3 h-48 flex-shrink-0">
                         <h4 className="text-sm font-semibold text-gray-700">Caratteristiche Incluse</h4>
                         <div className="space-y-2">
                           {getScenarioFeatures(index).map((feature, featureIndex) => (
@@ -828,7 +829,8 @@ const Index = () => {
                         </div>
                       </div>
 
-                      <div className="space-y-2 border-t pt-3">
+                      {/* Fee Breakdown Section - Fixed Height */}
+                      <div className="space-y-2 border-t pt-3 h-40 flex-shrink-0">
                         <div className="flex justify-between text-sm">
                           <span>SaaS Fee:</span>
                           <span>{formatCurrency(calculation.saasFee)}</span>
@@ -854,20 +856,24 @@ const Index = () => {
                           <span>{getTranslation(language, 'takeRate')}:</span>
                           <span className="text-[#1790FF]">{formatPercentage(calculation.takeRate)}</span>
                         </div>
+                      </div>
 
-                        <div className="mt-4">
-                          <FeeDistributionChart
-                            saasFee={calculation.saasFee}
-                            transactionFee={calculation.transactionFee}
-                            rdvFee={calculation.rdvFee}
-                            upsellingFee={calculation.upsellingFee}
-                            totalMensile={calculation.totalMensile}
-                          />
-                        </div>
-                        
+                      {/* Chart Section - Fixed Height */}
+                      <div className="mt-4 h-32 flex-shrink-0">
+                        <FeeDistributionChart
+                          saasFee={calculation.saasFee}
+                          transactionFee={calculation.transactionFee}
+                          rdvFee={calculation.rdvFee}
+                          upsellingFee={calculation.upsellingFee}
+                          totalMensile={calculation.totalMensile}
+                        />
+                      </div>
+                      
+                      {/* Button Section - Fixed Height */}
+                      <div className="mt-auto pt-3 flex-shrink-0">
                         <Button 
                           onClick={() => selectPredefinedScenario(scenario)}
-                          className="w-full mt-3 bg-[#1790FF] hover:bg-[#1470CC] text-white"
+                          className="w-full bg-[#1790FF] hover:bg-[#1470CC] text-white"
                         >
                           {getTranslation(language, 'useThisScenario')}
                         </Button>
