@@ -32,9 +32,13 @@ interface ShareModalProps {
   showUpfrontDiscount?: boolean;
   absorbTransactionFee?: boolean;
   customFeatures?: string[];
+  extraServices?: {
+    reverProtect: boolean;
+    sizeSuggestions: boolean;
+  };
 }
 
-const ShareModal = ({ clientData, customScenario, language, showUpfrontDiscount = false, absorbTransactionFee = false, customFeatures = [] }: ShareModalProps) => {
+const ShareModal = ({ clientData, customScenario, language, showUpfrontDiscount = false, absorbTransactionFee = false, customFeatures = [], extraServices = { reverProtect: false, sizeSuggestions: false } }: ShareModalProps) => {
   const [clientName, setClientName] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [generatedLink, setGeneratedLink] = useState('');
@@ -51,7 +55,8 @@ const ShareModal = ({ clientData, customScenario, language, showUpfrontDiscount 
           ...customScenario,
           showUpfrontDiscount,
           absorbTransactionFee,
-          features: customFeatures
+          features: customFeatures,
+          extraServices
         },
         business_case_data: clientData
       };

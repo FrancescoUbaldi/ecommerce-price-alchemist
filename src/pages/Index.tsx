@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Settings, RotateCcw, Check, Undo, Clock } from 'lucide-react';
+import { Settings, RotateCcw, Check, Undo, Clock, X, Plus } from 'lucide-react';
 import FeeDistributionChart from '@/components/FeeDistributionChart';
 import BusinessCase from '@/components/BusinessCase';
 import LanguageSelector from '@/components/LanguageSelector';
@@ -100,6 +100,11 @@ const Index = () => {
 
   const [duplicatedScenarios, setDuplicatedScenarios] = useState<PricingData[]>([]);
   const [customFeatures, setCustomFeatures] = useState<string[]>([]);
+  const [newFeature, setNewFeature] = useState('');
+  const [extraServices, setExtraServices] = useState({
+    reverProtect: false,
+    sizeSuggestions: false
+  });
 
   // Calculate GTV - FIXED: should be Annual Returns × Average Cart OR Monthly Returns × 12 × Average Cart
   const gtv = useMemo(() => {
@@ -176,6 +181,24 @@ const Index = () => {
     
     setShowScenarioNotification(true);
     setTimeout(() => setShowScenarioNotification(false), 3000);
+  };
+
+  const removeCustomFeature = (index: number) => {
+    setCustomFeatures(customFeatures.filter((_, i) => i !== index));
+  };
+
+  const addCustomFeature = () => {
+    if (newFeature.trim() && !customFeatures.includes(newFeature.trim())) {
+      setCustomFeatures([...customFeatures, newFeature.trim()]);
+      setNewFeature('');
+    }
+  };
+
+  const toggleExtraService = (service: 'reverProtect' | 'sizeSuggestions') => {
+    setExtraServices(prev => ({
+      ...prev,
+      [service]: !prev[service]
+    }));
   };
 
   const resetData = () => {
@@ -910,6 +933,7 @@ const Index = () => {
                       showUpfrontDiscount={showUpfrontDiscount}
                       absorbTransactionFee={absorbTransactionFee}
                       customFeatures={customFeatures}
+                      extraServices={extraServices}
                     />
                   )}
                 </div>
@@ -1131,23 +1155,91 @@ const Index = () => {
                         </div>
                       )}
 
-                      {/* Caratteristiche Incluse Section */}
-                      {customFeatures.length > 0 && (
+                      {/* Caratteristiche Incluse Section - Redesigned */}
+                      {(customFeatures.length > 0 || newFeature || true) && (
                         <div className="mt-6 bg-white p-6 rounded-lg border">
-                          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                          <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
                             ✅ Caratteristiche Incluse nel piano selezionato
                           </h3>
-                          <div className="space-y-3">
-                            {customFeatures.map((feature, featureIndex) => (
-                              <div key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600">
-                                {feature === "–" ? (
-                                  <span className="text-gray-400 font-medium">–</span>
-                                ) : (
-                                  <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
-                                )}
-                                <span className={feature === "–" ? "text-gray-400" : ""}>{feature}</span>
+                          
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {/* Left Column - Editable Features */}
+                            <div className="space-y-4">
+                              <h4 className="font-medium text-gray-700 mb-3">Caratteristiche Incluse</h4>
+                              
+                              {/* Feature List */}
+                              <div className="space-y-2">
+                                {customFeatures.map((feature, featureIndex) => (
+                                  <div 
+                                    key={featureIndex} 
+                                    className="group flex items-center justify-between p-2 rounded-md hover:bg-gray-50 transition-colors"
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
+                                      <span className="text-sm text-gray-600">{feature}</span>
+                                    </div>
+                                    <button
+                                      onClick={() => removeCustomFeature(featureIndex)}
+                                      className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity p-1"
+                                    >
+                                      <X className="h-3 w-3" />
+                                    </button>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
+
+                              {/* Add New Feature */}
+                              <div className="flex gap-2 mt-4">
+                                <Input
+                                  value={newFeature}
+                                  onChange={(e) => setNewFeature(e.target.value)}
+                                  placeholder="Aggiungi nuova caratteristica..."
+                                  className="flex-1 text-sm"
+                                  onKeyPress={(e) => e.key === 'Enter' && addCustomFeature()}
+                                />
+                                <Button
+                                  onClick={addCustomFeature}
+                                  disabled={!newFeature.trim()}
+                                  size="sm"
+                                  variant="outline"
+                                  className="flex items-center gap-1"
+                                >
+                                  <Plus className="h-3 w-3" />
+                                  Aggiungi
+                                </Button>
+                              </div>
+                            </div>
+
+                            {/* Right Column - Extra Services */}
+                            <div className="space-y-4">
+                              <h4 className="font-medium text-gray-700 mb-3">Extra selezionabili</h4>
+                              
+                              <div className="space-y-3">
+                                {/* REVER Protect */}
+                                <div className="flex items-center justify-between p-3 border rounded-md">
+                                  <div className="flex-1">
+                                    <div className="font-medium text-sm text-gray-800">REVER Protect</div>
+                                    <div className="text-xs text-gray-600">Protezione avanzata per i tuoi resi</div>
+                                  </div>
+                                  <Switch
+                                    checked={extraServices.reverProtect}
+                                    onCheckedChange={() => toggleExtraService('reverProtect')}
+                                  />
+                                </div>
+
+                                {/* Size Suggestions */}
+                                <div className="flex items-center justify-between p-3 border rounded-md">
+                                  <div className="flex-1">
+                                    <div className="font-medium text-sm text-gray-800">Size Suggestions</div>
+                                    <div className="text-xs text-gray-600">Suggerimenti intelligenti per le taglie</div>
+                                  </div>
+                                  <Switch
+                                    checked={extraServices.sizeSuggestions}
+                                    onCheckedChange={() => toggleExtraService('sizeSuggestions')}
+                                  />
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       )}
