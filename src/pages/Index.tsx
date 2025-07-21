@@ -773,8 +773,8 @@ const Index = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-col flex-grow">
-                      {/* Input Fields Section - Fixed Height */}
-                      <div className="bg-gray-50 p-3 rounded-lg space-y-3 text-sm h-64 flex-shrink-0">
+                       {/* Input Fields Section */}
+                       <div className="bg-gray-50 p-3 rounded-lg space-y-3 text-sm">
                         <div className="space-y-1">
                           <label className="text-xs text-gray-600">{getTranslation(language, 'saasFee')}</label>
                           <Input
@@ -816,8 +816,8 @@ const Index = () => {
                         </div>
                       </div>
 
-                      {/* Caratteristiche Incluse Section - Fixed Height */}
-                      <div className="space-y-3 border-t pt-3 h-48 flex-shrink-0">
+                       {/* Caratteristiche Incluse Section */}
+                       <div className="space-y-3 border-t pt-3">
                         <h4 className="text-sm font-semibold text-gray-700">Caratteristiche Incluse</h4>
                         <div className="space-y-2">
                           {getScenarioFeatures(index).map((feature, featureIndex) => (
@@ -829,8 +829,8 @@ const Index = () => {
                         </div>
                       </div>
 
-                      {/* Fee Breakdown Section - Fixed Height */}
-                      <div className="space-y-2 border-t pt-3 h-40 flex-shrink-0">
+                       {/* Fee Breakdown Section */}
+                       <div className="space-y-2 border-t pt-3">
                         <div className="flex justify-between text-sm">
                           <span>SaaS Fee:</span>
                           <span>{formatCurrency(calculation.saasFee)}</span>
@@ -858,8 +858,8 @@ const Index = () => {
                         </div>
                       </div>
 
-                      {/* Chart Section - Fixed Height */}
-                      <div className="mt-4 h-32 flex-shrink-0">
+                       {/* Chart Section */}
+                       <div className="mt-4">
                         <FeeDistributionChart
                           saasFee={calculation.saasFee}
                           transactionFee={calculation.transactionFee}
@@ -869,8 +869,8 @@ const Index = () => {
                         />
                       </div>
                       
-                      {/* Button Section - Fixed Height */}
-                      <div className="mt-auto pt-3 flex-shrink-0">
+                       {/* Button Section */}
+                       <div className="mt-auto pt-3">
                         <Button 
                           onClick={() => selectPredefinedScenario(scenario)}
                           className="w-full bg-[#1790FF] hover:bg-[#1470CC] text-white"
