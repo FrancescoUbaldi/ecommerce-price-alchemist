@@ -105,6 +105,7 @@ const Index = () => {
     reverProtect: false,
     sizeSuggestions: false
   });
+  const [showAddFeatureInput, setShowAddFeatureInput] = useState(false);
 
   // Calculate GTV - FIXED: should be Annual Returns × Average Cart OR Monthly Returns × 12 × Average Cart
   const gtv = useMemo(() => {
@@ -1132,13 +1133,15 @@ const Index = () => {
                       </div>
 
 
-                      {/* Restore payback time box - position right below monthly total */}
-                      <ReadOnlyPayback
-                        businessCaseData={clientData}
-                        scenarioData={customScenario}
-                        monthlyTotal={calculation.totalMensile}
-                        language={language}
-                      />
+                      {/* Payback time box - positioned right below monthly total */}
+                      <div className="mt-4">
+                        <ReadOnlyPayback
+                          businessCaseData={clientData}
+                          scenarioData={customScenario}
+                          monthlyTotal={calculation.totalMensile}
+                          language={language}
+                        />
+                      </div>
 
                       {/* Caratteristiche Incluse Section - Redesigned */}
                       {(customFeatures.length > 0 || newFeature || true) && (
@@ -1173,29 +1176,55 @@ const Index = () => {
                                 ))}
                               </div>
 
-                              {/* Add New Feature - smaller styling */}
-                              <button
-                                onClick={() => {
-                                  if (newFeature.trim()) {
-                                    addCustomFeature();
-                                  } else {
-                                    const input = document.querySelector('input[placeholder="Aggiungi caratteristica"]') as HTMLInputElement;
-                                    if (input) input.focus();
-                                  }
-                                }}
-                                className="text-sm text-blue-500 hover:text-blue-700 flex items-center gap-1 px-1 py-1"
-                              >
-                                <Plus className="h-3 w-3" />
-                                Aggiungi caratteristica
-                              </button>
-                              
-                              <Input
-                                value={newFeature}
-                                onChange={(e) => setNewFeature(e.target.value)}
-                                placeholder="Aggiungi caratteristica"
-                                className="text-xs h-8"
-                                onKeyPress={(e) => e.key === 'Enter' && addCustomFeature()}
-                              />
+                              {/* Add New Feature - toggle input visibility */}
+                              {!showAddFeatureInput ? (
+                                <button
+                                  onClick={() => setShowAddFeatureInput(true)}
+                                  className="text-sm text-blue-500 hover:text-blue-700 flex items-center gap-1 px-1 py-1"
+                                >
+                                  <Plus className="h-3 w-3" />
+                                  Aggiungi caratteristica
+                                </button>
+                              ) : (
+                                <div className="flex items-center gap-2">
+                                  <Input
+                                    value={newFeature}
+                                    onChange={(e) => setNewFeature(e.target.value)}
+                                    placeholder="Aggiungi caratteristica"
+                                    className="text-xs h-8 flex-1"
+                                    onKeyPress={(e) => {
+                                      if (e.key === 'Enter' && newFeature.trim()) {
+                                        addCustomFeature();
+                                        setShowAddFeatureInput(false);
+                                      }
+                                    }}
+                                    autoFocus
+                                  />
+                                  <Button
+                                    onClick={() => {
+                                      if (newFeature.trim()) {
+                                        addCustomFeature();
+                                        setShowAddFeatureInput(false);
+                                      }
+                                    }}
+                                    size="sm"
+                                    className="h-8 px-2 text-xs"
+                                  >
+                                    <Plus className="h-3 w-3" />
+                                  </Button>
+                                  <Button
+                                    onClick={() => {
+                                      setShowAddFeatureInput(false);
+                                      setNewFeature('');
+                                    }}
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 px-2 text-xs"
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              )}
                               
                               {/* Show active extras in blue box at bottom */}
                               {(extraServices.reverProtect || extraServices.sizeSuggestions) && (
