@@ -99,6 +99,7 @@ const Index = () => {
   ]);
 
   const [duplicatedScenarios, setDuplicatedScenarios] = useState<PricingData[]>([]);
+  const [customFeatures, setCustomFeatures] = useState<string[]>([]);
 
   // Calculate GTV - FIXED: should be Annual Returns × Average Cart OR Monthly Returns × 12 × Average Cart
   const gtv = useMemo(() => {
@@ -162,11 +163,16 @@ const Index = () => {
     );
   };
 
-  const selectPredefinedScenario = (scenario: PricingData) => {
+  const selectPredefinedScenario = (scenario: PricingData, scenarioIndex?: number) => {
     setCustomScenario({
       ...scenario,
       name: "Scenario Personalizzato"
     });
+    
+    // Copy features from the selected scenario
+    if (scenarioIndex !== undefined) {
+      setCustomFeatures(getScenarioFeatures(scenarioIndex));
+    }
     
     setShowScenarioNotification(true);
     setTimeout(() => setShowScenarioNotification(false), 3000);
@@ -875,7 +881,7 @@ const Index = () => {
                        {/* Button Section */}
                        <div className="mt-auto pt-3">
                         <Button 
-                          onClick={() => selectPredefinedScenario(scenario)}
+                          onClick={() => selectPredefinedScenario(scenario, index)}
                           className="w-full bg-[#1790FF] hover:bg-[#1470CC] text-white"
                         >
                           {getTranslation(language, 'useThisScenario')}
@@ -1120,6 +1126,21 @@ const Index = () => {
                               </span>
                               <span> per recuperare l'investimento</span>
                             </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Caratteristiche Incluse Section */}
+                      {customFeatures.length > 0 && (
+                        <div className="mt-6 bg-white p-6 rounded-lg border">
+                          <h4 className="text-sm font-semibold text-gray-700 mb-4">Caratteristiche Incluse</h4>
+                          <div className="space-y-2">
+                            {customFeatures.map((feature, featureIndex) => (
+                              <div key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600 h-5">
+                                <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
+                                <span className="truncate">{feature}</span>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       )}
