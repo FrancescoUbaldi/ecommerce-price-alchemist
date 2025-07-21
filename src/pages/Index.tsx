@@ -1131,7 +1131,8 @@ const Index = () => {
                         </div>
                       </div>
 
-                      {/* Use the ReadOnlyPayback component */}
+
+                      {/* Restore payback time box - position right below monthly total */}
                       <ReadOnlyPayback
                         businessCaseData={clientData}
                         scenarioData={customScenario}
@@ -1139,40 +1140,24 @@ const Index = () => {
                         language={language}
                       />
 
-                      {/* Payback calculation box */}
-                      {calculatePayback !== null && (
-                        <div className="mt-6 bg-[#E5F0FF] border border-[#1790FF] rounded-lg p-4 animate-fade-in">
-                          <div className="flex items-center gap-3">
-                            <Clock className="h-5 w-5 text-[#1790FF]" />
-                            <div className="text-[#000D1F]">
-                              <span className="font-medium">⏳ Payback stimato: </span>
-                              <span className="font-bold text-[#1790FF]">
-                                {calculatePayback.toFixed(1)} mesi
-                              </span>
-                              <span> per recuperare l'investimento</span>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
                       {/* Caratteristiche Incluse Section - Redesigned */}
                       {(customFeatures.length > 0 || newFeature || true) && (
-                        <div className="mt-6 bg-white p-6 rounded-lg border">
-                          <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
+                        <div className="mt-6 bg-white p-4 rounded-lg border">
+                          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                             ✅ Caratteristiche Incluse nel piano selezionato
                           </h3>
                           
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {/* Left Column - Editable Features */}
-                            <div className="space-y-4">
-                              <h4 className="font-medium text-gray-700 mb-3">Caratteristiche Incluse</h4>
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-gray-700 mb-2">Caratteristiche Incluse</h4>
                               
                               {/* Feature List */}
-                              <div className="space-y-2">
+                              <div className="space-y-1">
                                 {customFeatures.map((feature, featureIndex) => (
                                   <div 
                                     key={featureIndex} 
-                                    className="group flex items-center justify-between p-2 rounded-md hover:bg-gray-50 transition-colors"
+                                    className="group flex items-center justify-between py-1 px-2 rounded-md hover:bg-gray-50 transition-colors"
                                   >
                                     <div className="flex items-center gap-2">
                                       <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
@@ -1188,33 +1173,57 @@ const Index = () => {
                                 ))}
                               </div>
 
-                              {/* Add New Feature */}
-                              <div className="flex gap-2 mt-4">
-                                <Input
-                                  value={newFeature}
-                                  onChange={(e) => setNewFeature(e.target.value)}
-                                  placeholder="Aggiungi nuova caratteristica..."
-                                  className="flex-1 text-sm"
-                                  onKeyPress={(e) => e.key === 'Enter' && addCustomFeature()}
-                                />
-                                <Button
-                                  onClick={addCustomFeature}
-                                  disabled={!newFeature.trim()}
-                                  size="sm"
-                                  variant="outline"
-                                  className="flex items-center gap-1"
-                                >
-                                  <Plus className="h-3 w-3" />
-                                  Aggiungi
-                                </Button>
-                              </div>
+                              {/* Add New Feature - smaller styling */}
+                              <button
+                                onClick={() => {
+                                  if (newFeature.trim()) {
+                                    addCustomFeature();
+                                  } else {
+                                    const input = document.querySelector('input[placeholder="Aggiungi caratteristica"]') as HTMLInputElement;
+                                    if (input) input.focus();
+                                  }
+                                }}
+                                className="text-sm text-blue-500 hover:text-blue-700 flex items-center gap-1 px-1 py-1"
+                              >
+                                <Plus className="h-3 w-3" />
+                                Aggiungi caratteristica
+                              </button>
+                              
+                              <Input
+                                value={newFeature}
+                                onChange={(e) => setNewFeature(e.target.value)}
+                                placeholder="Aggiungi caratteristica"
+                                className="text-xs h-8"
+                                onKeyPress={(e) => e.key === 'Enter' && addCustomFeature()}
+                              />
+                              
+                              {/* Show active extras in blue box at bottom */}
+                              {(extraServices.reverProtect || extraServices.sizeSuggestions) && (
+                                <div className="mt-3 pt-3 border-t">
+                                  <div className="text-xs text-gray-500 mb-2">EXTRA:</div>
+                                  <div className="space-y-1">
+                                    {extraServices.reverProtect && (
+                                      <div className="flex items-center gap-2 text-sm text-blue-600">
+                                        <Check className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                                        <span>REVER Protect</span>
+                                      </div>
+                                    )}
+                                    {extraServices.sizeSuggestions && (
+                                      <div className="flex items-center gap-2 text-sm text-blue-600">
+                                        <Check className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                                        <span>Size Suggestions</span>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
                             </div>
 
                             {/* Right Column - Extra Services */}
-                            <div className="space-y-4">
-                              <h4 className="font-medium text-gray-700 mb-3">Extra selezionabili</h4>
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-gray-700 mb-2">Extra selezionabili</h4>
                               
-                              <div className="space-y-3">
+                              <div className="space-y-2">
                                 {/* REVER Protect */}
                                 <div className="flex items-center justify-between p-3 border rounded-md">
                                   <div className="flex-1">

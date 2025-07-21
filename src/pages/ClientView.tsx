@@ -372,19 +372,19 @@ const ClientView = () => {
 
                   {/* Caratteristiche Incluse Section - Redesigned */}
                   {(shareData.scenario_data.features && shareData.scenario_data.features.length > 0) || shareData.scenario_data.extraServices ? (
-                    <div className="mt-6 bg-white p-6 rounded-lg border">
-                      <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
+                    <div className="mt-6 bg-white p-4 rounded-lg border">
+                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                         ✅ Caratteristiche Incluse nel piano selezionato
                       </h3>
                       
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {/* Left Column - Features */}
                         {shareData.scenario_data.features && shareData.scenario_data.features.length > 0 && (
-                          <div className="space-y-4">
-                            <h4 className="font-medium text-gray-700 mb-3">Caratteristiche Incluse</h4>
-                            <div className="space-y-2">
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-gray-700 mb-2">Caratteristiche Incluse</h4>
+                            <div className="space-y-1">
                               {shareData.scenario_data.features.map((feature: string, featureIndex: number) => (
-                                <div key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600">
+                                <div key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600 py-1">
                                   {feature === "–" ? (
                                     <span className="text-gray-400 font-medium">–</span>
                                   ) : (
@@ -394,15 +394,36 @@ const ClientView = () => {
                                 </div>
                               ))}
                             </div>
+                            
+                            {/* Show active extras in blue box at bottom */}
+                            {shareData.scenario_data.extraServices && (shareData.scenario_data.extraServices.reverProtect || shareData.scenario_data.extraServices.sizeSuggestions) && (
+                              <div className="mt-3 pt-3 border-t">
+                                <div className="text-xs text-gray-500 mb-2">EXTRA:</div>
+                                <div className="space-y-1">
+                                  {shareData.scenario_data.extraServices.reverProtect && (
+                                    <div className="flex items-center gap-2 text-sm text-blue-600">
+                                      <Check className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                                      <span>REVER Protect</span>
+                                    </div>
+                                  )}
+                                  {shareData.scenario_data.extraServices.sizeSuggestions && (
+                                    <div className="flex items-center gap-2 text-sm text-blue-600">
+                                      <Check className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                                      <span>Size Suggestions</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         )}
 
                         {/* Right Column - Extra Services */}
                         {shareData.scenario_data.extraServices && (
-                          <div className="space-y-4">
-                            <h4 className="font-medium text-gray-700 mb-3">Extra selezionabili</h4>
+                          <div className="space-y-3">
+                            <h4 className="font-medium text-gray-700 mb-2">Extra selezionabili</h4>
                             
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                               {/* REVER Protect */}
                               <div className="flex items-center justify-between p-3 border rounded-md">
                                 <div className="flex-1">
