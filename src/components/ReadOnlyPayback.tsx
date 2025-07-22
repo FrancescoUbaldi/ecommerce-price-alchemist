@@ -34,26 +34,34 @@ const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, languag
   // Total platform cost (annual)
   const annualPlatformCost = monthlyTotal * 12;
   
-  // Calculate payback using the SAME formula as BusinessCase
-  const paybackMonths = annualPlatformCost > 0 ? annualPlatformCost / (fatturazioneGenerataRever / 12) : 0;
+  // Calculate NET INCREASE in company revenues (matching BusinessCase exactly)
+  const fatturazioneNettaPreRever = businessCaseData.carrelloMedio * annualReturns;
+  const fatturazioneNettaFinale = fatturazioneNettaPreRever + fatturazioneGenerataRever;
+  const netRevenuesEcommerce = fatturazioneNettaFinale - annualPlatformCost;
+  const aumentoNetRevenues = netRevenuesEcommerce - fatturazioneNettaPreRever;
+  
+  // Calculate payback using the SAME formula as BusinessCase (net revenue increase)
+  const paybackMonths = aumentoNetRevenues > 0 && annualPlatformCost > 0 
+    ? annualPlatformCost / (aumentoNetRevenues / 12) 
+    : 0;
 
   console.log('ReadOnlyPayback Debug:', {
     fatturazioneGenerataRever,
-    monthlyTotal,
+    aumentoNetRevenues,
     annualPlatformCost,
     paybackMonths,
     showPayback: paybackMonths > 0 && paybackMonths < 120
   });
 
-  // Show if payback exists and is meaningful (changed logic to be more visible)
-  if (paybackMonths <= 0 || paybackMonths > 120) {
+  // Show if payback exists and is meaningful (matching BusinessCase logic)
+  if (paybackMonths <= 0 || paybackMonths >= 6) {
     return null;
   }
 
   return (
-    <div className="p-4 rounded-xl border" style={{ backgroundColor: '#E9F9EC', borderColor: '#4CAF50' }}>
+    <div className="p-3 rounded-lg border border-green-200" style={{ backgroundColor: '#F2FCF4' }}>
       <div className="flex items-center gap-2">
-        <span className="text-gray-800 font-semibold">
+        <span className="text-sm font-medium" style={{ color: '#00875A' }}>
           ⏳ {getTranslation(language, 'estimatedPayback')}: {paybackMonths.toFixed(1)} {getTranslation(language, 'monthsToRecoverInvestment')}
         </span>
       </div>
