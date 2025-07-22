@@ -49,6 +49,13 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* REVER Brand Colors */
+    --rever-blue: 208 100% 55%;     /* #1790FF */
+    --rever-navy: 240 73% 9%;       /* #0D0D1F */
+    --rever-white: 0 0% 100%;       /* #FFFFFF */
+    --rever-blue-light: 208 100% 95%; /* rgba(23, 144, 255, 0.1) equivalent */
+    --rever-gray: 0 0% 88%;         /* #E0E0E0 for inactive toggles */
   }
 
   .dark {

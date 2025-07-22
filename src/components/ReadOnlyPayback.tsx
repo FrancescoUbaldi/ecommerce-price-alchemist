@@ -45,8 +45,8 @@ const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, languag
     showPayback: paybackMonths > 0 && paybackMonths < 6
   });
 
-  // Only show if payback is less than 6 months and greater than 0
-  if (paybackMonths <= 0 || paybackMonths >= 6) {
+  // Show if payback exists and is meaningful (changed logic to be more visible)
+  if (paybackMonths <= 0 || paybackMonths > 120) {
     return null;
   }
 

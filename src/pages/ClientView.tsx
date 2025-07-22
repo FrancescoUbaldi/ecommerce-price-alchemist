@@ -323,7 +323,7 @@ const ClientView = () => {
                     <div className="space-y-3">
                       {/* Upfront discount options - shown only if it was active when link was generated */}
                       {shareData.scenario_data.showUpfrontDiscount && calculation.totalMensile > 0 && (
-                        <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                        <div className="bg-rever-blue-light border border-rever-blue p-4 rounded-xl">
                           <h4 className="font-semibold mb-3 text-gray-800">💸 Sconto upfront:</h4>
                           <div className="space-y-2 text-sm">
                             <div className="flex justify-between items-center">
@@ -388,11 +388,25 @@ const ClientView = () => {
                                   {feature === "–" ? (
                                     <span className="text-gray-400 font-medium">–</span>
                                   ) : (
-                                    <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
+                                    <Check className="h-4 w-4 text-rever-blue flex-shrink-0" />
                                   )}
                                   <span className={feature === "–" ? "text-gray-400" : ""}>{feature}</span>
                                 </div>
                               ))}
+                              
+                              {/* Display active extra services */}
+                              {shareData.scenario_data.extraServices?.reverProtect && (
+                                <div className="flex items-center gap-2 text-sm text-gray-600 py-1">
+                                  <Check className="h-4 w-4 text-rever-blue flex-shrink-0" />
+                                  <span>REVER Protect</span>
+                                </div>
+                              )}
+                              {shareData.scenario_data.extraServices?.sizeSuggestions && (
+                                <div className="flex items-center gap-2 text-sm text-gray-600 py-1">
+                                  <Check className="h-4 w-4 text-rever-blue flex-shrink-0" />
+                                  <span>Size Suggestions</span>
+                                </div>
+                              )}
                             </div>
                             
                             {/* Show active extras in blue box at bottom */}

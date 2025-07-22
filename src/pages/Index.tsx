@@ -1097,7 +1097,7 @@ const Index = () => {
                         <div className="space-y-3">
                           {/* Upfront discount options */}
                           {showUpfrontDiscount && calculation.totalMensile > 0 && (
-                            <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                            <div className="bg-rever-blue-light border border-rever-blue p-4 rounded-xl">
                               <h4 className="font-semibold mb-3 text-gray-800">💸 Sconto upfront:</h4>
                               <div className="space-y-2 text-sm">
                                 <div className="flex items-center justify-between">
@@ -1163,7 +1163,7 @@ const Index = () => {
                                     className="group flex items-center justify-between py-1 px-2 rounded-md hover:bg-gray-50 transition-colors"
                                   >
                                     <div className="flex items-center gap-2">
-                                      <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
+                                      <Check className="h-4 w-4 text-rever-blue flex-shrink-0" />
                                       <span className="text-sm text-gray-600">{feature}</span>
                                     </div>
                                     <button
@@ -1174,13 +1174,27 @@ const Index = () => {
                                     </button>
                                   </div>
                                 ))}
+                                
+                                {/* Display active extra services */}
+                                {extraServices.reverProtect && (
+                                  <div className="flex items-center gap-2 py-1 px-2">
+                                    <Check className="h-4 w-4 text-rever-blue flex-shrink-0" />
+                                    <span className="text-sm text-gray-600">REVER Protect</span>
+                                  </div>
+                                )}
+                                {extraServices.sizeSuggestions && (
+                                  <div className="flex items-center gap-2 py-1 px-2">
+                                    <Check className="h-4 w-4 text-rever-blue flex-shrink-0" />
+                                    <span className="text-sm text-gray-600">Size Suggestions</span>
+                                  </div>
+                                )}
                               </div>
 
                               {/* Add New Feature - toggle input visibility */}
                               {!showAddFeatureInput ? (
                                 <button
                                   onClick={() => setShowAddFeatureInput(true)}
-                                  className="text-sm text-blue-500 hover:text-blue-700 flex items-center gap-1 px-1 py-1"
+                                  className="text-sm text-rever-blue hover:text-rever-navy flex items-center gap-1 px-1 py-1"
                                 >
                                   <Plus className="h-3 w-3" />
                                   Aggiungi caratteristica
