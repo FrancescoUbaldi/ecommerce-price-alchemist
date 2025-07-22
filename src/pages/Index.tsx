@@ -1097,7 +1097,7 @@ const Index = () => {
                         <div className="space-y-3">
                           {/* Upfront discount options */}
                           {showUpfrontDiscount && calculation.totalMensile > 0 && (
-                            <div className="bg-rever-blue-light border border-rever-blue p-4 rounded-xl">
+                            <div className="bg-rever-blue-light border border-rever-blue p-4 rounded-xl" style={{ marginTop: '-24px' }}>
                               <h4 className="font-semibold mb-3 text-gray-800">Sconto upfront:</h4>
                               <div className="space-y-2 text-sm">
                                 <div className="flex items-center justify-between">
@@ -1174,20 +1174,6 @@ const Index = () => {
                                     </button>
                                   </div>
                                 ))}
-                                
-                                {/* Display active extra services */}
-                                {extraServices.reverProtect && (
-                                  <div className="flex items-center gap-2 py-1 px-2">
-                                    <Check className="h-4 w-4 text-rever-blue flex-shrink-0" />
-                                    <span className="text-sm text-gray-600">REVER Protect</span>
-                                  </div>
-                                )}
-                                {extraServices.sizeSuggestions && (
-                                  <div className="flex items-center gap-2 py-1 px-2">
-                                    <Check className="h-4 w-4 text-rever-blue flex-shrink-0" />
-                                    <span className="text-sm text-gray-600">Size Suggestions</span>
-                                  </div>
-                                )}
                               </div>
 
                               {/* Add New Feature - toggle input visibility */}

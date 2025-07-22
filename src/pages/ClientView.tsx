@@ -323,7 +323,7 @@ const ClientView = () => {
                     <div className="space-y-3">
                       {/* Upfront discount options - shown only if it was active when link was generated */}
                       {shareData.scenario_data.showUpfrontDiscount && calculation.totalMensile > 0 && (
-                        <div className="bg-rever-blue-light border border-rever-blue p-4 rounded-xl">
+                        <div className="bg-rever-blue-light border border-rever-blue p-4 rounded-xl" style={{ marginTop: '-24px' }}>
                           <h4 className="font-semibold mb-3 text-gray-800">Sconto upfront:</h4>
                           <div className="space-y-2 text-sm">
                             <div className="flex justify-between items-center">
