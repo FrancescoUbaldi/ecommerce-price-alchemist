@@ -51,10 +51,10 @@ const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, languag
   }
 
   return (
-    <div className="mt-6 p-4 bg-green-100 border border-green-200 rounded-lg">
+    <div className="p-4 rounded-xl border" style={{ backgroundColor: '#E9F9EC', borderColor: '#4CAF50' }}>
       <div className="flex items-center gap-2">
-        <span className="text-green-800 font-semibold">
-          ⏱️ {getTranslation(language, 'estimatedPayback')}: {paybackMonths.toFixed(1)} {getTranslation(language, 'monthsToRecoverInvestment')}
+        <span className="text-gray-800 font-semibold">
+          ⏳ {getTranslation(language, 'estimatedPayback')}: {paybackMonths.toFixed(1)} {getTranslation(language, 'monthsToRecoverInvestment')}
         </span>
       </div>
     </div>

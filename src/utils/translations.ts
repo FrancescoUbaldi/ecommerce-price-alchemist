@@ -68,7 +68,9 @@ export const translations = {
     linkDescription: 'Questo link può essere condiviso con il cliente per visualizzare lo scenario e il business case in modalità read-only.',
     linkNotFound: 'Link non valido o scaduto',
     linkExpiredMessage: 'Il link che stai cercando di accedere non è valido o è scaduto.',
-    businessCaseFor: 'Business Case per'
+    businessCaseFor: 'Business Case per',
+    estimatedPayback: 'Payback stimato',
+    monthsToRecoverInvestment: 'mesi per recuperare l\'investimento'
   },
   en: {
     title: "Price & Smile :)",
@@ -138,7 +140,9 @@ export const translations = {
     linkDescription: 'This link can be shared with the client to view the scenario and business case in read-only mode.',
     linkNotFound: 'Invalid or expired link',
     linkExpiredMessage: 'The link you are trying to access is not valid or has expired.',
-    businessCaseFor: 'Business Case for'
+    businessCaseFor: 'Business Case for',
+    estimatedPayback: 'Estimated Payback',
+    monthsToRecoverInvestment: 'months to recover investment'
   },
   es: {
     title: "Price & Smile :)",
@@ -208,7 +212,9 @@ export const translations = {
     linkDescription: 'Este enlace se puede compartir con el cliente para ver el escenario y el caso de negocio en modo de solo lectura.',
     linkNotFound: 'Enlace inválido o expirado',
     linkExpiredMessage: 'El enlace al que intentas acceder no es válido o ha expirado.',
-    businessCaseFor: 'Caso de Negocio para'
+    businessCaseFor: 'Caso de Negocio para',
+    estimatedPayback: 'Payback Estimado',
+    monthsToRecoverInvestment: 'meses para recuperar la inversión'
   },
   fr: {
     title: "Price & Smile :)",
@@ -278,7 +284,9 @@ export const translations = {
     linkDescription: 'Ce lien peut être partagé avec le client pour voir le scénario et le business case en mode lecture seule.',
     linkNotFound: 'Lien invalide ou expiré',
     linkExpiredMessage: 'Le lien auquel vous essayez d\'accéder n\'est pas valide ou a expiré.',
-    businessCaseFor: 'Business Case pour'
+    businessCaseFor: 'Business Case pour',
+    estimatedPayback: 'Payback Estimé',
+    monthsToRecoverInvestment: 'mois pour récupérer l\'investissement'
   }
 };
 
