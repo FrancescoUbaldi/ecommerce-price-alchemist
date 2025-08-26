@@ -231,8 +231,8 @@ const Index = () => {
         
         return { 
           ...scenario, 
-          rdvPercentage: round1(rdvPct), 
-          upsellingPercentage: round1(upsPct), 
+          rdvPercentage: Math.round(rdvPct), 
+          upsellingPercentage: Math.round(upsPct), 
           saasFee: Math.round(requiredSaasFee) 
         };
       });
@@ -941,23 +941,23 @@ const Index = () => {
                         </div>
                         <div className="space-y-1">
                           <label className="text-xs text-gray-600">{getTranslation(language, 'rdvFee')}</label>
-                          <Input
-                            type="number"
-                            step="0.1"
-                            value={scenario.rdvPercentage}
-                            onChange={(e) => updatePredefinedScenario(index, 'rdvPercentage', parseFloat(e.target.value) || 0)}
-                            className="h-8 text-sm"
-                          />
+                           <Input
+                             type="number"
+                             step="1"
+                             value={scenario.rdvPercentage}
+                             onChange={(e) => updatePredefinedScenario(index, 'rdvPercentage', Math.round(parseFloat(e.target.value)) || 0)}
+                             className="h-8 text-sm"
+                           />
                         </div>
                         <div className="space-y-1">
                           <label className="text-xs text-gray-600">{getTranslation(language, 'upsellingFee')}</label>
-                          <Input
-                            type="number"
-                            step="0.1"
-                            value={scenario.upsellingPercentage}
-                            onChange={(e) => updatePredefinedScenario(index, 'upsellingPercentage', parseFloat(e.target.value) || 0)}
-                            className="h-8 text-sm"
-                          />
+                           <Input
+                             type="number"
+                             step="1"
+                             value={scenario.upsellingPercentage}
+                             onChange={(e) => updatePredefinedScenario(index, 'upsellingPercentage', Math.round(parseFloat(e.target.value)) || 0)}
+                             className="h-8 text-sm"
+                           />
                         </div>
                       </div>
 
@@ -1148,28 +1148,28 @@ const Index = () => {
                     <Input
                       id="customRdvFee"
                       type="number"
-                      step="0.1"
+                      step="1"
                       value={customScenario.rdvPercentage || ''}
                       onChange={(e) => setCustomScenario({
                         ...customScenario,
-                        rdvPercentage: parseFloat(e.target.value) || 0
+                        rdvPercentage: Math.round(parseFloat(e.target.value)) || 0
                       })}
                       placeholder="0"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="customUpsellingFee">{getTranslation(language, 'upsellingFee')}</Label>
-                    <Input
-                      id="customUpsellingFee"
-                      type="number"
-                      step="0.1"
-                      value={customScenario.upsellingPercentage || ''}
-                      onChange={(e) => setCustomScenario({
-                        ...customScenario,
-                        upsellingPercentage: parseFloat(e.target.value) || 0
-                      })}
-                      placeholder="0"
-                    />
+                     <Input
+                       id="customUpsellingFee"
+                       type="number"
+                       step="1"
+                       value={customScenario.upsellingPercentage || ''}
+                       onChange={(e) => setCustomScenario({
+                         ...customScenario,
+                         upsellingPercentage: Math.round(parseFloat(e.target.value)) || 0
+                       })}
+                       placeholder="0"
+                     />
                   </div>
                 </div>
 
@@ -1457,21 +1457,21 @@ const Index = () => {
                     </div>
                     <div className="space-y-2">
                       <Label>{getTranslation(language, 'rdvFee')}</Label>
-                      <Input
-                        type="number"
-                        step="0.1"
-                        value={scenario.rdvPercentage || ''}
-                        onChange={(e) => updateDuplicatedScenario(index, 'rdvPercentage', parseFloat(e.target.value) || 0)}
+                       <Input
+                         type="number"
+                         step="1"
+                         value={scenario.rdvPercentage || ''}
+                         onChange={(e) => updateDuplicatedScenario(index, 'rdvPercentage', Math.round(parseFloat(e.target.value)) || 0)}
                         placeholder="0"
                       />
                     </div>
                     <div className="space-y-2">
                       <Label>{getTranslation(language, 'upsellingFee')}</Label>
-                      <Input
-                        type="number"
-                        step="0.1"
-                        value={scenario.upsellingPercentage || ''}
-                        onChange={(e) => updateDuplicatedScenario(index, 'upsellingPercentage', parseFloat(e.target.value) || 0)}
+                       <Input
+                         type="number"
+                         step="1"
+                         value={scenario.upsellingPercentage || ''}
+                         onChange={(e) => updateDuplicatedScenario(index, 'upsellingPercentage', Math.round(parseFloat(e.target.value)) || 0)}
                         placeholder="0"
                       />
                     </div>
