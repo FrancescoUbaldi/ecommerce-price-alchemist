@@ -49,6 +49,7 @@ const Index = () => {
   const [showComboUsedNotification, setShowComboUsedNotification] = useState(false);
   const [showUpfrontDiscount, setShowUpfrontDiscount] = useState(false);
   const [absorbTransactionFee, setAbsorbTransactionFee] = useState<boolean>(false);
+  const [lastSelectedPredefinedScenario, setLastSelectedPredefinedScenario] = useState<PricingData | null>(null);
   
   // Track which field was last modified to determine calculation priority
   const [lastModifiedField, setLastModifiedField] = useState<'orders' | 'returns' | 'rate' | null>(null);
@@ -287,6 +288,9 @@ const Index = () => {
       ...scenario,
       name: "Scenario Personalizzato"
     });
+    
+    // Track this as the last selected predefined scenario
+    setLastSelectedPredefinedScenario(scenario);
     
     // Copy features from the selected scenario, excluding placeholder dashes
     if (scenarioIndex !== undefined) {
@@ -721,7 +725,36 @@ const Index = () => {
   };
 
   const handleDeleteDuplicatedScenario = (index: number) => {
+    const scenarioToDelete = duplicatedScenarios[index];
+    
+    // Check if the deleted scenario was currently active
+    const wasActive = (
+      customScenario.saasFee === scenarioToDelete.saasFee &&
+      customScenario.transactionFeeFixed === scenarioToDelete.transactionFeeFixed &&
+      customScenario.rdvPercentage === scenarioToDelete.rdvPercentage &&
+      customScenario.upsellingPercentage === scenarioToDelete.upsellingPercentage
+    );
+    
+    // Remove the scenario
     setDuplicatedScenarios(prev => prev.filter((_, i) => i !== index));
+    
+    // If the deleted scenario was active, revert to last selected predefined scenario
+    if (wasActive && lastSelectedPredefinedScenario) {
+      setCustomScenario({
+        ...lastSelectedPredefinedScenario,
+        name: "Scenario Personalizzato"
+      });
+    } else if (wasActive && !lastSelectedPredefinedScenario) {
+      // If no predefined scenario was previously selected, reset to defaults
+      setCustomScenario({
+        saasFee: 0,
+        transactionFeeFixed: 0,
+        rdvPercentage: 0,
+        upsellingPercentage: 0,
+        name: "Scenario Personalizzato"
+      });
+    }
+    
     setShowComboDeletedNotification(true);
     setTimeout(() => setShowComboDeletedNotification(false), 3000);
   };
