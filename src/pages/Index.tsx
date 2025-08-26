@@ -76,21 +76,21 @@ const Index = () => {
 
   const [predefinedScenarios, setPredefinedScenarios] = useState<PricingData[]>([
     {
-      saasFee: 199,
+      saasFee: 89,
       transactionFeeFixed: 1.50,
       rdvPercentage: 0,
       upsellingPercentage: 0,
       name: "ECO MODE"
     },
     {
-      saasFee: 299,
+      saasFee: 109,
       transactionFeeFixed: 1.50,
       rdvPercentage: 2,
       upsellingPercentage: 0,
       name: "GAS"
     },
     {
-      saasFee: 399,
+      saasFee: 149,
       transactionFeeFixed: 1.70,
       rdvPercentage: 3,
       upsellingPercentage: 3,
@@ -122,12 +122,15 @@ const Index = () => {
     return 0;
   }, [clientData.resiAnnuali, clientData.resiMensili, clientData.carrelloMedio]);
 
-  // Enforce progressive rules (Eco -> Gas -> Full Gas) and min SaaS fee 89€
+  // Enforce progressive rules (Eco -> Gas -> Full Gas) with diversified min SaaS fees
   const enforceProgressivePredefined = (scenarios: PricingData[]): PricingData[] => {
     const adjusted = scenarios.map(s => ({ ...s }));
+    const minSaasFees = [89, 109, 149]; // Diversified minimums ending in 9
+    
     for (let i = 0; i < adjusted.length; i++) {
-      // SaaS must be defined and at least 89
-      adjusted[i].saasFee = Math.max(89, Number.isFinite(adjusted[i].saasFee) ? adjusted[i].saasFee : 89);
+      // SaaS must be defined and at least the minimum for this scenario
+      const minSaas = minSaasFees[i] || 89;
+      adjusted[i].saasFee = Math.max(minSaas, Number.isFinite(adjusted[i].saasFee) ? adjusted[i].saasFee : minSaas);
       if (i > 0) {
         if (adjusted[i].saasFee < adjusted[i - 1].saasFee) adjusted[i].saasFee = adjusted[i - 1].saasFee;
         if (adjusted[i].transactionFeeFixed < adjusted[i - 1].transactionFeeFixed) adjusted[i].transactionFeeFixed = adjusted[i - 1].transactionFeeFixed;
@@ -186,7 +189,8 @@ const Index = () => {
         if (index === 1) {
           if (!upsEdited) upsPct = 0;
           if (!rdvEdited) {
-            const gapForMinSaaS = targetMonthlyCost - transactionFee - 89;
+            const minSaasForScenario = 109; // Diversified minimum for GAS
+            const gapForMinSaaS = targetMonthlyCost - transactionFee - minSaasForScenario;
             if (rdvPerPercent > 0) {
               const neededPct = gapForMinSaaS > 0 ? gapForMinSaaS / rdvPerPercent : 1; // ensure > 0
               rdvPct = Math.min(4, Math.max(1, round1(neededPct)));
@@ -206,7 +210,8 @@ const Index = () => {
 
           if (!rdvEdited || !upsEdited) {
             const baseContribution = (rdvPct * rdvPerPercent) + (upsPct * upsPerPercent);
-            const gapForMinSaaS = targetMonthlyCost - transactionFee - 89 - baseContribution;
+            const minSaasForScenario = 149; // Diversified minimum for FULL GAS
+            const gapForMinSaaS = targetMonthlyCost - transactionFee - minSaasForScenario - baseContribution;
 
             const rdvRange = rdvMax - Math.max(rdvPct, rdvMin);
             const upsRange = upsMax - Math.max(upsPct, upsMin);
@@ -230,8 +235,10 @@ const Index = () => {
         const rdvFee = (rdvMensili * clientData.carrelloMedio * rdvPct) / 100;
         const upsellingFee = (upsellingMensili * incrementoCarrello * upsPct) / 100;
         
-        // Calculate required SaaS fee to reach target with minimum 89€
-        const requiredSaasFee = Math.max(89, targetMonthlyCost - transactionFee - rdvFee - upsellingFee);
+        // Calculate required SaaS fee to reach target with diversified minimums
+        const minSaasFees = [89, 109, 149]; // Diversified minimums ending in 9
+        const minSaasForScenario = minSaasFees[index] || 89;
+        const requiredSaasFee = Math.max(minSaasForScenario, targetMonthlyCost - transactionFee - rdvFee - upsellingFee);
         
         return { 
           ...scenario, 
