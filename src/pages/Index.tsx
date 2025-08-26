@@ -117,6 +117,22 @@ const Index = () => {
     return 0;
   }, [clientData.resiAnnuali, clientData.resiMensili, clientData.carrelloMedio]);
 
+  // Enforce progressive rules (Eco -> Gas -> Full Gas) and min SaaS fee 89€
+  const enforceProgressivePredefined = (scenarios: PricingData[]): PricingData[] => {
+    const adjusted = scenarios.map(s => ({ ...s }));
+    for (let i = 0; i < adjusted.length; i++) {
+      // SaaS must be defined and at least 89
+      adjusted[i].saasFee = Math.max(89, Number.isFinite(adjusted[i].saasFee) ? adjusted[i].saasFee : 89);
+      if (i > 0) {
+        if (adjusted[i].saasFee < adjusted[i - 1].saasFee) adjusted[i].saasFee = adjusted[i - 1].saasFee;
+        if (adjusted[i].transactionFeeFixed < adjusted[i - 1].transactionFeeFixed) adjusted[i].transactionFeeFixed = adjusted[i - 1].transactionFeeFixed;
+        if (adjusted[i].rdvPercentage < adjusted[i - 1].rdvPercentage) adjusted[i].rdvPercentage = adjusted[i - 1].rdvPercentage;
+        if (adjusted[i].upsellingPercentage < adjusted[i - 1].upsellingPercentage) adjusted[i].upsellingPercentage = adjusted[i - 1].upsellingPercentage;
+      }
+    }
+    return adjusted;
+  };
+
   // Auto-adjust predefined scenarios based on Take Rate targets with minimum SaaS fee
   useEffect(() => {
     if (gtv > 0) {
@@ -141,15 +157,20 @@ const Index = () => {
         const incrementoCarrello = clientData.carrelloMedio * 0.3;
         const upsellingFee = (upsellingMensili * incrementoCarrello * scenario.upsellingPercentage) / 100;
         
-        // Calculate required SaaS fee to reach target with minimum 69€
-        const requiredSaasFee = Math.max(69, targetMonthlyCost - transactionFee - rdvFee - upsellingFee);
+        // Calculate required SaaS fee to reach target with minimum 89€
+        const requiredSaasFee = Math.max(89, targetMonthlyCost - transactionFee - rdvFee - upsellingFee);
         
         return { ...scenario, saasFee: Math.round(requiredSaasFee) };
       });
       
-      setPredefinedScenarios(updatedScenarios);
+      setPredefinedScenarios(enforceProgressivePredefined(updatedScenarios));
     }
   }, [gtv, clientData.resiAnnuali, clientData.resiMensili, clientData.carrelloMedio]);
+
+  // Ensure progressive constraints are applied on initial load and any external changes
+  useEffect(() => {
+    setPredefinedScenarios(prev => enforceProgressivePredefined(prev));
+  }, []);
 
   // Hide undo button after 5 seconds
   useEffect(() => {
@@ -162,13 +183,13 @@ const Index = () => {
   }, [showUndoButton]);
 
   const updatePredefinedScenario = (index: number, field: keyof PricingData, value: number) => {
-    setPredefinedScenarios(prev => 
-      prev.map((scenario, i) => 
+    setPredefinedScenarios(prev => {
+      const updated = prev.map((scenario, i) =>
         i === index ? { ...scenario, [field]: value } : scenario
-      )
-    );
+      );
+      return enforceProgressivePredefined(updated);
+    });
   };
-
   const selectPredefinedScenario = (scenario: PricingData, scenarioIndex?: number) => {
     setCustomScenario({
       ...scenario,
@@ -236,7 +257,7 @@ const Index = () => {
     setDuplicatedScenarios([]);
 
     // FORCE RESET PREDEFINED SCENARIOS TO INITIAL VALUES
-    setPredefinedScenarios([
+    setPredefinedScenarios(enforceProgressivePredefined([
       {
         saasFee: 199,
         transactionFeeFixed: 1.50,
@@ -258,7 +279,7 @@ const Index = () => {
         upsellingPercentage: 3,
         name: "FULL GAS"
       }
-    ]);
+    ]));
 
     // Reset last modified field tracker and field modification order
     setLastModifiedField(null);
