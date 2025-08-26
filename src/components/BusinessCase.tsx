@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -20,6 +20,16 @@ interface ClientData {
   carrelloMedio: number;
   totalOrdersAnnual: number;
   returnRatePercentage: number;
+}
+
+interface FieldOverrides {
+  rdvRate?: number;
+  upsellingRate?: number;
+  saasFee?: number;
+  transactionFeeFixed?: number;
+  rdvPercentage?: number;
+  upsellingPercentage?: number;
+  [key: string]: number | undefined;
 }
 
 interface BusinessCaseProps {
@@ -46,6 +56,77 @@ const BusinessCase = ({
   updateClientData,
   readOnly = false
 }: BusinessCaseProps) => {
+  const [fieldOverrides, setFieldOverrides] = useState<FieldOverrides>({});
+
+  // Editable Value Component
+  interface EditableValueProps {
+    value: number;
+    format: 'currency' | 'percentage';
+    field: string;
+    disabled?: boolean;
+    onUpdate?: (value: number) => void;
+  }
+
+  const EditableValue: React.FC<EditableValueProps> = ({ 
+    value, 
+    format, 
+    field, 
+    disabled = false,
+    onUpdate 
+  }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [editValue, setEditValue] = useState('');
+
+    const formatValue = (val: number) => {
+      return format === 'currency' ? formatCurrency(val) : formatPercentage(val);
+    };
+
+    const handleClick = () => {
+      if (readOnly || disabled) return;
+      setIsEditing(true);
+      setEditValue(format === 'percentage' ? value.toString() : value.toString());
+    };
+
+    const handleSave = () => {
+      const numValue = parseFloat(editValue);
+      if (!isNaN(numValue)) {
+        setFieldOverrides(prev => ({ ...prev, [field]: numValue }));
+        if (onUpdate) onUpdate(numValue);
+      }
+      setIsEditing(false);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        handleSave();
+      } else if (e.key === 'Escape') {
+        setIsEditing(false);
+      }
+    };
+
+    if (isEditing) {
+      return (
+        <Input
+          value={editValue}
+          onChange={(e) => setEditValue(e.target.value)}
+          onBlur={handleSave}
+          onKeyDown={handleKeyDown}
+          className="w-20 h-6 text-center text-sm"
+          autoFocus
+        />
+      );
+    }
+
+    return (
+      <span 
+        className={`${!readOnly && !disabled ? 'cursor-pointer hover:bg-blue-50 px-1 rounded' : ''}`}
+        onClick={handleClick}
+        title={!readOnly && !disabled ? 'Click to edit' : ''}
+      >
+        {formatValue(value)}
+      </span>
+    );
+  };
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('it-IT', {
       style: 'currency',
@@ -61,7 +142,13 @@ const BusinessCase = ({
   // Get the annual returns (use annual if available, otherwise calculate from monthly)
   const annualReturns = clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12;
   
-  // Business Case calculations matching the screenshot exactly
+  // Business Case calculations with overrides
+  const effectiveRdvRate = fieldOverrides.rdvRate !== undefined ? fieldOverrides.rdvRate / 100 : 0.35;
+  const effectiveUpsellingRate = fieldOverrides.upsellingRate !== undefined ? fieldOverrides.upsellingRate / 100 : 0.0378;
+  const effectiveSaasFee = fieldOverrides.saasFee !== undefined ? fieldOverrides.saasFee : scenario.saasFee;
+  const effectiveTransactionFee = fieldOverrides.transactionFeeFixed !== undefined ? fieldOverrides.transactionFeeFixed : scenario.transactionFeeFixed;
+  const effectiveRdvPercentage = fieldOverrides.rdvPercentage !== undefined ? fieldOverrides.rdvPercentage : scenario.rdvPercentage;
+  const effectiveUpsellingPercentage = fieldOverrides.upsellingPercentage !== undefined ? fieldOverrides.upsellingPercentage : scenario.upsellingPercentage;
   
   // Fatturazione (Pre REVER) = Orders × AOV
   const fatturazione = clientData.totalOrdersAnnual * clientData.carrelloMedio;
@@ -72,12 +159,12 @@ const BusinessCase = ({
   // Fatturazione netta (Pre REVER) = Fatturazione - Resi
   const fatturazioneNettaPreRever = fatturazione - resiValue;
   
-  // Vendite ritenute (35% con REVER) = Returns × RDV rate × AOV
-  const rdvResi = annualReturns * 0.35;
+  // Vendite ritenute (with editable RDV rate) = Returns × RDV rate × AOV
+  const rdvResi = annualReturns * effectiveRdvRate;
   const rdvValue = rdvResi * clientData.carrelloMedio;
   
-  // Upselling (con REVER) = Upsell Orders × Upsell AOV
-  const upsellingResi = annualReturns * 0.0378;
+  // Upselling (with editable upselling rate) = Upsell Orders × Upsell AOV
+  const upsellingResi = annualReturns * effectiveUpsellingRate;
   const upsellingAOV = clientData.carrelloMedio * 1.3; // 30% increase
   const upsellingValue = upsellingResi * upsellingAOV;
   
@@ -87,11 +174,11 @@ const BusinessCase = ({
   // Fatturazione Netta Generata da REVER = RDV + Upselling
   const fatturazioneGenerataRever = rdvValue + upsellingValue;
   
-  // REVER Platform Cost calculation with ANNUAL values
-  const saasFeeAnnuale = scenario.saasFee * 12;
-  const transactionFeeAnnuale = scenario.transactionFeeFixed * annualReturns;
-  const rdvFeeAnnuale = (rdvValue * scenario.rdvPercentage) / 100;
-  const upsellingFeeAnnuale = (upsellingValue * scenario.upsellingPercentage) / 100;
+  // REVER Platform Cost calculation with ANNUAL values (using effective overrides)
+  const saasFeeAnnuale = effectiveSaasFee * 12;
+  const transactionFeeAnnuale = effectiveTransactionFee * annualReturns;
+  const rdvFeeAnnuale = (rdvValue * effectiveRdvPercentage) / 100;
+  const upsellingFeeAnnuale = (upsellingValue * effectiveUpsellingPercentage) / 100;
   const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale;
   
   // Net Revenues Nome Ecommerce = Fatturazione Netta Finale - REVER Platform Cost
@@ -256,7 +343,13 @@ const BusinessCase = ({
                 <TableCell className="font-medium">{getTranslation(language, 'retainedSalesWithRever')}</TableCell>
                 <TableCell className="text-center">{Math.round(rdvResi).toLocaleString()}</TableCell>
                 <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
-                <TableCell className="text-center">35.00% <span className="text-sm text-gray-500">{getTranslation(language, 'rdvRate')}</span></TableCell>
+                <TableCell className="text-center">
+                  <EditableValue 
+                    value={effectiveRdvRate * 100} 
+                    format="percentage" 
+                    field="rdvRate"
+                  /> <span className="text-sm text-gray-500">{getTranslation(language, 'rdvRate')}</span>
+                </TableCell>
                 <TableCell className="text-center">
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -280,7 +373,13 @@ const BusinessCase = ({
                 <TableCell className="font-medium">{getTranslation(language, 'upsellingWithRever')}</TableCell>
                 <TableCell className="text-center">{Math.round(upsellingResi).toLocaleString()}</TableCell>
                 <TableCell className="text-center">{formatCurrency(upsellingAOV)}</TableCell>
-                <TableCell className="text-center">3.78% <span className="text-sm text-gray-500">{getTranslation(language, 'upsellingRate')}</span></TableCell>
+                <TableCell className="text-center">
+                  <EditableValue 
+                    value={effectiveUpsellingRate * 100} 
+                    format="percentage" 
+                    field="upsellingRate"
+                  /> <span className="text-sm text-gray-500">{getTranslation(language, 'upsellingRate')}</span>
+                </TableCell>
                 <TableCell className="text-center">
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -358,10 +457,10 @@ const BusinessCase = ({
                     </TooltipTrigger>
                     <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                       <div className="space-y-1 text-sm">
-                        <div>SaaS Fee: {formatCurrency(saasFeeAnnuale)}</div>
-                        <div>+ Transaction Fee: {formatCurrency(transactionFeeAnnuale)}</div>
-                        <div>+ RDV Fee: {formatCurrency(rdvFeeAnnuale)}</div>
-                        <div>+ Upselling Fee: {formatCurrency(upsellingFeeAnnuale)}</div>
+                        <div>SaaS Fee: <EditableValue value={saasFeeAnnuale} format="currency" field="saasFee" /></div>
+                        <div>+ Transaction Fee: <EditableValue value={transactionFeeAnnuale} format="currency" field="transactionFeeFixed" /></div>
+                        <div>+ RDV Fee ({effectiveRdvPercentage}%): <EditableValue value={rdvFeeAnnuale} format="currency" field="rdvPercentage" /></div>
+                        <div>+ Upselling Fee ({effectiveUpsellingPercentage}%): <EditableValue value={upsellingFeeAnnuale} format="currency" field="upsellingPercentage" /></div>
                         <div className="border-t pt-1 mt-2 font-semibold">
                           = {getTranslation(language, 'total')}: {formatCurrency(totalPlatformCost)}
                         </div>
