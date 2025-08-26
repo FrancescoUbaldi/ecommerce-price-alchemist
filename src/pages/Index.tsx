@@ -882,6 +882,12 @@ const Index = () => {
               {getTranslation(language, 'predefinedScenarios')}
             </TabsTrigger>
             <TabsTrigger 
+              value="business-case"
+              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 data-[state=inactive]:hover:bg-gray-200 transition-all duration-300 cursor-pointer rounded-md font-medium"
+            >
+              {getTranslation(language, 'businessCase')}
+            </TabsTrigger>
+            <TabsTrigger 
               value="personalizzato"
               className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 data-[state=inactive]:hover:bg-gray-200 transition-all duration-300 cursor-pointer rounded-md font-medium"
             >
@@ -891,12 +897,6 @@ const Index = () => {
                   {getTranslation(language, 'scenarioApplied')}
                 </span>
               )}
-            </TabsTrigger>
-            <TabsTrigger 
-              value="business-case"
-              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900 data-[state=inactive]:hover:bg-gray-200 transition-all duration-300 cursor-pointer rounded-md font-medium"
-            >
-              {getTranslation(language, 'businessCase')}
             </TabsTrigger>
           </TabsList>
 

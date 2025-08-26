@@ -202,19 +202,19 @@ const ClientView = () => {
           </div>
         )}
 
-        <Tabs defaultValue="personalizzato" className="w-full">
+        <Tabs defaultValue="business-case" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-gray-100 p-1 rounded-lg">
-            <TabsTrigger 
-              value="personalizzato"
-              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 transition-all duration-300 cursor-pointer rounded-md font-medium"
-            >
-              {getTranslation(shareData.language, 'customScenario')}
-            </TabsTrigger>
             <TabsTrigger 
               value="business-case"
               className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 transition-all duration-300 cursor-pointer rounded-md font-medium"
             >
               {getTranslation(shareData.language, 'businessCase')}
+            </TabsTrigger>
+            <TabsTrigger 
+              value="personalizzato"
+              className="relative data-[state=active]:bg-[#1790FF] data-[state=active]:text-white data-[state=inactive]:text-gray-600 transition-all duration-300 cursor-pointer rounded-md font-medium"
+            >
+              {getTranslation(shareData.language, 'customScenario')}
             </TabsTrigger>
           </TabsList>
 
