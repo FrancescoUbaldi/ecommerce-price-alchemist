@@ -112,21 +112,15 @@ const Index = () => {
   });
   const [showAddFeatureInput, setShowAddFeatureInput] = useState(false);
 
-  // Check if we have meaningful client data
-  const hasClientData = useMemo(() => {
-    return clientData.carrelloMedio > 0 && (clientData.resiAnnuali > 0 || clientData.resiMensili > 0);
-  }, [clientData.resiAnnuali, clientData.resiMensili, clientData.carrelloMedio]);
-
   // Calculate GTV - FIXED: should be Annual Returns × Average Cart OR Monthly Returns × 12 × Average Cart
   const gtv = useMemo(() => {
-    if (!hasClientData) return 0;
     if (clientData.resiAnnuali > 0 && clientData.carrelloMedio > 0) {
       return clientData.resiAnnuali * clientData.carrelloMedio;
     } else if (clientData.resiMensili > 0 && clientData.carrelloMedio > 0) {
       return clientData.resiMensili * 12 * clientData.carrelloMedio;
     }
     return 0;
-  }, [clientData.resiAnnuali, clientData.resiMensili, clientData.carrelloMedio, hasClientData]);
+  }, [clientData.resiAnnuali, clientData.resiMensili, clientData.carrelloMedio]);
 
   // Round to nearest value ending in 9 (e.g. 93→89, 97→99, 104→109)
   const roundToNine = (value: number): number => {
@@ -535,7 +529,6 @@ const Index = () => {
   const calculateScenario = (scenario: PricingData, absorb: boolean = false) => {
     const annualReturns = clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12;
     
-    // Return empty state if no meaningful client data is provided
     if (!annualReturns || !clientData.carrelloMedio) {
       return {
         saasFee: 0,
@@ -852,7 +845,7 @@ const Index = () => {
                   type="number"
                   value={clientData.resiAnnuali || ''}
                   onChange={(e) => updateClientData('resiAnnuali', parseInt(e.target.value) || 0)}
-                  placeholder=""
+                  placeholder="23900"
                 />
               </div>
               <div className="space-y-2">
@@ -862,7 +855,7 @@ const Index = () => {
                   type="number"
                   value={clientData.resiMensili || ''}
                   onChange={(e) => updateClientData('resiMensili', parseInt(e.target.value) || 0)}
-                  placeholder=""
+                  placeholder="1992"
                 />
               </div>
               <div className="space-y-2">
@@ -872,7 +865,7 @@ const Index = () => {
                   type="number"
                   value={clientData.carrelloMedio || ''}
                   onChange={(e) => updateClientData('carrelloMedio', parseFloat(e.target.value) || 0)}
-                  placeholder=""
+                  placeholder="35.50"
                 />
               </div>
               <div className="space-y-2">
@@ -1075,7 +1068,7 @@ const Index = () => {
                       type="number"
                       value={clientData.totalOrdersAnnual || ''}
                       onChange={(e) => updateCustomScenarioField('totalOrdersAnnual', parseInt(e.target.value) || 0)}
-                      placeholder=""
+                      placeholder="100000"
                     />
                   </div>
                   <div className="space-y-2">
@@ -1085,7 +1078,7 @@ const Index = () => {
                       type="number"
                       value={clientData.resiAnnuali || ''}
                       onChange={(e) => updateCustomScenarioField('resiAnnuali', parseInt(e.target.value) || 0)}
-                       placeholder=""
+                      placeholder="23900"
                     />
                   </div>
                   <div className="space-y-2">
@@ -1096,7 +1089,7 @@ const Index = () => {
                       step="0.1"
                       value={clientData.returnRatePercentage || ''}
                       onChange={(e) => updateCustomScenarioField('returnRatePercentage', parseFloat(e.target.value) || 0)}
-                      placeholder=""
+                      placeholder="23.9"
                     />
                   </div>
                   <div className="space-y-2 flex flex-col justify-end">
@@ -1125,7 +1118,7 @@ const Index = () => {
                         ...customScenario,
                         saasFee: parseFloat(e.target.value) || 0
                       })}
-                       placeholder=""
+                      placeholder="0"
                     />
                   </div>
                   <div className="space-y-2">
@@ -1139,7 +1132,7 @@ const Index = () => {
                         ...customScenario,
                         transactionFeeFixed: parseFloat(e.target.value) || 0
                       })}
-                       placeholder=""
+                      placeholder="0.50"
                       className={absorbTransactionFee ? 'text-gray-400' : ''}
                     />
                     {/* Checkbox to absorb transaction fee */}
@@ -1169,7 +1162,7 @@ const Index = () => {
                         ...customScenario,
                         rdvPercentage: Math.round(parseFloat(e.target.value)) || 0
                       })}
-                       placeholder=""
+                      placeholder="0"
                     />
                   </div>
                   <div className="space-y-2">
@@ -1183,7 +1176,7 @@ const Index = () => {
                          ...customScenario,
                          upsellingPercentage: Math.round(parseFloat(e.target.value)) || 0
                        })}
-                        placeholder=""
+                       placeholder="0"
                      />
                   </div>
                 </div>
@@ -1459,7 +1452,7 @@ const Index = () => {
                         type="number"
                         value={scenario.saasFee || ''}
                         onChange={(e) => updateDuplicatedScenario(index, 'saasFee', parseFloat(e.target.value) || 0)}
-                         placeholder=""
+                        placeholder="0"
                       />
                     </div>
                     <div className="space-y-2">
@@ -1469,7 +1462,7 @@ const Index = () => {
                         step="0.10"
                         value={scenario.transactionFeeFixed || ''}
                         onChange={(e) => updateDuplicatedScenario(index, 'transactionFeeFixed', parseFloat(e.target.value) || 0)}
-                        placeholder=""
+                        placeholder="0.50"
                       />
                     </div>
                     <div className="space-y-2">
@@ -1479,7 +1472,7 @@ const Index = () => {
                          step="1"
                          value={scenario.rdvPercentage || ''}
                          onChange={(e) => updateDuplicatedScenario(index, 'rdvPercentage', Math.round(parseFloat(e.target.value)) || 0)}
-                         placeholder=""
+                        placeholder="0"
                       />
                     </div>
                     <div className="space-y-2">
@@ -1489,7 +1482,7 @@ const Index = () => {
                          step="1"
                          value={scenario.upsellingPercentage || ''}
                          onChange={(e) => updateDuplicatedScenario(index, 'upsellingPercentage', Math.round(parseFloat(e.target.value)) || 0)}
-                        placeholder=""
+                        placeholder="0"
                       />
                     </div>
                   </div>
