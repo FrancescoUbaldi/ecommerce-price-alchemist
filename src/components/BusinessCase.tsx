@@ -58,8 +58,71 @@ const BusinessCase = ({
     return `${value.toFixed(2)}%`;
   };
 
+  // Check if we have meaningful client data
+  const hasClientData = clientData.carrelloMedio > 0 && 
+    (clientData.resiAnnuali > 0 || clientData.resiMensili > 0) && 
+    clientData.totalOrdersAnnual > 0;
+
   // Get the annual returns (use annual if available, otherwise calculate from monthly)
   const annualReturns = clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12;
+  
+  // If no meaningful data, show empty state for calculations
+  if (!hasClientData) {
+    return (
+      <TooltipProvider>
+        <div className="space-y-6">
+          {!readOnly && (
+            <Card>
+              <CardHeader>
+                <CardTitle>{getTranslation(language, 'businessCaseConfig')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="clientName">{getTranslation(language, 'ecommerceName')}</Label>
+                    <Input
+                      id="clientName"
+                      value={clientName}
+                      onChange={(e) => setClientName(e.target.value)}
+                      placeholder={getTranslation(language, 'enterEcommerceName')}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="returnRateBusiness">{getTranslation(language, 'returnRate')}</Label>
+                    <Input
+                      id="returnRateBusiness"
+                      type="number"
+                      step="0.1"
+                      value={clientData.returnRatePercentage || ''}
+                      onChange={(e) => updateClientData('returnRatePercentage', parseFloat(e.target.value) || 0)}
+                      placeholder=""
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Empty state message */}
+          <div className="bg-white rounded-xl p-6 text-center text-gray-500"
+            style={{
+              border: '2px solid #000D1F',
+              borderRadius: '12px',
+              padding: '24px',
+              backgroundColor: 'white'
+            }}
+          >
+            <h2 className="text-2xl font-semibold leading-none tracking-tight text-black mb-4">
+              Business Case: {clientName || getTranslation(language, 'ecommerceName')}
+            </h2>
+            <p className="text-lg">
+              {getTranslation(language, 'enterClientData') || 'Inserisci i dati del cliente per visualizzare il business case'}
+            </p>
+          </div>
+        </div>
+      </TooltipProvider>
+    );
+  }
   
   // Business Case calculations matching the screenshot exactly
   
@@ -149,7 +212,7 @@ const BusinessCase = ({
                     step="0.1"
                     value={clientData.returnRatePercentage || ''}
                     onChange={(e) => updateClientData('returnRatePercentage', parseFloat(e.target.value) || 0)}
-                    placeholder="23.9"
+                    placeholder=""
                   />
                 </div>
               </div>

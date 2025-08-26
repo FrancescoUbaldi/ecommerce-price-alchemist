@@ -17,7 +17,8 @@ const FeeDistributionChart = ({
   upsellingFee, 
   totalMensile 
 }: FeeDistributionProps) => {
-  if (totalMensile === 0) return null;
+  // Don't render if no meaningful data (all fees are 0 or total is 0)
+  if (totalMensile === 0 || (saasFee === 0 && transactionFee === 0 && rdvFee === 0 && upsellingFee === 0)) return null;
 
   const saasPercentage = (saasFee / totalMensile) * 100;
   const transactionPercentage = (transactionFee / totalMensile) * 100;
