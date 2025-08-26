@@ -382,17 +382,15 @@ const ClientView = () => {
                         {shareData.scenario_data.features && shareData.scenario_data.features.length > 0 && (
                           <div className="space-y-3">
                             <h4 className="font-medium text-gray-700 mb-2">Caratteristiche Incluse</h4>
-                            <div className="space-y-1">
-                              {shareData.scenario_data.features.map((feature: string, featureIndex: number) => (
-                                <div key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600 py-1">
-                                  {feature === "–" ? (
-                                    <span className="text-gray-400 font-medium">–</span>
-                                  ) : (
-                                    <Check className="h-4 w-4 text-rever-blue flex-shrink-0" />
-                                  )}
-                                  <span className={feature === "–" ? "text-gray-400" : ""}>{feature}</span>
-                                </div>
-                              ))}
+                             <div className="space-y-1">
+                               {shareData.scenario_data.features
+                                 .filter((feature: string) => feature !== "-" && feature !== "–" && feature.trim() !== "")
+                                 .map((feature: string, featureIndex: number) => (
+                                 <div key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600 py-1">
+                                   <Check className="h-4 w-4 text-rever-blue flex-shrink-0" />
+                                   <span>{feature}</span>
+                                 </div>
+                               ))}
                               
                               {/* Display active extra services */}
                               {shareData.scenario_data.extraServices?.reverProtect && (

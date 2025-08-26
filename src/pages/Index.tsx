@@ -292,7 +292,7 @@ const Index = () => {
     // Copy features from the selected scenario, excluding placeholder dashes
     if (scenarioIndex !== undefined) {
       const features = getScenarioFeatures(scenarioIndex);
-      const validFeatures = features.filter(feature => feature !== "–" && feature.trim() !== "");
+      const validFeatures = features.filter(feature => feature !== "-" && feature !== "–" && feature.trim() !== "");
       setCustomFeatures(validFeatures);
     }
     
@@ -1274,17 +1274,19 @@ const Index = () => {
                             <div className="space-y-3">
                               <h4 className="font-medium text-gray-700 mb-2">Caratteristiche Incluse</h4>
                               
-                              {/* Feature List */}
-                              <div className="space-y-1">
-                                {customFeatures.map((feature, featureIndex) => (
-                                  <div 
-                                    key={featureIndex} 
-                                    className="group flex items-center justify-between py-1 px-2 rounded-md hover:bg-gray-50 transition-colors"
-                                  >
-                                    <div className="flex items-center gap-2">
-                                      <Check className="h-4 w-4 text-rever-blue flex-shrink-0" />
-                                      <span className="text-sm text-gray-600">{feature}</span>
-                                    </div>
+                               {/* Feature List */}
+                               <div className="space-y-1">
+                                 {customFeatures
+                                   .filter(feature => feature !== "-" && feature !== "–" && feature.trim() !== "")
+                                   .map((feature, featureIndex) => (
+                                   <div 
+                                     key={featureIndex} 
+                                     className="group flex items-center justify-between py-1 px-2 rounded-md hover:bg-gray-50 transition-colors"
+                                   >
+                                     <div className="flex items-center gap-2">
+                                       <Check className="h-4 w-4 text-rever-blue flex-shrink-0" />
+                                       <span className="text-sm text-gray-600">{feature}</span>
+                                     </div>
                                     <button
                                       onClick={() => removeCustomFeature(featureIndex)}
                                       className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity p-1"
