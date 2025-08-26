@@ -289,9 +289,11 @@ const Index = () => {
       name: "Scenario Personalizzato"
     });
     
-    // Copy features from the selected scenario
+    // Copy features from the selected scenario, excluding placeholder dashes
     if (scenarioIndex !== undefined) {
-      setCustomFeatures(getScenarioFeatures(scenarioIndex));
+      const features = getScenarioFeatures(scenarioIndex);
+      const validFeatures = features.filter(feature => feature !== "–" && feature.trim() !== "");
+      setCustomFeatures(validFeatures);
     }
     
     setShowScenarioNotification(true);
