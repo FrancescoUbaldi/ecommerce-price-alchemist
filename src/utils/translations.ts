@@ -2,7 +2,7 @@
 export const translations = {
   it: {
     title: "Price & Smile :)",
-    subtitle: "Calcola il pricing perfetto per i tuoi clienti",
+    subtitle: "La tua proposta economica",
     clientData: "Dati Cliente",
     annualReturns: "Resi Annuali",
     monthlyReturns: "Resi Mensili",
@@ -74,7 +74,7 @@ export const translations = {
   },
   en: {
     title: "Price & Smile :)",
-    subtitle: "Calculate the perfect pricing for your clients",
+    subtitle: "Your pricing proposal",
     clientData: "Client Data",
     annualReturns: "Annual Returns",
     monthlyReturns: "Monthly Returns",
@@ -146,7 +146,7 @@ export const translations = {
   },
   es: {
     title: "Price & Smile :)",
-    subtitle: "Calcula el pricing perfecto para tus clientes",
+    subtitle: "Tu propuesta económica",
     clientData: "Datos del Cliente",
     annualReturns: "Devoluciones Anuales",
     monthlyReturns: "Devoluciones Mensuales",
@@ -218,7 +218,7 @@ export const translations = {
   },
   fr: {
     title: "Price & Smile :)",
-    subtitle: "Calculez le pricing parfait pour vos clients",
+    subtitle: "Votre proposition tarifaire",
     clientData: "Données Client",
     annualReturns: "Retours Annuels",
     monthlyReturns: "Retours Mensuels",
