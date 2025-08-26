@@ -97,7 +97,12 @@ const Index = () => {
       name: "FULL GAS"
     }
   ]);
-
+  
+  const [predefinedEditFlags, setPredefinedEditFlags] = useState({
+    rdvEdited: [false, false, false],
+    upsellingEdited: [false, false, false],
+  });
+  
   const [duplicatedScenarios, setDuplicatedScenarios] = useState<PricingData[]>([]);
   const [customFeatures, setCustomFeatures] = useState<string[]>([]);
   const [newFeature, setNewFeature] = useState('');
@@ -136,6 +141,8 @@ const Index = () => {
   // Auto-adjust predefined scenarios based on Take Rate targets with minimum SaaS fee
   useEffect(() => {
     if (gtv > 0) {
+      const round1 = (n: number) => Math.round(n * 10) / 10;
+
       // Target Take Rate ranges: ECO MODE (flexible), GAS (2.8%-4.8%), FULL GAS (>5%)
       const targetTakeRates = [0.025, 0.035, 0.055]; // Base target rates
       
@@ -144,23 +151,90 @@ const Index = () => {
         const targetACV = gtv * targetTakeRate;
         const targetMonthlyCost = targetACV / 12;
         
-        // Calculate other fees first
-        const resiMensili = clientData.resiAnnuali > 0 ? clientData.resiAnnuali / 12 : clientData.resiMensili;
+        // Base figures
+        const annualReturns = clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12;
+        const resiMensili = annualReturns / 12;
         const transactionFee = resiMensili * scenario.transactionFeeFixed;
-        
-        const rdvAnnuali = (clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12) * 0.35;
+
+        const rdvAnnuali = annualReturns * 0.35;
         const rdvMensili = rdvAnnuali / 12;
-        const rdvFee = (rdvMensili * clientData.carrelloMedio * scenario.rdvPercentage) / 100;
+        const rdvPerPercent = (rdvMensili * clientData.carrelloMedio) / 100; // € per 1% RDV
         
-        const upsellingAnnuali = (clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12) * 0.0378;
+        const upsellingAnnuali = annualReturns * 0.0378;
         const upsellingMensili = upsellingAnnuali / 12;
         const incrementoCarrello = clientData.carrelloMedio * 0.3;
-        const upsellingFee = (upsellingMensili * incrementoCarrello * scenario.upsellingPercentage) / 100;
+        const upsPerPercent = (upsellingMensili * incrementoCarrello) / 100; // € per 1% Upselling
+
+        // Decide dynamic defaults if not user-edited
+        let rdvPct = scenario.rdvPercentage;
+        let upsPct = scenario.upsellingPercentage;
+
+        const rdvEdited = predefinedEditFlags.rdvEdited[index];
+        const upsEdited = predefinedEditFlags.upsellingEdited[index];
+
+        // Always keep ECO MODE at 0% RDV and 0% Upselling in defaults
+        if (index === 0) {
+          if (!rdvEdited) rdvPct = 0;
+          if (!upsEdited) upsPct = 0;
+        }
+
+        // GAS: RDV in [1,4], Upselling = 0 by default
+        if (index === 1) {
+          if (!upsEdited) upsPct = 0;
+          if (!rdvEdited) {
+            const gapForMinSaaS = targetMonthlyCost - transactionFee - 89;
+            if (rdvPerPercent > 0) {
+              const neededPct = gapForMinSaaS > 0 ? gapForMinSaaS / rdvPerPercent : 1; // ensure > 0
+              rdvPct = Math.min(4, Math.max(1, round1(neededPct)));
+            } else {
+              rdvPct = 1;
+            }
+          }
+        }
+
+        // FULL GAS: RDV in [2,4], Upselling in [3,5]
+        if (index === 2) {
+          const rdvMin = 2, rdvMax = 4;
+          const upsMin = 3, upsMax = 5;
+
+          if (!rdvEdited) rdvPct = rdvMin;
+          if (!upsEdited) upsPct = upsMin;
+
+          if (!rdvEdited || !upsEdited) {
+            const baseContribution = (rdvPct * rdvPerPercent) + (upsPct * upsPerPercent);
+            const gapForMinSaaS = targetMonthlyCost - transactionFee - 89 - baseContribution;
+
+            const rdvRange = rdvMax - Math.max(rdvPct, rdvMin);
+            const upsRange = upsMax - Math.max(upsPct, upsMin);
+            const maxAddContribution = (rdvRange * rdvPerPercent) + (upsRange * upsPerPercent);
+
+            if (gapForMinSaaS > 0 && maxAddContribution > 0) {
+              if (gapForMinSaaS >= maxAddContribution) {
+                // Use full ranges
+                if (!rdvEdited) rdvPct = rdvMin + rdvRange;
+                if (!upsEdited) upsPct = upsMin + upsRange;
+              } else {
+                const scale = gapForMinSaaS / maxAddContribution;
+                if (!rdvEdited) rdvPct = round1(rdvMin + rdvRange * scale);
+                if (!upsEdited) upsPct = round1(upsMin + upsRange * scale);
+              }
+            }
+          }
+        }
+
+        // Compute fees with decided percentages
+        const rdvFee = (rdvMensili * clientData.carrelloMedio * rdvPct) / 100;
+        const upsellingFee = (upsellingMensili * incrementoCarrello * upsPct) / 100;
         
         // Calculate required SaaS fee to reach target with minimum 89€
         const requiredSaasFee = Math.max(89, targetMonthlyCost - transactionFee - rdvFee - upsellingFee);
         
-        return { ...scenario, saasFee: Math.round(requiredSaasFee) };
+        return { 
+          ...scenario, 
+          rdvPercentage: round1(rdvPct), 
+          upsellingPercentage: round1(upsPct), 
+          saasFee: Math.round(requiredSaasFee) 
+        };
       });
       
       setPredefinedScenarios(enforceProgressivePredefined(updatedScenarios));
@@ -189,6 +263,20 @@ const Index = () => {
       );
       return enforceProgressivePredefined(updated);
     });
+
+    // Mark user edits so auto-balance won't override them later
+    if (field === 'rdvPercentage') {
+      setPredefinedEditFlags(prev => ({
+        ...prev,
+        rdvEdited: prev.rdvEdited.map((v, i) => (i === index ? true : v)),
+      }));
+    }
+    if (field === 'upsellingPercentage') {
+      setPredefinedEditFlags(prev => ({
+        ...prev,
+        upsellingEdited: prev.upsellingEdited.map((v, i) => (i === index ? true : v)),
+      }));
+    }
   };
   const selectPredefinedScenario = (scenario: PricingData, scenarioIndex?: number) => {
     setCustomScenario({
@@ -262,24 +350,27 @@ const Index = () => {
         saasFee: 199,
         transactionFeeFixed: 1.50,
         rdvPercentage: 0,
-        upsellingPercentage: 5,
+        upsellingPercentage: 0,
         name: "ECO MODE"
       },
       {
         saasFee: 299,
         transactionFeeFixed: 1.20,
-        rdvPercentage: 2,
-        upsellingPercentage: 4,
+        rdvPercentage: 1,
+        upsellingPercentage: 0,
         name: "GAS"
       },
       {
         saasFee: 399,
         transactionFeeFixed: 1.00,
-        rdvPercentage: 3,
+        rdvPercentage: 2,
         upsellingPercentage: 3,
         name: "FULL GAS"
       }
     ]));
+
+    // Reset edit flags so defaults can apply again
+    setPredefinedEditFlags({ rdvEdited: [false, false, false], upsellingEdited: [false, false, false] });
 
     // Reset last modified field tracker and field modification order
     setLastModifiedField(null);
