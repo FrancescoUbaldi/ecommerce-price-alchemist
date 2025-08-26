@@ -76,21 +76,21 @@ const Index = () => {
 
   const [predefinedScenarios, setPredefinedScenarios] = useState<PricingData[]>([
     {
-      saasFee: 89,
+      saasFee: 89, // Will be dynamically calculated
       transactionFeeFixed: 1.50,
       rdvPercentage: 0,
       upsellingPercentage: 0,
       name: "ECO MODE"
     },
     {
-      saasFee: 109,
+      saasFee: 109, // Will be dynamically calculated
       transactionFeeFixed: 1.50,
       rdvPercentage: 2,
       upsellingPercentage: 0,
       name: "GAS"
     },
     {
-      saasFee: 149,
+      saasFee: 149, // Will be dynamically calculated
       transactionFeeFixed: 1.70,
       rdvPercentage: 3,
       upsellingPercentage: 3,
@@ -122,15 +122,25 @@ const Index = () => {
     return 0;
   }, [clientData.resiAnnuali, clientData.resiMensili, clientData.carrelloMedio]);
 
-  // Enforce progressive rules (Eco -> Gas -> Full Gas) with diversified min SaaS fees
+  // Round to nearest value ending in 9 (e.g. 93→89, 97→99, 104→109)
+  const roundToNine = (value: number): number => {
+    const base = Math.floor(value / 10) * 10; // Get tens place
+    const remainder = value % 10;
+    
+    if (remainder <= 4) {
+      return base - 1; // Round down to X9 of lower ten
+    } else {
+      return base + 9; // Round up to X9 of current ten
+    }
+  };
+
+  // Enforce progressive rules (Eco -> Gas -> Full Gas) allowing full manual override
   const enforceProgressivePredefined = (scenarios: PricingData[]): PricingData[] => {
     const adjusted = scenarios.map(s => ({ ...s }));
-    const minSaasFees = [89, 109, 149]; // Diversified minimums ending in 9
     
     for (let i = 0; i < adjusted.length; i++) {
-      // SaaS must be defined and at least the minimum for this scenario
-      const minSaas = minSaasFees[i] || 89;
-      adjusted[i].saasFee = Math.max(minSaas, Number.isFinite(adjusted[i].saasFee) ? adjusted[i].saasFee : minSaas);
+      // Ensure SaaS fee is defined
+      adjusted[i].saasFee = Number.isFinite(adjusted[i].saasFee) ? adjusted[i].saasFee : 89;
       if (i > 0) {
         if (adjusted[i].saasFee < adjusted[i - 1].saasFee) adjusted[i].saasFee = adjusted[i - 1].saasFee;
         if (adjusted[i].transactionFeeFixed < adjusted[i - 1].transactionFeeFixed) adjusted[i].transactionFeeFixed = adjusted[i - 1].transactionFeeFixed;
@@ -141,14 +151,14 @@ const Index = () => {
     return adjusted;
   };
 
-  // Auto-adjust predefined scenarios based on Take Rate targets with minimum SaaS fee
+  // Auto-adjust predefined scenarios based on Take Rate targets with SaaS fees ending in 9
   useEffect(() => {
     if (gtv > 0) {
       const round1 = (n: number) => Math.round(n * 10) / 10;
 
-      // Target Take Rate ranges: ECO MODE (flexible), GAS (2.8%-4.8%), FULL GAS (>5%)
+      // Target Take Rate ranges: ECO MODE (≤3.0%), GAS (3.5%-5.0%), FULL GAS (4.0%-6.5%)
       // Reduce by 1% for high-value clients (Annual GTV > €1,000,000)
-      const baseTakeRates = [0.025, 0.035, 0.055]; // Base target rates
+      const baseTakeRates = [0.03, 0.0425, 0.0525]; // Base target rates (center of ranges)
       const targetTakeRates = gtv > 1000000 
         ? baseTakeRates.map(rate => rate - 0.01) // Reduce by 1 percentage point for high GTV
         : baseTakeRates;
@@ -189,11 +199,9 @@ const Index = () => {
         if (index === 1) {
           if (!upsEdited) upsPct = 0;
           if (!rdvEdited) {
-            const minSaasForScenario = 109; // Diversified minimum for GAS
-            const gapForMinSaaS = targetMonthlyCost - transactionFee - minSaasForScenario;
+            // Calculate optimal RDV to stay within take rate range
             if (rdvPerPercent > 0) {
-              const neededPct = gapForMinSaaS > 0 ? gapForMinSaaS / rdvPerPercent : 1; // ensure > 0
-              rdvPct = Math.min(4, Math.max(1, round1(neededPct)));
+              rdvPct = Math.min(4, Math.max(1, round1(2))); // Default to 2% for GAS
             } else {
               rdvPct = 1;
             }
@@ -208,43 +216,27 @@ const Index = () => {
           if (!rdvEdited) rdvPct = rdvMin;
           if (!upsEdited) upsPct = upsMin;
 
-          if (!rdvEdited || !upsEdited) {
-            const baseContribution = (rdvPct * rdvPerPercent) + (upsPct * upsPerPercent);
-            const minSaasForScenario = 149; // Diversified minimum for FULL GAS
-            const gapForMinSaaS = targetMonthlyCost - transactionFee - minSaasForScenario - baseContribution;
-
-            const rdvRange = rdvMax - Math.max(rdvPct, rdvMin);
-            const upsRange = upsMax - Math.max(upsPct, upsMin);
-            const maxAddContribution = (rdvRange * rdvPerPercent) + (upsRange * upsPerPercent);
-
-            if (gapForMinSaaS > 0 && maxAddContribution > 0) {
-              if (gapForMinSaaS >= maxAddContribution) {
-                // Use full ranges
-                if (!rdvEdited) rdvPct = rdvMin + rdvRange;
-                if (!upsEdited) upsPct = upsMin + upsRange;
-              } else {
-                const scale = gapForMinSaaS / maxAddContribution;
-                if (!rdvEdited) rdvPct = round1(rdvMin + rdvRange * scale);
-                if (!upsEdited) upsPct = round1(upsMin + upsRange * scale);
-              }
-            }
-          }
+          // Default values for FULL GAS within ranges
+          if (!rdvEdited) rdvPct = 3; // Default to 3% for FULL GAS
+          if (!upsEdited) upsPct = 3; // Default to 3% for FULL GAS
         }
 
         // Compute fees with decided percentages
         const rdvFee = (rdvMensili * clientData.carrelloMedio * rdvPct) / 100;
         const upsellingFee = (upsellingMensili * incrementoCarrello * upsPct) / 100;
         
-        // Calculate required SaaS fee to reach target with diversified minimums
-        const minSaasFees = [89, 109, 149]; // Diversified minimums ending in 9
-        const minSaasForScenario = minSaasFees[index] || 89;
-        const requiredSaasFee = Math.max(minSaasForScenario, targetMonthlyCost - transactionFee - rdvFee - upsellingFee);
+        // Calculate required SaaS fee to reach target take rate, then round to nearest 9
+        const requiredSaasFee = Math.max(0, targetMonthlyCost - transactionFee - rdvFee - upsellingFee);
+        const roundedSaasFee = roundToNine(requiredSaasFee);
+        
+        // Ensure minimum reasonable SaaS fee
+        const finalSaasFee = Math.max(89, roundedSaasFee);
         
         return { 
           ...scenario, 
           rdvPercentage: Math.round(rdvPct), 
           upsellingPercentage: Math.round(upsPct), 
-          saasFee: Math.round(requiredSaasFee) 
+          saasFee: finalSaasFee 
         };
       });
       
@@ -712,10 +704,12 @@ const Index = () => {
   };
 
   const getTakeRateStatus = (takeRate: number, scenarioName: string) => {
-    if (scenarioName === "GAS") {
-      return takeRate >= 2.8 && takeRate <= 4.8 ? "✅ In range (2.8%-4.8%)" : "⚠️ Out of range";
+    if (scenarioName === "ECO MODE") {
+      return takeRate <= 3.0 ? "✅ In range (≤3.0%)" : "⚠️ Out of range";
+    } else if (scenarioName === "GAS") {
+      return takeRate >= 3.5 && takeRate <= 5.0 ? "✅ In range (3.5%-5.0%)" : "⚠️ Out of range";
     } else if (scenarioName === "FULL GAS") {
-      return takeRate > 5 ? "✅ In range (>5%)" : "⚠️ Out of range";
+      return takeRate >= 4.0 && takeRate <= 6.5 ? "✅ In range (4.0%-6.5%)" : "⚠️ Out of range";
     }
     return "";
   };
