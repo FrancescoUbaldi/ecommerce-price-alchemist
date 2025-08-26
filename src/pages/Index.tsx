@@ -1436,95 +1436,126 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            {duplicatedScenarios.map((scenario, index) => (
-              <Card key={index} className="border-dashed border-2">
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <div className="h-5 w-5" />
-                    {scenario.name} #{index + 1}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div className="space-y-2">
-                      <Label>{getTranslation(language, 'saasFee')}</Label>
-                      <Input
-                        type="number"
-                        value={scenario.saasFee || ''}
-                        onChange={(e) => updateDuplicatedScenario(index, 'saasFee', parseFloat(e.target.value) || 0)}
-                        placeholder="0"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>{getTranslation(language, 'transactionFee')}</Label>
-                      <Input
-                        type="number"
-                        step="0.10"
-                        value={scenario.transactionFeeFixed || ''}
-                        onChange={(e) => updateDuplicatedScenario(index, 'transactionFeeFixed', parseFloat(e.target.value) || 0)}
-                        placeholder="0.50"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>{getTranslation(language, 'rdvFee')}</Label>
-                       <Input
-                         type="number"
-                         step="1"
-                         value={scenario.rdvPercentage || ''}
-                         onChange={(e) => updateDuplicatedScenario(index, 'rdvPercentage', Math.round(parseFloat(e.target.value)) || 0)}
-                        placeholder="0"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>{getTranslation(language, 'upsellingFee')}</Label>
-                       <Input
-                         type="number"
-                         step="1"
-                         value={scenario.upsellingPercentage || ''}
-                         onChange={(e) => updateDuplicatedScenario(index, 'upsellingPercentage', Math.round(parseFloat(e.target.value)) || 0)}
-                        placeholder="0"
-                      />
-                    </div>
-                  </div>
+            {duplicatedScenarios.map((scenario, index) => {
+              // Check if this scenario is currently active (matches custom scenario)
+              const isActive = (
+                customScenario.saasFee === scenario.saasFee &&
+                customScenario.transactionFeeFixed === scenario.transactionFeeFixed &&
+                customScenario.rdvPercentage === scenario.rdvPercentage &&
+                customScenario.upsellingPercentage === scenario.upsellingPercentage
+              );
 
-                  {(() => {
-                    const calculation = calculateScenario(scenario);
-                    return (
-                      <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-lg">
-                        <h3 className="text-lg font-semibold mb-4">{getTranslation(language, 'calculationResults')}</h3>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div className="space-y-3">
-                            <div className="flex justify-between">
-                              <span>SaaS Fee:</span>
-                              <span className="font-medium">{formatCurrency(calculation.saasFee)}</span>
+              return (
+                <Card 
+                  key={index} 
+                  className={`border-dashed border-2 ${isActive ? 'border-blue-500 bg-blue-50' : ''}`}
+                >
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="h-5 w-5" />
+                        {scenario.name} #{index + 1}
+                      </div>
+                      {isActive && (
+                        <div className="flex items-center gap-2 bg-blue-600 text-white px-2 py-1 rounded-md text-sm font-medium">
+                          <Check className="h-4 w-4" />
+                          Attivo
+                        </div>
+                      )}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                      <div className="space-y-2">
+                        <Label>{getTranslation(language, 'saasFee')}</Label>
+                        <Input
+                          type="number"
+                          value={scenario.saasFee || ''}
+                          onChange={(e) => updateDuplicatedScenario(index, 'saasFee', parseFloat(e.target.value) || 0)}
+                          placeholder="0"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>{getTranslation(language, 'transactionFee')}</Label>
+                        <Input
+                          type="number"
+                          step="0.10"
+                          value={scenario.transactionFeeFixed || ''}
+                          onChange={(e) => updateDuplicatedScenario(index, 'transactionFeeFixed', parseFloat(e.target.value) || 0)}
+                          placeholder="0.50"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>{getTranslation(language, 'rdvFee')}</Label>
+                         <Input
+                           type="number"
+                           step="1"
+                           value={scenario.rdvPercentage || ''}
+                           onChange={(e) => updateDuplicatedScenario(index, 'rdvPercentage', Math.round(parseFloat(e.target.value)) || 0)}
+                          placeholder="0"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>{getTranslation(language, 'upsellingFee')}</Label>
+                         <Input
+                           type="number"
+                           step="1"
+                           value={scenario.upsellingPercentage || ''}
+                           onChange={(e) => updateDuplicatedScenario(index, 'upsellingPercentage', Math.round(parseFloat(e.target.value)) || 0)}
+                          placeholder="0"
+                        />
+                      </div>
+                    </div>
+
+                    {(() => {
+                      const calculation = calculateScenario(scenario);
+                      return (
+                        <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-lg">
+                          <h3 className="text-lg font-semibold mb-4">{getTranslation(language, 'calculationResults')}</h3>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-3">
+                              <div className="flex justify-between">
+                                <span>SaaS Fee:</span>
+                                <span className="font-medium">{formatCurrency(calculation.saasFee)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Transaction Fee:</span>
+                                <span className="font-medium">{formatCurrency(calculation.transactionFee)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>RDV Fee:</span>
+                                <span className="font-medium">{formatCurrency(calculation.rdvFee)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Upselling Fee:</span>
+                                <span className="font-medium">{formatCurrency(calculation.upsellingFee)}</span>
+                              </div>
+                              <div className="flex justify-between font-bold text-xl border-t pt-3">
+                                <span>{getTranslation(language, 'monthlyTotal')}:</span>
+                                <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
+                              </div>
                             </div>
-                            <div className="flex justify-between">
-                              <span>Transaction Fee:</span>
-                              <span className="font-medium">{formatCurrency(calculation.transactionFee)}</span>
+                            <div className="space-y-3">
                             </div>
-                            <div className="flex justify-between">
-                              <span>RDV Fee:</span>
-                              <span className="font-medium">{formatCurrency(calculation.rdvFee)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>Upselling Fee:</span>
-                              <span className="font-medium">{formatCurrency(calculation.upsellingFee)}</span>
-                            </div>
-                            <div className="flex justify-between font-bold text-xl border-t pt-3">
-                              <span>{getTranslation(language, 'monthlyTotal')}:</span>
-                              <span className="text-green-600">{formatCurrency(calculation.totalMensile)}</span>
-                            </div>
-                          </div>
-                          <div className="space-y-3">
                           </div>
                         </div>
-                      </div>
-                    );
-                  })()}
-                </CardContent>
-              </Card>
-            ))}
+                      );
+                    })()}
+
+                    <ComboActions
+                      currentScenario={scenario}
+                      onUse={handleUseDuplicatedScenario}
+                      onDelete={() => handleDeleteDuplicatedScenario(index)}
+                      language={language}
+                      showDuplicate={false}
+                      showDelete={true}
+                      showUse={!isActive}
+                    />
+                  </CardContent>
+                </Card>
+              );
+            })}
           </TabsContent>
 
           <TabsContent value="business-case" className="space-y-6">
