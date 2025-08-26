@@ -144,7 +144,11 @@ const Index = () => {
       const round1 = (n: number) => Math.round(n * 10) / 10;
 
       // Target Take Rate ranges: ECO MODE (flexible), GAS (2.8%-4.8%), FULL GAS (>5%)
-      const targetTakeRates = [0.025, 0.035, 0.055]; // Base target rates
+      // Reduce by 1% for high-value clients (Annual GTV > €1,000,000)
+      const baseTakeRates = [0.025, 0.035, 0.055]; // Base target rates
+      const targetTakeRates = gtv > 1000000 
+        ? baseTakeRates.map(rate => rate - 0.01) // Reduce by 1 percentage point for high GTV
+        : baseTakeRates;
       
       const updatedScenarios = predefinedScenarios.map((scenario, index) => {
         const targetTakeRate = targetTakeRates[index];
