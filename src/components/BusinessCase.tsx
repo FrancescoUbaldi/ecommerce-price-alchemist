@@ -127,6 +127,71 @@ const BusinessCase = ({
       </span>
     );
   };
+
+  // Editable Client Name Component
+  interface EditableClientNameProps {
+    value: string;
+    onUpdate?: (value: string) => void;
+    placeholder: string;
+    disabled?: boolean;
+  }
+
+  const EditableClientName: React.FC<EditableClientNameProps> = ({ 
+    value, 
+    onUpdate, 
+    placeholder,
+    disabled = false
+  }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [editValue, setEditValue] = useState('');
+
+    const handleClick = () => {
+      if (disabled || !onUpdate) return;
+      setIsEditing(true);
+      setEditValue(value);
+    };
+
+    const handleSave = () => {
+      if (onUpdate) {
+        onUpdate(editValue.trim());
+      }
+      setIsEditing(false);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        handleSave();
+      } else if (e.key === 'Escape') {
+        setIsEditing(false);
+      }
+    };
+
+    if (isEditing) {
+      return (
+        <Input
+          value={editValue}
+          onChange={(e) => setEditValue(e.target.value)}
+          onBlur={handleSave}
+          onKeyDown={handleKeyDown}
+          className="inline-block w-auto min-w-[200px] h-8 text-lg font-semibold"
+          autoFocus
+        />
+      );
+    }
+
+    const displayValue = value || placeholder;
+    
+    return (
+      <span 
+        className={`${!disabled && onUpdate ? 'cursor-pointer hover:bg-blue-50 px-2 py-1 rounded' : ''} ${!value ? 'text-gray-500 italic' : ''}`}
+        onClick={handleClick}
+        title={!disabled && onUpdate ? 'Click to edit' : ''}
+      >
+        {displayValue}
+      </span>
+    );
+  };
+  
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('it-IT', {
       style: 'currency',
@@ -220,13 +285,14 @@ const BusinessCase = ({
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="clientName">{getTranslation(language, 'ecommerceName')}</Label>
-                  <Input
-                    id="clientName"
-                    value={clientName}
-                    onChange={(e) => setClientName(e.target.value)}
-                    placeholder={getTranslation(language, 'enterEcommerceName')}
-                  />
+                  <Label>{getTranslation(language, 'ecommerceName')}</Label>
+                  <div className="text-sm text-gray-600 mb-2">
+                    <EditableClientName 
+                      value={clientName}
+                      onUpdate={setClientName}
+                      placeholder={getTranslation(language, 'enterEcommerceName')}
+                    />
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="returnRateBusiness">{getTranslation(language, 'returnRate')}</Label>
@@ -256,7 +322,12 @@ const BusinessCase = ({
         >
           <div className="mb-6">
             <h2 className="text-2xl font-semibold leading-none tracking-tight">
-              Business Case: {clientName || getTranslation(language, 'ecommerceName')}
+              Business Case: <EditableClientName 
+                value={clientName}
+                onUpdate={readOnly ? undefined : setClientName}
+                placeholder={getTranslation(language, 'ecommerceName')}
+                disabled={readOnly}
+              />
             </h2>
           </div>
           <Table>

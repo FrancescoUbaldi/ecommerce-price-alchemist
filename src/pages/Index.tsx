@@ -75,6 +75,19 @@ const Index = () => {
     name: "Scenario Personalizzato"
   });
 
+  // Dynamic scenario name based on client name
+  const getCustomScenarioName = () => {
+    return clientName ? `Scenario Personalizzato: ${clientName}` : "Scenario Personalizzato";
+  };
+
+  // Update custom scenario name when client name changes
+  useEffect(() => {
+    setCustomScenario(prev => ({
+      ...prev,
+      name: getCustomScenarioName()
+    }));
+  }, [clientName]);
+
   const [predefinedScenarios, setPredefinedScenarios] = useState<PricingData[]>([
     {
       saasFee: 89, // Will be dynamically calculated
@@ -286,7 +299,7 @@ const Index = () => {
   const selectPredefinedScenario = (scenario: PricingData, scenarioIndex?: number) => {
     setCustomScenario({
       ...scenario,
-      name: "Scenario Personalizzato"
+      name: getCustomScenarioName()
     });
     
     // Track this as the last selected predefined scenario
@@ -348,7 +361,7 @@ const Index = () => {
       transactionFeeFixed: 0,
       rdvPercentage: 0,
       upsellingPercentage: 0,
-      name: "Scenario Personalizzato"
+      name: getCustomScenarioName()
     });
 
     // FORCE RESET DUPLICATED SCENARIOS TO EMPTY ARRAY
@@ -742,7 +755,7 @@ const Index = () => {
     if (wasActive && lastSelectedPredefinedScenario) {
       setCustomScenario({
         ...lastSelectedPredefinedScenario,
-        name: "Scenario Personalizzato"
+        name: getCustomScenarioName()
       });
     } else if (wasActive && !lastSelectedPredefinedScenario) {
       // If no predefined scenario was previously selected, reset to defaults
@@ -751,7 +764,7 @@ const Index = () => {
         transactionFeeFixed: 0,
         rdvPercentage: 0,
         upsellingPercentage: 0,
-        name: "Scenario Personalizzato"
+        name: getCustomScenarioName()
       });
     }
     
@@ -762,7 +775,7 @@ const Index = () => {
   const handleUseDuplicatedScenario = (scenario: PricingData) => {
     setCustomScenario({
       ...scenario,
-      name: "Scenario Personalizzato"
+      name: getCustomScenarioName()
     });
     setShowComboUsedNotification(true);
     setTimeout(() => setShowComboUsedNotification(false), 3000);
