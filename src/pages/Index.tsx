@@ -789,6 +789,63 @@ const Index = () => {
     );
   };
 
+  // Editable Client Data Title Component
+  const EditableClientDataTitle = ({ 
+    clientName, 
+    setClientName, 
+    defaultTitle 
+  }: { 
+    clientName: string; 
+    setClientName: (name: string) => void; 
+    defaultTitle: string; 
+  }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [editValue, setEditValue] = useState('');
+
+    const handleClick = () => {
+      setIsEditing(true);
+      setEditValue(clientName);
+    };
+
+    const handleSave = () => {
+      setClientName(editValue.trim());
+      setIsEditing(false);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        handleSave();
+      } else if (e.key === 'Escape') {
+        setIsEditing(false);
+      }
+    };
+
+    if (isEditing) {
+      return (
+        <Input
+          value={editValue}
+          onChange={(e) => setEditValue(e.target.value)}
+          onBlur={handleSave}
+          onKeyDown={handleKeyDown}
+          className="inline-block w-auto min-w-[150px] h-8 text-lg font-semibold"
+          autoFocus
+        />
+      );
+    }
+
+    const displayValue = clientName || defaultTitle;
+    
+    return (
+      <span 
+        className="cursor-pointer hover:bg-blue-50 px-2 py-1 rounded transition-colors"
+        onClick={handleClick}
+        title="Click to edit client name"
+      >
+        {displayValue}
+      </span>
+    );
+  };
+
   // Check if required data is complete for sharing
   const isDataCompleteForSharing = () => {
     const hasRequiredClientData = (
@@ -844,7 +901,11 @@ const Index = () => {
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">
                 <Settings className="h-5 w-5" />
-                {getTranslation(language, 'clientData')}
+                <EditableClientDataTitle 
+                  clientName={clientName}
+                  setClientName={setClientName}
+                  defaultTitle={getTranslation(language, 'clientData')}
+                />
               </CardTitle>
               <div className="flex flex-col items-end relative">
                 <Button 
