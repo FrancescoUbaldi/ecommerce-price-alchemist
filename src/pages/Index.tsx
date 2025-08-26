@@ -79,19 +79,19 @@ const Index = () => {
       saasFee: 199,
       transactionFeeFixed: 1.50,
       rdvPercentage: 0,
-      upsellingPercentage: 5,
+      upsellingPercentage: 0,
       name: "ECO MODE"
     },
     {
       saasFee: 299,
-      transactionFeeFixed: 1.20,
+      transactionFeeFixed: 1.50,
       rdvPercentage: 2,
-      upsellingPercentage: 4,
+      upsellingPercentage: 0,
       name: "GAS"
     },
     {
       saasFee: 399,
-      transactionFeeFixed: 1.00,
+      transactionFeeFixed: 1.70,
       rdvPercentage: 3,
       upsellingPercentage: 3,
       name: "FULL GAS"
