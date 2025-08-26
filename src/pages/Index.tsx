@@ -261,7 +261,8 @@ const Index = () => {
       const updated = prev.map((scenario, i) =>
         i === index ? { ...scenario, [field]: value } : scenario
       );
-      return enforceProgressivePredefined(updated);
+      // Allow full manual override - no validation constraints
+      return updated;
     });
 
     // Mark user edits so auto-balance won't override them later
