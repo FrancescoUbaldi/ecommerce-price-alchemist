@@ -277,38 +277,6 @@ const BusinessCase = ({
   return (
     <TooltipProvider>
       <div className="space-y-6">
-        {!readOnly && (
-          <Card>
-            <CardHeader>
-              <CardTitle>{getTranslation(language, 'businessCaseConfig')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>{getTranslation(language, 'ecommerceName')}</Label>
-                  <div className="text-sm text-gray-600 mb-2">
-                    <EditableClientName 
-                      value={clientName}
-                      onUpdate={setClientName}
-                      placeholder={getTranslation(language, 'enterEcommerceName')}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="returnRateBusiness">{getTranslation(language, 'returnRate')}</Label>
-                  <Input
-                    id="returnRateBusiness"
-                    type="number"
-                    step="0.1"
-                    value={clientData.returnRatePercentage || ''}
-                    onChange={(e) => updateClientData('returnRatePercentage', parseFloat(e.target.value) || 0)}
-                    placeholder="23.9"
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Business Case table with custom border frame */}
         <div 
