@@ -1306,16 +1306,14 @@ const Index = () => {
                       <h3 className="text-lg font-semibold mb-4">{getTranslation(language, 'calculationResults')}</h3>
                       
                       {/* Offer Expiration Date */}
-                      <div className="mb-4">
-                        <label className="text-sm font-medium text-muted-foreground block mb-2">
-                          {getTranslation(language, 'offerValidUntil')}
-                        </label>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-medium">{getTranslation(language, 'offerValidUntil')}</span>
                         <Popover>
                           <PopoverTrigger asChild>
                             <Button
                               variant="outline"
                               className={cn(
-                                "w-full justify-start text-left font-normal bg-white",
+                                "w-40 justify-start text-left font-normal text-sm",
                                 !offerExpirationDate && "text-muted-foreground"
                               )}
                             >
@@ -1327,7 +1325,7 @@ const Index = () => {
                               )}
                             </Button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
+                          <PopoverContent className="w-auto p-0" align="end">
                             <Calendar
                               mode="single"
                               selected={offerExpirationDate}
@@ -1665,16 +1663,14 @@ const Index = () => {
                           <h3 className="text-lg font-semibold mb-4">{getTranslation(language, 'calculationResults')}</h3>
                           
                           {/* Offer Expiration Date */}
-                          <div className="mb-4">
-                            <label className="text-sm font-medium text-muted-foreground block mb-2">
-                              {getTranslation(language, 'offerValidUntil')}
-                            </label>
+                          <div className="flex items-center justify-between mb-3">
+                            <span className="text-sm font-medium">{getTranslation(language, 'offerValidUntil')}</span>
                             <Popover>
                               <PopoverTrigger asChild>
                                 <Button
                                   variant="outline"
                                   className={cn(
-                                    "w-full justify-start text-left font-normal bg-white",
+                                    "w-40 justify-start text-left font-normal text-sm",
                                     !offerExpirationDate && "text-muted-foreground"
                                   )}
                                 >
@@ -1686,7 +1682,7 @@ const Index = () => {
                                   )}
                                 </Button>
                               </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0" align="start">
+                              <PopoverContent className="w-auto p-0" align="end">
                                 <Calendar
                                   mode="single"
                                   selected={offerExpirationDate}
