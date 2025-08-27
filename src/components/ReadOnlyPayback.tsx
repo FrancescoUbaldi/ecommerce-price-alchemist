@@ -21,7 +21,7 @@ const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, languag
   const annualReturns = businessCaseData.resiAnnuali > 0 ? businessCaseData.resiAnnuali : businessCaseData.resiMensili * 12;
   
   // Calculate RDV revenue (matching BusinessCase exactly)
-  const rdvValue = annualReturns * (scenarioData.rdvPercentage / 100) * businessCaseData.carrelloMedio;
+  const rdvValue = annualReturns * 0.35 * businessCaseData.carrelloMedio;
   
   // Calculate upselling revenue (matching BusinessCase exactly)
   const upsellingResi = annualReturns * 0.0378;
