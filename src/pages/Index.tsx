@@ -1304,11 +1304,11 @@ const Index = () => {
                   return (
                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
                       {/* Header with title and offer expiration date */}
-                      <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-start justify-between mb-6">
                         <h3 className="text-lg font-semibold">{getTranslation(language, 'calculationResults')}</h3>
                         
-                        {/* Offer Expiration Date - Top Right */}
-                        <div className="flex items-center gap-1">
+                        {/* Offer Expiration Date - Positioned higher and slightly left */}
+                        <div className="flex items-center gap-1 mr-5 -mt-1">
                           <span className="text-sm font-medium">{getTranslation(language, 'offerValidUntil')}</span>
                           <Popover>
                             <PopoverTrigger asChild>
@@ -1662,11 +1662,11 @@ const Index = () => {
                       return (
                         <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-lg">
                           {/* Header with title and offer expiration date */}
-                          <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-start justify-between mb-6">
                             <h3 className="text-lg font-semibold">{getTranslation(language, 'calculationResults')}</h3>
                             
-                            {/* Offer Expiration Date - Top Right */}
-                            <div className="flex items-center gap-1">
+                            {/* Offer Expiration Date - Positioned higher and slightly left */}
+                            <div className="flex items-center gap-1 mr-5 -mt-1">
                               <span className="text-sm font-medium">{getTranslation(language, 'offerValidUntil')}</span>
                               <Popover>
                                 <PopoverTrigger asChild>
