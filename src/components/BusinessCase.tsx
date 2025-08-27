@@ -395,14 +395,14 @@ const BusinessCase = ({
                       <span className="cursor-help">{formatCurrency(rdvValue)}</span>
                     </TooltipTrigger>
                     <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-                      <div className="space-y-1 text-sm">
-                        <div>{getTranslation(language, 'annualReturns')}: {annualReturns.toLocaleString()}</div>
-                        <div>× {getTranslation(language, 'rdvRate')}: 35%</div>
-                        <div>× {getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
-                        <div className="border-t pt-1 mt-2 font-semibold">
-                          = {getTranslation(language, 'total')}: {formatCurrency(rdvValue)}
-                        </div>
-                      </div>
+                       <div className="space-y-1 text-sm">
+                         <div>{getTranslation(language, 'annualReturns')}: {annualReturns.toLocaleString()}</div>
+                         <div>× {getTranslation(language, 'rdvRate')}: {formatPercentage(effectiveRdvRate * 100)}</div>
+                         <div>× {getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
+                         <div className="border-t pt-1 mt-2 font-semibold">
+                           = {getTranslation(language, 'total')}: {formatCurrency(rdvValue)}
+                         </div>
+                       </div>
                     </TooltipContent>
                   </Tooltip>
                 </TableCell>
