@@ -1306,26 +1306,24 @@ const Index = () => {
                       <h3 className="text-lg font-semibold mb-4">{getTranslation(language, 'calculationResults')}</h3>
                       
                       {/* Offer Expiration Date */}
-                      <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-1 mb-3">
                         <span className="text-sm font-medium">{getTranslation(language, 'offerValidUntil')}</span>
                         <Popover>
                           <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
+                            <button
                               className={cn(
-                                "w-40 justify-start text-left font-normal text-sm",
+                                "inline-flex items-center text-sm underline decoration-dotted underline-offset-4 cursor-pointer hover:decoration-solid transition-all",
                                 !offerExpirationDate && "text-muted-foreground"
                               )}
                             >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
                               {offerExpirationDate ? (
                                 format(offerExpirationDate, "dd/MM/yyyy")
                               ) : (
-                                <span>{getTranslation(language, 'selectDate')}</span>
+                                getTranslation(language, 'selectDate')
                               )}
-                            </Button>
+                            </button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="end">
+                          <PopoverContent className="w-auto p-0" align="start">
                             <Calendar
                               mode="single"
                               selected={offerExpirationDate}
@@ -1663,26 +1661,24 @@ const Index = () => {
                           <h3 className="text-lg font-semibold mb-4">{getTranslation(language, 'calculationResults')}</h3>
                           
                           {/* Offer Expiration Date */}
-                          <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-1 mb-3">
                             <span className="text-sm font-medium">{getTranslation(language, 'offerValidUntil')}</span>
                             <Popover>
                               <PopoverTrigger asChild>
-                                <Button
-                                  variant="outline"
+                                <button
                                   className={cn(
-                                    "w-40 justify-start text-left font-normal text-sm",
+                                    "inline-flex items-center text-sm underline decoration-dotted underline-offset-4 cursor-pointer hover:decoration-solid transition-all",
                                     !offerExpirationDate && "text-muted-foreground"
                                   )}
                                 >
-                                  <CalendarIcon className="mr-2 h-4 w-4" />
                                   {offerExpirationDate ? (
                                     format(offerExpirationDate, "dd/MM/yyyy")
                                   ) : (
-                                    <span>{getTranslation(language, 'selectDate')}</span>
+                                    getTranslation(language, 'selectDate')
                                   )}
-                                </Button>
+                                </button>
                               </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0" align="end">
+                              <PopoverContent className="w-auto p-0" align="start">
                                 <Calendar
                                   mode="single"
                                   selected={offerExpirationDate}
