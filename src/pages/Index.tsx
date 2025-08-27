@@ -1303,37 +1303,40 @@ const Index = () => {
                   
                   return (
                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
-                      <h3 className="text-lg font-semibold mb-4">{getTranslation(language, 'calculationResults')}</h3>
-                      
-                      {/* Offer Expiration Date */}
-                      <div className="flex items-center gap-1 mb-3">
-                        <span className="text-sm font-medium">{getTranslation(language, 'offerValidUntil')}</span>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <button
-                              className={cn(
-                                "inline-flex items-center text-sm cursor-pointer font-medium",
-                                !offerExpirationDate && "text-muted-foreground"
-                              )}
-                            >
-                              {offerExpirationDate ? (
-                                format(offerExpirationDate, "dd/MM/yyyy")
-                              ) : (
-                                getTranslation(language, 'selectDate')
-                              )}
-                            </button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={offerExpirationDate}
-                              onSelect={setOfferExpirationDate}
-                              disabled={(date) => date < new Date()}
-                              initialFocus
-                              className={cn("p-3 pointer-events-auto")}
-                            />
-                          </PopoverContent>
-                        </Popover>
+                      {/* Header with title and offer expiration date */}
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-semibold">{getTranslation(language, 'calculationResults')}</h3>
+                        
+                        {/* Offer Expiration Date - Top Right */}
+                        <div className="flex items-center gap-1">
+                          <span className="text-sm font-medium">{getTranslation(language, 'offerValidUntil')}</span>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <button
+                                className={cn(
+                                  "inline-flex items-center text-sm cursor-pointer font-medium",
+                                  !offerExpirationDate && "text-muted-foreground"
+                                )}
+                              >
+                                {offerExpirationDate ? (
+                                  format(offerExpirationDate, "dd/MM/yyyy")
+                                ) : (
+                                  getTranslation(language, 'selectDate')
+                                )}
+                              </button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                mode="single"
+                                selected={offerExpirationDate}
+                                onSelect={setOfferExpirationDate}
+                                disabled={(date) => date < new Date()}
+                                initialFocus
+                                className={cn("p-3 pointer-events-auto")}
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
                       </div>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1658,37 +1661,40 @@ const Index = () => {
                       const calculation = calculateScenario(scenario);
                       return (
                         <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-lg">
-                          <h3 className="text-lg font-semibold mb-4">{getTranslation(language, 'calculationResults')}</h3>
-                          
-                          {/* Offer Expiration Date */}
-                          <div className="flex items-center gap-1 mb-3">
-                            <span className="text-sm font-medium">{getTranslation(language, 'offerValidUntil')}</span>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <button
-                                  className={cn(
-                                    "inline-flex items-center text-sm cursor-pointer font-medium",
-                                    !offerExpirationDate && "text-muted-foreground"
-                                  )}
-                                >
-                                  {offerExpirationDate ? (
-                                    format(offerExpirationDate, "dd/MM/yyyy")
-                                  ) : (
-                                    getTranslation(language, 'selectDate')
-                                  )}
-                                </button>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0" align="start">
-                                <Calendar
-                                  mode="single"
-                                  selected={offerExpirationDate}
-                                  onSelect={setOfferExpirationDate}
-                                  disabled={(date) => date < new Date()}
-                                  initialFocus
-                                  className={cn("p-3 pointer-events-auto")}
-                                />
-                              </PopoverContent>
-                            </Popover>
+                          {/* Header with title and offer expiration date */}
+                          <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold">{getTranslation(language, 'calculationResults')}</h3>
+                            
+                            {/* Offer Expiration Date - Top Right */}
+                            <div className="flex items-center gap-1">
+                              <span className="text-sm font-medium">{getTranslation(language, 'offerValidUntil')}</span>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <button
+                                    className={cn(
+                                      "inline-flex items-center text-sm cursor-pointer font-medium",
+                                      !offerExpirationDate && "text-muted-foreground"
+                                    )}
+                                  >
+                                    {offerExpirationDate ? (
+                                      format(offerExpirationDate, "dd/MM/yyyy")
+                                    ) : (
+                                      getTranslation(language, 'selectDate')
+                                    )}
+                                  </button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                  <Calendar
+                                    mode="single"
+                                    selected={offerExpirationDate}
+                                    onSelect={setOfferExpirationDate}
+                                    disabled={(date) => date < new Date()}
+                                    initialFocus
+                                    className={cn("p-3 pointer-events-auto")}
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            </div>
                           </div>
                           
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
