@@ -20,6 +20,7 @@ interface ShareData {
     name: string;
     showUpfrontDiscount?: boolean;
     absorbTransactionFee?: boolean;
+    offerExpirationDate?: string; // ISO date string
     features?: string[];
     extraServices?: {
       reverProtect: boolean;
@@ -284,7 +285,24 @@ const ClientView = () => {
                 </div>
 
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-4">{getTranslation(shareData.language, 'calculationResults')}</h3>
+                  {/* Header with title and offer expiration date */}
+                  <div className="flex items-start justify-between mb-6">
+                    <h3 className="text-lg font-semibold">{getTranslation(shareData.language, 'calculationResults')}</h3>
+                    
+                    {/* Offer Expiration Date - Static display in read-only mode */}
+                    {shareData.scenario_data.offerExpirationDate && (
+                      <div className="flex items-center gap-1 mr-5 -mt-1">
+                        <span className="text-sm font-medium">{getTranslation(shareData.language, 'offerValidUntil')}</span>
+                        <span className="text-sm font-medium">
+                          {new Date(shareData.scenario_data.offerExpirationDate).toLocaleDateString('it-IT', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                          })}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">

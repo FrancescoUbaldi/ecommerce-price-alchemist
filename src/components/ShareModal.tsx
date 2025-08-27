@@ -29,8 +29,10 @@ interface ShareModalProps {
     name: string;
   };
   language: string;
+  clientName?: string;
   showUpfrontDiscount?: boolean;
   absorbTransactionFee?: boolean;
+  offerExpirationDate?: Date;
   customFeatures?: string[];
   extraServices?: {
     reverProtect: boolean;
@@ -38,8 +40,8 @@ interface ShareModalProps {
   };
 }
 
-const ShareModal = ({ clientData, customScenario, language, showUpfrontDiscount = false, absorbTransactionFee = false, customFeatures = [], extraServices = { reverProtect: false, sizeSuggestions: false } }: ShareModalProps) => {
-  const [clientName, setClientName] = useState('');
+const ShareModal = ({ clientData, customScenario, language, clientName: initialClientName = '', showUpfrontDiscount = false, absorbTransactionFee = false, offerExpirationDate, customFeatures = [], extraServices = { reverProtect: false, sizeSuggestions: false } }: ShareModalProps) => {
+  const [clientName, setClientName] = useState(initialClientName);
   const [isOpen, setIsOpen] = useState(false);
   const [generatedLink, setGeneratedLink] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -55,6 +57,7 @@ const ShareModal = ({ clientData, customScenario, language, showUpfrontDiscount 
           ...customScenario,
           showUpfrontDiscount,
           absorbTransactionFee,
+          offerExpirationDate: offerExpirationDate?.toISOString(),
           features: customFeatures,
           extraServices
         },
@@ -89,7 +92,7 @@ const ShareModal = ({ clientData, customScenario, language, showUpfrontDiscount 
   };
 
   const resetModal = () => {
-    setClientName('');
+    setClientName(initialClientName);
     setGeneratedLink('');
     setCopied(false);
   };

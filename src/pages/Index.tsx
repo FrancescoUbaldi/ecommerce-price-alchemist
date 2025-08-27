@@ -1167,8 +1167,10 @@ const Index = () => {
                       clientData={clientData}
                       customScenario={customScenario}
                       language={language}
+                      clientName={clientName}
                       showUpfrontDiscount={showUpfrontDiscount}
                       absorbTransactionFee={absorbTransactionFee}
+                      offerExpirationDate={offerExpirationDate}
                       customFeatures={customFeatures}
                       extraServices={extraServices}
                     />
