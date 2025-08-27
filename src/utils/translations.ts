@@ -1,4 +1,3 @@
-
 export const translations = {
   it: {
     title: "Price & Smile :)",
@@ -106,7 +105,29 @@ export const translations = {
     saasLabel: 'SaaS',
     transactionLabel: 'Transaction',
     rdvLabel: 'RDV',
-    upsellingLabel: 'Upselling'
+    upsellingLabel: 'Upselling',
+    // Feature names for predefined scenarios
+    nationalCoverage: 'Copertura nazionale',
+    internationalCoverage: 'Copertura internazionale',
+    refundItemVerified: 'Rimborso: "item verified"',
+    refundVerifiedSent: 'Rimborso: "verified", "sent"',
+    refundVerifiedSentStart: 'Rimborso: "verified", "sent", "start"',
+    onlyRefunds: 'Only refunds',
+    giftCards: 'Gift cards',
+    giftCardsRdvSurplus: 'Gift cards + RDV surplus',
+    oneToOneExchanges: '1:1 exchanges',
+    oneToNExchanges: '1:n exchanges',
+    fullCatalog: 'Full catalogo',
+    // Additional strings
+    includedCharacteristicsTitle: 'Caratteristiche Incluse',
+    paybackEstimated: 'Payback stimato',
+    reverProtectTitle: 'REVER Protect',
+    sizeSuggestionsTitle: 'Size Suggestions',
+    // Additional UI strings
+    comboDeleted: 'Combo eliminata con successo',
+    businessCaseUpdated: 'Business Case aggiornato con questa configurazione',
+    undoReset: 'Annulla reset',
+    revenueConfigurationText: 'Con questa configurazione, REVER può generare un extra fatturato netto di'
   },
   en: {
     title: "Price & Smile :)",
@@ -214,7 +235,29 @@ export const translations = {
     saasLabel: 'SaaS',
     transactionLabel: 'Transaction',
     rdvLabel: 'RDV',
-    upsellingLabel: 'Upselling'
+    upsellingLabel: 'Upselling',
+    // Feature names for predefined scenarios
+    nationalCoverage: 'National coverage',
+    internationalCoverage: 'International coverage',
+    refundItemVerified: 'Refund: "item verified"',
+    refundVerifiedSent: 'Refund: "verified", "sent"',
+    refundVerifiedSentStart: 'Refund: "verified", "sent", "start"',
+    onlyRefunds: 'Only refunds',
+    giftCards: 'Gift cards',
+    giftCardsRdvSurplus: 'Gift cards + RDV surplus',
+    oneToOneExchanges: '1:1 exchanges',
+    oneToNExchanges: '1:n exchanges',
+    fullCatalog: 'Full catalog',
+    // Additional strings
+    includedCharacteristicsTitle: 'Included Features',
+    paybackEstimated: 'Estimated Payback',
+    reverProtectTitle: 'REVER Protect',
+    sizeSuggestionsTitle: 'Size Suggestions',
+    // Additional UI strings
+    comboDeleted: 'Combo deleted successfully',
+    businessCaseUpdated: 'Business Case updated with this configuration',
+    undoReset: 'Undo reset',
+    revenueConfigurationText: 'With this configuration, REVER can generate an extra net revenue of'
   },
   es: {
     title: "Price & Smile :)",
@@ -322,7 +365,29 @@ export const translations = {
     saasLabel: 'SaaS',
     transactionLabel: 'Transaction',
     rdvLabel: 'RDV',
-    upsellingLabel: 'Upselling'
+    upsellingLabel: 'Upselling',
+    // Feature names for predefined scenarios
+    nationalCoverage: 'Cobertura nacional',
+    internationalCoverage: 'Cobertura internacional',
+    refundItemVerified: 'Reembolso: "artículo verificado"',
+    refundVerifiedSent: 'Reembolso: "verificado", "enviado"',
+    refundVerifiedSentStart: 'Reembolso: "verificado", "enviado", "inicio"',
+    onlyRefunds: 'Solo reembolsos',
+    giftCards: 'Tarjetas regalo',
+    giftCardsRdvSurplus: 'Tarjetas regalo + excedente RDV',
+    oneToOneExchanges: 'Intercambios 1:1',
+    oneToNExchanges: 'Intercambios 1:n',
+    fullCatalog: 'Catálogo completo',
+    // Additional strings
+    includedCharacteristicsTitle: 'Características Incluidas',
+    paybackEstimated: 'Payback Estimado',
+    reverProtectTitle: 'REVER Protect',
+    sizeSuggestionsTitle: 'Sugerencias de Tallas',
+    // Additional UI strings
+    comboDeleted: 'Combo eliminada con éxito',
+    businessCaseUpdated: 'Caso de Negocio actualizado con esta configuración',
+    undoReset: 'Deshacer reset',
+    revenueConfigurationText: 'Con esta configuración, REVER puede generar ingresos netos adicionales de'
   },
   fr: {
     title: "Price & Smile :)",
@@ -430,7 +495,29 @@ export const translations = {
     saasLabel: 'SaaS',
     transactionLabel: 'Transaction',
     rdvLabel: 'RDV',
-    upsellingLabel: 'Upselling'
+    upsellingLabel: 'Upselling',
+    // Feature names for predefined scenarios
+    nationalCoverage: 'Couverture nationale',
+    internationalCoverage: 'Couverture internationale',
+    refundItemVerified: 'Remboursement: "article vérifié"',
+    refundVerifiedSent: 'Remboursement: "vérifié", "envoyé"',
+    refundVerifiedSentStart: 'Remboursement: "vérifié", "envoyé", "début"',
+    onlyRefunds: 'Remboursements uniquement',
+    giftCards: 'Cartes cadeaux',
+    giftCardsRdvSurplus: 'Cartes cadeaux + surplus RDV',
+    oneToOneExchanges: 'Échanges 1:1',
+    oneToNExchanges: 'Échanges 1:n',
+    fullCatalog: 'Catalogue complet',
+    // Additional strings
+    includedCharacteristicsTitle: 'Caractéristiques Incluses',
+    paybackEstimated: 'Payback Estimé',
+    reverProtectTitle: 'REVER Protect',
+    sizeSuggestionsTitle: 'Suggestions de Tailles',
+    // Additional UI strings
+    comboDeleted: 'Combo supprimée avec succès',
+    businessCaseUpdated: 'Business Case mis à jour avec cette configuration',
+    undoReset: 'Annuler reset',
+    revenueConfigurationText: 'Avec cette configuration, REVER peut générer un chiffre d\'affaires net supplémentaire de'
   }
 };
 

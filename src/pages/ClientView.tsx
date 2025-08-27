@@ -381,7 +381,7 @@ const ClientView = () => {
                         {/* Left Column - Features */}
                         {shareData.scenario_data.features && shareData.scenario_data.features.length > 0 && (
                           <div className="space-y-3">
-                            <h4 className="font-medium text-gray-700 mb-2">Caratteristiche Incluse</h4>
+                            <h4 className="font-medium text-gray-700 mb-2">{getTranslation(shareData.language, 'includedCharacteristicsTitle')}</h4>
                              <div className="space-y-1">
                                {shareData.scenario_data.features
                                  .filter((feature: string) => feature !== "-" && feature !== "–" && feature.trim() !== "")
@@ -433,15 +433,15 @@ const ClientView = () => {
                         {/* Right Column - Extra Services */}
                         {shareData.scenario_data.extraServices && (
                           <div className="space-y-3">
-                            <h4 className="font-medium text-gray-700 mb-2">Extra selezionabili</h4>
+                            <h4 className="font-medium text-gray-700 mb-2">{getTranslation(shareData.language, 'selectableExtras')}</h4>
                             
                             <div className="space-y-2">
                               {/* REVER Protect */}
                               <div className="flex items-center justify-between p-3 border rounded-md">
-                                <div className="flex-1">
-                                  <div className="font-medium text-sm text-gray-800">REVER Protect</div>
-                                  <div className="text-xs text-gray-600">Protezione avanzata per i tuoi resi</div>
-                                </div>
+                                 <div className="flex-1">
+                                   <div className="font-medium text-sm text-gray-800">{getTranslation(shareData.language, 'reverProtectTitle')}</div>
+                                   <div className="text-xs text-gray-600">{getTranslation(shareData.language, 'advancedProtection')}</div>
+                                 </div>
                                 <div className={`px-2 py-1 rounded text-xs font-medium ${
                                   shareData.scenario_data.extraServices.reverProtect 
                                     ? 'bg-green-100 text-green-800' 
@@ -453,10 +453,10 @@ const ClientView = () => {
 
                               {/* Size Suggestions */}
                               <div className="flex items-center justify-between p-3 border rounded-md">
-                                <div className="flex-1">
-                                  <div className="font-medium text-sm text-gray-800">Size Suggestions</div>
-                                  <div className="text-xs text-gray-600">Suggerimenti intelligenti per le taglie</div>
-                                </div>
+                                 <div className="flex-1">
+                                   <div className="font-medium text-sm text-gray-800">{getTranslation(shareData.language, 'sizeSuggestionsTitle')}</div>
+                                   <div className="text-xs text-gray-600">{getTranslation(shareData.language, 'intelligentSuggestions')}</div>
+                                 </div>
                                 <div className={`px-2 py-1 rounded text-xs font-medium ${
                                   shareData.scenario_data.extraServices.sizeSuggestions 
                                     ? 'bg-green-100 text-green-800' 

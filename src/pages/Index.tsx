@@ -693,27 +693,27 @@ const Index = () => {
     const featuresByScenario = [
       // ECO MODE (index 0)
       [
-        'Copertura nazionale',
-        'Rimborso: "item verified"',
-        'Only refunds',
+        getTranslation(language, 'nationalCoverage'),
+        getTranslation(language, 'refundItemVerified'),
+        getTranslation(language, 'onlyRefunds'),
         '-',
         '-'
       ],
       // GAS (index 1)
       [
-        'Copertura internazionale',
-        'Rimborso: "verified", "sent"',
-        'Gift cards',
-        '1:1 exchanges',
+        getTranslation(language, 'internationalCoverage'),
+        getTranslation(language, 'refundVerifiedSent'),
+        getTranslation(language, 'giftCards'),
+        getTranslation(language, 'oneToOneExchanges'),
         '-'
       ],
       // FULL GAS (index 2)
       [
-        'Copertura internazionale',
-        'Rimborso: "verified", "sent", "start"',
-        'Gift cards + RDV surplus',
-        '1:n exchanges',
-        'Full catalogo'
+        getTranslation(language, 'internationalCoverage'),
+        getTranslation(language, 'refundVerifiedSentStart'),
+        getTranslation(language, 'giftCardsRdvSurplus'),
+        getTranslation(language, 'oneToNExchanges'),
+        getTranslation(language, 'fullCatalog')
       ]
     ];
     
@@ -885,13 +885,13 @@ const Index = () => {
         {/* Notifications */}
         {showComboDeletedNotification && (
           <div className="fixed top-4 right-4 bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-md shadow-lg animate-fade-in z-50">
-            ✅ Combo eliminata con successo
+            ✅ {getTranslation(language, 'comboDeleted')}
           </div>
         )}
 
         {showComboUsedNotification && (
           <div className="fixed top-4 right-4 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded-md shadow-lg animate-fade-in z-50">
-            ✅ Business Case aggiornato con questa configurazione
+            ✅ {getTranslation(language, 'businessCaseUpdated')}
           </div>
         )}
 
@@ -937,7 +937,7 @@ const Index = () => {
                     className="mt-2 flex items-center gap-2 bg-blue-50 border-blue-200 hover:bg-blue-100 animate-fade-in"
                   >
                     <Undo className="h-4 w-4" />
-                    ↩️ Annulla reset
+                    ↩️ {getTranslation(language, 'undoReset')}
                   </Button>
                 )}
               </div>
@@ -1374,13 +1374,13 @@ const Index = () => {
                       {(customFeatures.length > 0 || newFeature || true) && (
                         <div className="mt-6 bg-white p-4 rounded-lg border">
                           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                            ✅ Caratteristiche Incluse nel piano selezionato
+                            ✅ {getTranslation(language, 'includedFeaturesInSelectedPlan')}
                           </h3>
                           
                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {/* Left Column - Editable Features */}
                             <div className="space-y-3">
-                              <h4 className="font-medium text-gray-700 mb-2">Caratteristiche Incluse</h4>
+                              <h4 className="font-medium text-gray-700 mb-2">{getTranslation(language, 'includedCharacteristicsTitle')}</h4>
                               
                                {/* Feature List */}
                                <div className="space-y-1">
@@ -1412,14 +1412,14 @@ const Index = () => {
                                   className="text-sm text-rever-blue hover:text-rever-navy flex items-center gap-1 px-1 py-1"
                                 >
                                   <Plus className="h-3 w-3" />
-                                  Aggiungi caratteristica
+                                  {getTranslation(language, 'addFeature')}
                                 </button>
                               ) : (
                                 <div className="flex items-center gap-2">
                                   <Input
                                     value={newFeature}
                                     onChange={(e) => setNewFeature(e.target.value)}
-                                    placeholder="Aggiungi caratteristica"
+                                    placeholder={getTranslation(language, 'addFeature')}
                                     className="text-xs h-8 flex-1"
                                     onKeyPress={(e) => {
                                       if (e.key === 'Enter' && newFeature.trim()) {
@@ -1479,14 +1479,14 @@ const Index = () => {
 
                             {/* Right Column - Extra Services */}
                             <div className="space-y-3">
-                              <h4 className="font-medium text-gray-700 mb-2">Extra selezionabili</h4>
+                              <h4 className="font-medium text-gray-700 mb-2">{getTranslation(language, 'selectableExtras')}</h4>
                               
                               <div className="space-y-2">
                                 {/* REVER Protect */}
                                 <div className="flex items-center justify-between p-3 border rounded-md">
                                   <div className="flex-1">
-                                    <div className="font-medium text-sm text-gray-800">REVER Protect</div>
-                                    <div className="text-xs text-gray-600">Protezione avanzata per i tuoi resi</div>
+                                    <div className="font-medium text-sm text-gray-800">{getTranslation(language, 'reverProtectTitle')}</div>
+                                    <div className="text-xs text-gray-600">{getTranslation(language, 'advancedProtection')}</div>
                                   </div>
                                   <Switch
                                     checked={extraServices.reverProtect}
@@ -1497,8 +1497,8 @@ const Index = () => {
                                 {/* Size Suggestions */}
                                 <div className="flex items-center justify-between p-3 border rounded-md">
                                   <div className="flex-1">
-                                    <div className="font-medium text-sm text-gray-800">Size Suggestions</div>
-                                    <div className="text-xs text-gray-600">Suggerimenti intelligenti per le taglie</div>
+                                    <div className="font-medium text-sm text-gray-800">{getTranslation(language, 'sizeSuggestionsTitle')}</div>
+                                    <div className="text-xs text-gray-600">{getTranslation(language, 'intelligentSuggestions')}</div>
                                   </div>
                                   <Switch
                                     checked={extraServices.sizeSuggestions}
@@ -1525,7 +1525,7 @@ const Index = () => {
                           </div>
                           <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                             <p className="text-sm text-gray-600">
-                              Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(businessData.aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
+                              {getTranslation(language, 'revenueConfigurationText')} <span className="font-semibold text-blue-700">{formatCurrency(businessData.aumentoNetRevenues)}</span> {getTranslation(language, 'revenueSuggestionEnd')}
                             </p>
                           </div>
                         </div>

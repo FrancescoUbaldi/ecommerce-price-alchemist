@@ -587,7 +587,7 @@ const BusinessCase = ({
           <div className="text-center">
             <div className="inline-block p-3 bg-green-50 border border-green-200 rounded-lg">
               <p className="text-sm text-green-700 font-medium">
-                ⏱️ Payback stimato: {paybackMonths.toFixed(1)} mesi per recuperare l'investimento
+                ⏱️ {getTranslation(language, 'paybackEstimated')}: {paybackMonths.toFixed(1)} {getTranslation(language, 'monthsToRecoverInvestment')}
               </p>
             </div>
           </div>
