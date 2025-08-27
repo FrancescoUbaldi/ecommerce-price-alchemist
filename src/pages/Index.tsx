@@ -1078,7 +1078,7 @@ const Index = () => {
 
                        {/* Caratteristiche Incluse Section */}
                        <div className="space-y-3 border-t pt-3">
-                        <h4 className="text-sm font-semibold text-gray-700">Caratteristiche Incluse</h4>
+                        <h4 className="text-sm font-semibold text-gray-700">{getTranslation(language, 'includedFeatures')}</h4>
                         <div className="space-y-2">
                           {getScenarioFeatures(index).map((feature, featureIndex) => (
                              <div key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600 h-5">
@@ -1203,7 +1203,7 @@ const Index = () => {
                     {/* Upfront discount toggle */}
                     <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
                       <Label htmlFor="upfront-toggle" className="text-sm font-medium">
-                        Pagamento anticipato
+                        {getTranslation(language, 'upfrontPayment')}
                       </Label>
                       <Switch
                         id="upfront-toggle"
@@ -1254,7 +1254,7 @@ const Index = () => {
                         }}
                       />
                       <Label htmlFor="absorb-transaction-fee" className="text-sm text-gray-700">
-                        Assorbi costi Transaction Fee
+                        {getTranslation(language, 'absorbTransactionCosts')}
                       </Label>
                     </div>
                   </div>

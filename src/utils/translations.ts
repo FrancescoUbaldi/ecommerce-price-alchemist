@@ -70,7 +70,23 @@ export const translations = {
     linkExpiredMessage: 'Il link che stai cercando di accedere non è valido o è scaduto.',
     businessCaseFor: 'Business Case per',
     estimatedPayback: 'Payback stimato',
-    monthsToRecoverInvestment: 'mesi per recuperare l\'investimento'
+    monthsToRecoverInvestment: 'mesi per recuperare l\'investimento',
+    // Additional interface strings
+    includedFeatures: 'Caratteristiche Incluse',
+    includedFeaturesInPlan: 'Caratteristiche Incluse nel piano selezionato',
+    selectableExtras: 'Extra selezionabili',
+    advancedProtection: 'Protezione avanzata per i tuoi resi',
+    intelligentSuggestions: 'Suggerimenti intelligenti per le taglie',
+    addFeature: 'Aggiungi caratteristica',
+    upfrontPayment: 'Pagamento anticipato',
+    absorbTransactionCosts: 'Assorbi costi Transaction Fee',
+    roiBreakdownAnnual: 'Breakdown ROI (annuo):',
+    currentNetRevenues: 'Ricavi Netti attuali (senza REVER):',
+    netRevenuesWithRever: 'Ricavi Netti con REVER:',
+    reverPlatformCosts: 'Costi piattaforma REVER:',
+    estimatedNetIncrease: 'Incremento netto stimato:',
+    useThisCombo: 'Usa questa Combo',
+    deleteCombo: 'Elimina Combo'
   },
   en: {
     title: "Price & Smile :)",
@@ -142,7 +158,23 @@ export const translations = {
     linkExpiredMessage: 'The link you are trying to access is not valid or has expired.',
     businessCaseFor: 'Business Case for',
     estimatedPayback: 'Estimated Payback',
-    monthsToRecoverInvestment: 'months to recover investment'
+    monthsToRecoverInvestment: 'months to recover investment',
+    // Additional interface strings
+    includedFeatures: 'Included Features',
+    includedFeaturesInPlan: 'Features Included in the Selected Plan',
+    selectableExtras: 'Selectable Extras',
+    advancedProtection: 'Advanced protection for your returns',
+    intelligentSuggestions: 'Intelligent size suggestions',
+    addFeature: 'Add feature',
+    upfrontPayment: 'Upfront payment',
+    absorbTransactionCosts: 'Absorb Transaction Fee costs',
+    roiBreakdownAnnual: 'ROI Breakdown (annual):',
+    currentNetRevenues: 'Current Net Revenue (without REVER):',
+    netRevenuesWithRever: 'Net Revenue with REVER:',
+    reverPlatformCosts: 'REVER Platform Costs:',
+    estimatedNetIncrease: 'Estimated net increase:',
+    useThisCombo: 'Use this Combo',
+    deleteCombo: 'Delete Combo'
   },
   es: {
     title: "Price & Smile :)",
@@ -214,7 +246,23 @@ export const translations = {
     linkExpiredMessage: 'El enlace al que intentas acceder no es válido o ha expirado.',
     businessCaseFor: 'Caso de Negocio para',
     estimatedPayback: 'Payback Estimado',
-    monthsToRecoverInvestment: 'meses para recuperar la inversión'
+    monthsToRecoverInvestment: 'meses para recuperar la inversión',
+    // Additional interface strings
+    includedFeatures: 'Características Incluidas',
+    includedFeaturesInPlan: 'Características Incluidas en el plan seleccionado',
+    selectableExtras: 'Extras seleccionables',
+    advancedProtection: 'Protección avanzada para tus devoluciones',
+    intelligentSuggestions: 'Sugerencias inteligentes de tallas',
+    addFeature: 'Añadir característica',
+    upfrontPayment: 'Pago anticipado',
+    absorbTransactionCosts: 'Absorber costos Transaction Fee',
+    roiBreakdownAnnual: 'Desglose ROI (anual):',
+    currentNetRevenues: 'Ingresos Netos actuales (sin REVER):',
+    netRevenuesWithRever: 'Ingresos Netos con REVER:',
+    reverPlatformCosts: 'Costos plataforma REVER:',
+    estimatedNetIncrease: 'Incremento neto estimado:',
+    useThisCombo: 'Usar esta Combo',
+    deleteCombo: 'Eliminar Combo'
   },
   fr: {
     title: "Price & Smile :)",
@@ -286,7 +334,23 @@ export const translations = {
     linkExpiredMessage: 'Le lien auquel vous essayez d\'accéder n\'est pas valide ou a expiré.',
     businessCaseFor: 'Business Case pour',
     estimatedPayback: 'Payback Estimé',
-    monthsToRecoverInvestment: 'mois pour récupérer l\'investissement'
+    monthsToRecoverInvestment: 'mois pour récupérer l\'investissement',
+    // Additional interface strings
+    includedFeatures: 'Caractéristiques Incluses',
+    includedFeaturesInPlan: 'Caractéristiques Incluses dans le plan sélectionné',
+    selectableExtras: 'Extras sélectionnables',
+    advancedProtection: 'Protection avancée pour vos retours',
+    intelligentSuggestions: 'Suggestions intelligentes de tailles',
+    addFeature: 'Ajouter caractéristique',
+    upfrontPayment: 'Paiement anticipé',
+    absorbTransactionCosts: 'Absorber coûts Transaction Fee',
+    roiBreakdownAnnual: 'Répartition ROI (annuel):',
+    currentNetRevenues: 'Revenus Nets actuels (sans REVER):',
+    netRevenuesWithRever: 'Revenus Nets avec REVER:',
+    reverPlatformCosts: 'Coûts plateforme REVER:',
+    estimatedNetIncrease: 'Augmentation nette estimée:',
+    useThisCombo: 'Utiliser cette Combo',
+    deleteCombo: 'Supprimer Combo'
   }
 };
 
