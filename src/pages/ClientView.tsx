@@ -265,7 +265,7 @@ const ClientView = () => {
                         formatCurrency(shareData.scenario_data.transactionFeeFixed)
                       )}
                       {shareData.scenario_data.absorbTransactionFee && (
-                        <div className="text-xs text-green-600 mt-1">Assorbito</div>
+                        <div className="text-xs text-green-600 mt-1">{getTranslation(shareData.language, 'absorbed')}</div>
                       )}
                     </div>
                   </div>
@@ -324,10 +324,10 @@ const ClientView = () => {
                       {/* Upfront discount options - shown only if it was active when link was generated */}
                       {shareData.scenario_data.showUpfrontDiscount && calculation.totalMensile > 0 && (
                         <div className="bg-rever-blue-light border border-rever-blue p-4 rounded-xl" style={{ marginTop: '-24px' }}>
-                          <h4 className="font-semibold mb-3 text-gray-800">Sconto upfront:</h4>
+                          <h4 className="font-semibold mb-3 text-gray-800">{getTranslation(shareData.language, 'upfrontDiscount')}:</h4>
                           <div className="space-y-2 text-sm">
                             <div className="flex justify-between items-center">
-                              <span>6 mesi (-10% SaaS):</span>
+                              <span>{getTranslation(shareData.language, 'sixMonthsDiscount')}:</span>
                               <div className="text-right">
                                 <span className="line-through text-red-500 mr-2">{formatCurrency(calculation.saasFee)}</span>
                                 <span className="font-semibold text-green-600">
@@ -336,13 +336,13 @@ const ClientView = () => {
                               </div>
                             </div>
                             <div className="text-xs text-gray-600 text-right">
-                              Nuovo mensile: {formatCurrency(calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.9))}
+                              {getTranslation(shareData.language, 'newMonthly')}: {formatCurrency(calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.9))}
                             </div>
                             <div className="text-xs text-gray-600 text-right">
-                              Totale annuo: {formatCurrency((calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.9)) * 12)}
+                              {getTranslation(shareData.language, 'totalAnnual')}: {formatCurrency((calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.9)) * 12)}
                             </div>
                             <div className="flex justify-between items-center">
-                              <span>12 mesi (-15% SaaS):</span>
+                              <span>{getTranslation(shareData.language, 'twelveMonthsDiscount')}:</span>
                               <div className="text-right">
                                 <span className="line-through text-red-500 mr-2">{formatCurrency(calculation.saasFee)}</span>
                                 <span className="font-semibold text-green-600">
@@ -351,10 +351,10 @@ const ClientView = () => {
                               </div>
                             </div>
                             <div className="text-xs text-gray-600 text-right">
-                              Nuovo mensile: {formatCurrency(calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.85))}
+                              {getTranslation(shareData.language, 'newMonthly')}: {formatCurrency(calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.85))}
                             </div>
                             <div className="text-xs text-gray-600 text-right">
-                              Totale annuo: {formatCurrency((calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.85)) * 12)}
+                              {getTranslation(shareData.language, 'totalAnnual')}: {formatCurrency((calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.85)) * 12)}
                             </div>
                           </div>
                         </div>
@@ -374,7 +374,7 @@ const ClientView = () => {
                   {(shareData.scenario_data.features && shareData.scenario_data.features.length > 0) || shareData.scenario_data.extraServices ? (
                     <div className="mt-6 bg-white p-4 rounded-lg border">
                       <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                        ✅ Caratteristiche Incluse nel piano selezionato
+                        ✅ {getTranslation(shareData.language, 'includedFeaturesInSelectedPlan')}
                       </h3>
                       
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -477,17 +477,17 @@ const ClientView = () => {
                 {fatturazioneNettaPreRever > 0 && netRevenuesEcommerce > 0 && totalPlatformCost > 0 && (
                   <div className="mt-6 bg-white p-6 rounded-lg border">
                     <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                      📊 Breakdown ROI (annuo):
+                      📊 {getTranslation(shareData.language, 'roiBreakdownAnnualColon')}
                     </h3>
                     <div className="space-y-2 text-gray-700">
-                      <div>• Ricavi Netti attuali (senza REVER): <span className="font-medium">{formatCurrency(fatturazioneNettaPreRever)}</span></div>
-                      <div>• Ricavi Netti con REVER: <span className="font-medium">{formatCurrency(netRevenuesEcommerce)}</span></div>
-                      <div>• Costi piattaforma REVER: <span className="font-medium">{formatCurrency(totalPlatformCost)}</span></div>
-                      <div>• Incremento netto stimato: <span className="font-medium text-green-600">{formatCurrency(aumentoNetRevenues)}</span></div>
+                      <div>• {getTranslation(shareData.language, 'currentNetRevenueWithoutRever')} <span className="font-medium">{formatCurrency(fatturazioneNettaPreRever)}</span></div>
+                      <div>• {getTranslation(shareData.language, 'netRevenueWithReverColon')} <span className="font-medium">{formatCurrency(netRevenuesEcommerce)}</span></div>
+                      <div>• {getTranslation(shareData.language, 'reverPlatformCostsColon')} <span className="font-medium">{formatCurrency(totalPlatformCost)}</span></div>
+                      <div>• {getTranslation(shareData.language, 'estimatedNetIncreaseColon')} <span className="font-medium text-green-600">{formatCurrency(aumentoNetRevenues)}</span></div>
                     </div>
                     <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                       <p className="text-sm text-gray-600">
-                        Con questa configurazione, REVER può generare un extra fatturato netto di <span className="font-semibold text-blue-700">{formatCurrency(aumentoNetRevenues)}</span> all'anno rispetto al tuo scenario attuale.
+                        {getTranslation(shareData.language, 'revenueSuggestion')} <span className="font-semibold text-blue-700">{formatCurrency(aumentoNetRevenues)}</span> {getTranslation(shareData.language, 'revenueSuggestionEnd')}
                       </p>
                     </div>
                   </div>

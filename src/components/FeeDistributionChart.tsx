@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Progress } from '@/components/ui/progress';
+import { getTranslation } from '@/utils/translations';
 
 interface FeeDistributionProps {
   saasFee: number;
@@ -26,7 +27,7 @@ const FeeDistributionChart = ({
 
   return (
     <div className="space-y-2">
-      <h4 className="text-xs font-medium text-gray-600">Fee Distribution</h4>
+      <h4 className="text-xs font-medium text-gray-600">{getTranslation('it', 'feeDistribution')}</h4>
       <div className="relative">
         <div className="flex h-4 bg-gray-200 rounded-full overflow-hidden">
           <div 
@@ -50,19 +51,19 @@ const FeeDistributionChart = ({
       <div className="grid grid-cols-2 gap-1 text-xs">
         <div className="flex items-center gap-1">
           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-          <span>SaaS: {saasPercentage.toFixed(1)}%</span>
+          <span>{getTranslation('it', 'saasLabel')}: {saasPercentage.toFixed(1)}%</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
-          <span>Transaction: {transactionPercentage.toFixed(1)}%</span>
+          <span>{getTranslation('it', 'transactionLabel')}: {transactionPercentage.toFixed(1)}%</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-          <span>RDV: {rdvPercentage.toFixed(1)}%</span>
+          <span>{getTranslation('it', 'rdvLabel')}: {rdvPercentage.toFixed(1)}%</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-          <span>Upselling: {upsellingPercentage.toFixed(1)}%</span>
+          <span>{getTranslation('it', 'upsellingLabel')}: {upsellingPercentage.toFixed(1)}%</span>
         </div>
       </div>
     </div>

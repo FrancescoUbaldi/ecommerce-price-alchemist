@@ -121,7 +121,7 @@ const BusinessCase = ({
       <span 
         className={`${!readOnly && !disabled ? 'cursor-pointer hover:bg-blue-50 px-1 rounded' : ''}`}
         onClick={handleClick}
-        title={!readOnly && !disabled ? 'Click to edit' : ''}
+        title={!readOnly && !disabled ? getTranslation(language, 'clickToEdit') : ''}
       >
         {formatValue(value)}
       </span>
@@ -185,7 +185,7 @@ const BusinessCase = ({
       <span 
         className={`${!disabled && onUpdate ? 'cursor-pointer hover:bg-blue-50 px-2 py-1 rounded' : ''} ${!value ? 'text-gray-500 italic' : ''}`}
         onClick={handleClick}
-        title={!disabled && onUpdate ? 'Click to edit' : ''}
+        title={!disabled && onUpdate ? getTranslation(language, 'clickToEdit') : ''}
       >
         {displayValue}
       </span>
@@ -426,7 +426,7 @@ const BusinessCase = ({
                     </TooltipTrigger>
                     <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                       <div className="space-y-1 text-sm">
-                        <div>Upsell Orders: {Math.round(upsellingResi).toLocaleString()}</div>
+                        <div>{getTranslation(language, 'upsellOrders')}: {Math.round(upsellingResi).toLocaleString()}</div>
                         <div>× Upsell {getTranslation(language, 'aov')}: {formatCurrency(upsellingAOV)}</div>
                         <div className="border-t pt-1 mt-2 font-semibold">
                           = {getTranslation(language, 'total')}: {formatCurrency(upsellingValue)}
