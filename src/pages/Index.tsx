@@ -1312,7 +1312,7 @@ const Index = () => {
                           <PopoverTrigger asChild>
                             <button
                               className={cn(
-                                "inline-flex items-center text-sm underline decoration-dotted underline-offset-4 cursor-pointer hover:decoration-solid transition-all",
+                                "inline-flex items-center text-sm cursor-pointer font-medium",
                                 !offerExpirationDate && "text-muted-foreground"
                               )}
                             >
@@ -1667,7 +1667,7 @@ const Index = () => {
                               <PopoverTrigger asChild>
                                 <button
                                   className={cn(
-                                    "inline-flex items-center text-sm underline decoration-dotted underline-offset-4 cursor-pointer hover:decoration-solid transition-all",
+                                    "inline-flex items-center text-sm cursor-pointer font-medium",
                                     !offerExpirationDate && "text-muted-foreground"
                                   )}
                                 >
