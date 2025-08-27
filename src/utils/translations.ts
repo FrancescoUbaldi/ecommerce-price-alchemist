@@ -25,6 +25,8 @@ export const translations = {
     reset: "Reset",
     scenarioApplied: "Scenario applicato!",
     calculationResults: "Proposta",
+    offerValidUntil: "Offerta valida fino al:",
+    selectDate: "Seleziona data",
     annualACV: "ACV Annuale",
     // Business Case translations
     orders: "Ordini",
@@ -155,6 +157,8 @@ export const translations = {
     reset: "Reset",
     scenarioApplied: "Scenario applied!",
     calculationResults: "Proposal",
+    offerValidUntil: "Offer valid until:",
+    selectDate: "Select date",
     annualACV: "Annual ACV",
     // Business Case translations
     orders: "Orders",
@@ -285,6 +289,8 @@ export const translations = {
     reset: "Reiniciar",
     scenarioApplied: "¡Escenario aplicado!",
     calculationResults: "Propuesta",
+    offerValidUntil: "Oferta válida hasta:",
+    selectDate: "Seleccionar fecha",
     annualACV: "ACV Anual",
     // Business Case translations
     orders: "Pedidos",
@@ -415,6 +421,8 @@ export const translations = {
     reset: "Réinitialiser",
     scenarioApplied: "Scénario appliqué!",
     calculationResults: "Proposition",
+    offerValidUntil: "Offre valable jusqu'au :",
+    selectDate: "Sélectionner la date",
     annualACV: "ACV Annuel",
     // Business Case translations
     orders: "Commandes",
@@ -545,6 +553,8 @@ export const translations = {
     reset: "Zurücksetzen",
     scenarioApplied: "Szenario angewendet!",
     calculationResults: "Vorschlag",
+    offerValidUntil: "Angebot gültig bis:",
+    selectDate: "Datum auswählen",
     annualACV: "Jährlicher ACV",
     // Business Case translations
     orders: "Bestellungen",
@@ -675,6 +685,8 @@ export const translations = {
     reset: "Resetten",
     scenarioApplied: "Scenario toegepast!",
     calculationResults: "Voorstel",
+    offerValidUntil: "Aanbieding geldig tot:",
+    selectDate: "Selecteer datum",
     annualACV: "Jaarlijkse ACV",
     // Business Case translations
     orders: "Bestellingen",
