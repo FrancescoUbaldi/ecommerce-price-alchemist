@@ -381,12 +381,14 @@ const ClientView = () => {
                   </div>
 
                   {/* Use the new ReadOnlyPayback component */}
-                  <ReadOnlyPayback
-                    businessCaseData={shareData.business_case_data}
-                    scenarioData={shareData.scenario_data}
-                    monthlyTotal={calculation.totalMensile}
-                    language={shareData.language}
-                  />
+                  <div className="mt-4">
+                    <ReadOnlyPayback
+                      businessCaseData={shareData.business_case_data}
+                      scenarioData={shareData.scenario_data}
+                      monthlyTotal={calculation.totalMensile}
+                      language={shareData.language}
+                    />
+                  </div>
 
                   {/* Caratteristiche Incluse Section - Redesigned */}
                   {(shareData.scenario_data.features && shareData.scenario_data.features.length > 0) || shareData.scenario_data.extraServices ? (
