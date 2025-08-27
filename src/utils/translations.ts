@@ -24,7 +24,7 @@ export const translations = {
     takeRate: "Take Rate",
     reset: "Reset",
     scenarioApplied: "Scenario applicato!",
-    calculationResults: "Risultati Calcolo",
+    calculationResults: "Proposta",
     annualACV: "ACV Annuale",
     // Business Case translations
     orders: "Ordini",
@@ -154,7 +154,7 @@ export const translations = {
     takeRate: "Take Rate",
     reset: "Reset",
     scenarioApplied: "Scenario applied!",
-    calculationResults: "Calculation Results",
+    calculationResults: "Proposal",
     annualACV: "Annual ACV",
     // Business Case translations
     orders: "Orders",
@@ -284,7 +284,7 @@ export const translations = {
     takeRate: "Take Rate",
     reset: "Reiniciar",
     scenarioApplied: "¡Escenario aplicado!",
-    calculationResults: "Resultados del Cálculo",
+    calculationResults: "Propuesta",
     annualACV: "ACV Anual",
     // Business Case translations
     orders: "Pedidos",
@@ -414,7 +414,7 @@ export const translations = {
     takeRate: "Take Rate",
     reset: "Réinitialiser",
     scenarioApplied: "Scénario appliqué!",
-    calculationResults: "Résultats du Calcul",
+    calculationResults: "Proposition",
     annualACV: "ACV Annuel",
     // Business Case translations
     orders: "Commandes",
@@ -544,7 +544,7 @@ export const translations = {
     takeRate: "Take Rate",
     reset: "Zurücksetzen",
     scenarioApplied: "Szenario angewendet!",
-    calculationResults: "Berechnungsergebnisse",
+    calculationResults: "Vorschlag",
     annualACV: "Jährlicher ACV",
     // Business Case translations
     orders: "Bestellungen",
@@ -674,7 +674,7 @@ export const translations = {
     takeRate: "Take Rate",
     reset: "Resetten",
     scenarioApplied: "Scenario toegepast!",
-    calculationResults: "Berekeningsresultaten",
+    calculationResults: "Voorstel",
     annualACV: "Jaarlijkse ACV",
     // Business Case translations
     orders: "Bestellingen",
