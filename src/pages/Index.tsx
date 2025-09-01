@@ -960,7 +960,7 @@ const Index = () => {
                   id="resiAnnuali"
                   type="number"
                   value={clientData.resiAnnuali || ''}
-                  onBlur={(e) => updateClientData('resiAnnuali', parseInt(e.target.value) || 0)}
+                  onChange={(e) => updateClientData('resiAnnuali', parseInt(e.target.value) || 0)}
                   placeholder="23900"
                 />
               </div>
@@ -970,7 +970,7 @@ const Index = () => {
                   id="resiMensili"
                   type="number"
                   value={clientData.resiMensili || ''}
-                  onBlur={(e) => updateClientData('resiMensili', parseInt(e.target.value) || 0)}
+                  onChange={(e) => updateClientData('resiMensili', parseInt(e.target.value) || 0)}
                   placeholder="1992"
                 />
               </div>
@@ -980,7 +980,7 @@ const Index = () => {
                   id="carrelloMedio"
                   type="number"
                   value={clientData.carrelloMedio || ''}
-                  onBlur={(e) => updateClientData('carrelloMedio', parseFloat(e.target.value) || 0)}
+                  onChange={(e) => updateClientData('carrelloMedio', parseFloat(e.target.value) || 0)}
                   placeholder="35.50"
                 />
               </div>
@@ -1185,7 +1185,7 @@ const Index = () => {
                       id="customTotalOrders"
                       type="number"
                       value={clientData.totalOrdersAnnual || ''}
-                      onBlur={(e) => updateCustomScenarioField('totalOrdersAnnual', parseInt(e.target.value) || 0)}
+                      onChange={(e) => updateCustomScenarioField('totalOrdersAnnual', parseInt(e.target.value) || 0)}
                       placeholder="100000"
                     />
                   </div>
@@ -1195,7 +1195,7 @@ const Index = () => {
                       id="customAnnualReturns"
                       type="number"
                       value={clientData.resiAnnuali || ''}
-                      onBlur={(e) => updateCustomScenarioField('resiAnnuali', parseInt(e.target.value) || 0)}
+                      onChange={(e) => updateCustomScenarioField('resiAnnuali', parseInt(e.target.value) || 0)}
                       placeholder="23900"
                     />
                   </div>
@@ -1206,7 +1206,7 @@ const Index = () => {
                       type="number"
                       step="0.1"
                       value={clientData.returnRatePercentage || ''}
-                      onBlur={(e) => updateCustomScenarioField('returnRatePercentage', parseFloat(e.target.value) || 0)}
+                      onChange={(e) => updateCustomScenarioField('returnRatePercentage', parseFloat(e.target.value) || 0)}
                       placeholder="23.9"
                     />
                   </div>
