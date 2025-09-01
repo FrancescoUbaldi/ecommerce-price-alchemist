@@ -1408,7 +1408,10 @@ const Index = () => {
                       {/* Payback time box - positioned right below monthly total */}
                       <div className="mt-4">
                         <ReadOnlyPayback
-                          businessCaseData={clientData}
+                          businessCaseData={{
+                            ...clientData,
+                            totalOrdersAnnual: clientData.totalOrdersAnnual
+                          }}
                           scenarioData={customScenario}
                           monthlyTotal={calculation.totalMensile}
                           language={language}
