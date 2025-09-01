@@ -610,13 +610,15 @@ const BusinessCase = ({
           </Table>
         </div>
 
-        {/* Payback information if applicable */}
+        {/* Payback information if applicable - styled like ReadOnlyPayback */}
         {paybackMonths !== null && (
-          <div className="text-center">
-            <div className="inline-block p-3 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-sm text-green-700 font-medium">
-                ⏱️ {getTranslation(language, 'paybackEstimated')}: {paybackMonths.toFixed(1)} {getTranslation(language, 'monthsToRecoverInvestment')}
-              </p>
+          <div className="mt-4">
+            <div className="p-3 rounded-lg border border-green-200" style={{ backgroundColor: '#F2FCF4' }}>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium" style={{ color: '#00875A' }}>
+                  ⏳ {getTranslation(language, 'estimatedPayback')}: {paybackMonths.toFixed(1)} {getTranslation(language, 'monthsToRecoverInvestment')}
+                </span>
+              </div>
             </div>
           </div>
         )}
