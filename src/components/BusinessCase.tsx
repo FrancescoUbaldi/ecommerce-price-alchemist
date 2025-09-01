@@ -44,7 +44,6 @@ interface BusinessCaseProps {
   };
   language: string;
   updateClientData: (field: keyof ClientData, value: number) => void;
-  updateScenario?: (field: string, value: number) => void;
   readOnly?: boolean;
 }
 
@@ -55,7 +54,6 @@ const BusinessCase = ({
   scenario, 
   language, 
   updateClientData,
-  updateScenario,
   readOnly = false
 }: BusinessCaseProps) => {
   const [fieldOverrides, setFieldOverrides] = useState<FieldOverrides>({});
@@ -92,25 +90,7 @@ const BusinessCase = ({
     const handleSave = () => {
       const numValue = parseFloat(editValue);
       if (!isNaN(numValue)) {
-        // Update scenario directly instead of using field overrides
-        if (updateScenario && !readOnly) {
-          if (field === 'rdvRate') {
-            updateScenario('rdvPercentage', numValue);
-          } else if (field === 'upsellingRate') {
-            updateScenario('upsellingPercentage', numValue);
-          } else if (field === 'saasFee') {
-            updateScenario('saasFee', numValue);
-          } else if (field === 'transactionFeeFixed') {
-            updateScenario('transactionFeeFixed', numValue);
-          } else if (field === 'rdvPercentage') {
-            updateScenario('rdvPercentage', numValue);
-          } else if (field === 'upsellingPercentage') {
-            updateScenario('upsellingPercentage', numValue);
-          }
-        } else {
-          // Fallback to field overrides for read-only or when updateScenario not provided
-          setFieldOverrides(prev => ({ ...prev, [field]: numValue }));
-        }
+        setFieldOverrides(prev => ({ ...prev, [field]: numValue }));
         if (onUpdate) onUpdate(numValue);
       }
       setIsEditing(false);
@@ -228,8 +208,8 @@ const BusinessCase = ({
   const annualReturns = clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12;
   
   // Business Case calculations with overrides
-  const effectiveRdvRate = fieldOverrides.rdvRate !== undefined ? fieldOverrides.rdvRate / 100 : scenario.rdvPercentage / 100;
-  const effectiveUpsellingRate = fieldOverrides.upsellingRate !== undefined ? fieldOverrides.upsellingRate / 100 : scenario.upsellingPercentage / 100;
+  const effectiveRdvRate = fieldOverrides.rdvRate !== undefined ? fieldOverrides.rdvRate / 100 : 0.35;
+  const effectiveUpsellingRate = fieldOverrides.upsellingRate !== undefined ? fieldOverrides.upsellingRate / 100 : 0.0378;
   const effectiveSaasFee = fieldOverrides.saasFee !== undefined ? fieldOverrides.saasFee : scenario.saasFee;
   const effectiveTransactionFee = fieldOverrides.transactionFeeFixed !== undefined ? fieldOverrides.transactionFeeFixed : scenario.transactionFeeFixed;
   const effectiveRdvPercentage = fieldOverrides.rdvPercentage !== undefined ? fieldOverrides.rdvPercentage : scenario.rdvPercentage;
@@ -610,15 +590,13 @@ const BusinessCase = ({
           </Table>
         </div>
 
-        {/* Payback information if applicable - styled like ReadOnlyPayback */}
+        {/* Payback information if applicable */}
         {paybackMonths !== null && (
-          <div className="mt-4">
-            <div className="p-3 rounded-lg border border-green-200" style={{ backgroundColor: '#F2FCF4' }}>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium" style={{ color: '#00875A' }}>
-                  ⏳ {getTranslation(language, 'estimatedPayback')}: {paybackMonths.toFixed(1)} {getTranslation(language, 'monthsToRecoverInvestment')}
-                </span>
-              </div>
+          <div className="text-center">
+            <div className="inline-block p-3 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-sm text-green-700 font-medium">
+                ⏱️ {getTranslation(language, 'paybackEstimated')}: {paybackMonths.toFixed(1)} {getTranslation(language, 'monthsToRecoverInvestment')}
+              </p>
             </div>
           </div>
         )}

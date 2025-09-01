@@ -418,13 +418,6 @@ const Index = () => {
     setTimeout(() => setShowResetConfirmation(false), 4000);
   };
 
-  const updateCustomScenario = (field: string, value: number) => {
-    setCustomScenario(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
   const undoReset = () => {
     if (previousState) {
       setClientData(previousState.clientData);
@@ -1759,7 +1752,6 @@ const Index = () => {
               scenario={customScenario}
               language={language}
               updateClientData={updateClientData}
-              updateScenario={updateCustomScenario}
             />
           </TabsContent>
         </Tabs>
