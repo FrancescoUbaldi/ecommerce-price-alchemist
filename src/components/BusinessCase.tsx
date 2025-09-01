@@ -84,7 +84,7 @@ const BusinessCase = ({
     const handleClick = () => {
       if (readOnly || disabled) return;
       setIsEditing(true);
-      setEditValue(format === 'percentage' ? value.toString() : value.toString());
+      setEditValue(''); // Start with empty field instead of current value
     };
 
     const handleSave = () => {
