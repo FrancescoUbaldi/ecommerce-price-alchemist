@@ -26,6 +26,8 @@ interface PricingData {
   transactionFeeFixed: number;
   rdvPercentage: number;
   upsellingPercentage: number;
+  rdvConversionRate?: number; // RDV conversion rate (default 35%)
+  upsellingConversionRate?: number; // Upselling conversion rate (default 3.78%)
   name: string;
 }
 
@@ -78,6 +80,8 @@ const Index = () => {
     transactionFeeFixed: 0,
     rdvPercentage: 0,
     upsellingPercentage: 0,
+    rdvConversionRate: 35, // Default 35% RDV conversion rate
+    upsellingConversionRate: 3.78, // Default 3.78% upselling conversion rate
     name: "Scenario Personalizzato"
   });
 
@@ -95,27 +99,33 @@ const Index = () => {
   }, [clientName]);
 
   const [predefinedScenarios, setPredefinedScenarios] = useState<PricingData[]>([
-    {
-      saasFee: 89, // Will be dynamically calculated
-      transactionFeeFixed: 1.50,
-      rdvPercentage: 0,
-      upsellingPercentage: 0,
-      name: "ECO MODE"
-    },
-    {
-      saasFee: 109, // Will be dynamically calculated
-      transactionFeeFixed: 1.50,
-      rdvPercentage: 2,
-      upsellingPercentage: 0,
-      name: "GAS"
-    },
-    {
-      saasFee: 149, // Will be dynamically calculated
-      transactionFeeFixed: 1.70,
-      rdvPercentage: 3,
-      upsellingPercentage: 3,
-      name: "FULL GAS"
-    }
+      {
+        saasFee: 89, // Will be dynamically calculated
+        transactionFeeFixed: 1.50,
+        rdvPercentage: 0,
+        upsellingPercentage: 0,
+        rdvConversionRate: 35, // Default 35% RDV conversion rate
+        upsellingConversionRate: 3.78, // Default 3.78% upselling conversion rate
+        name: "ECO MODE"
+      },
+      {
+        saasFee: 109, // Will be dynamically calculated
+        transactionFeeFixed: 1.50,
+        rdvPercentage: 2,
+        upsellingPercentage: 0,
+        rdvConversionRate: 35, // Default 35% RDV conversion rate
+        upsellingConversionRate: 3.78, // Default 3.78% upselling conversion rate
+        name: "GAS"
+      },
+      {
+        saasFee: 149, // Will be dynamically calculated
+        transactionFeeFixed: 1.70,
+        rdvPercentage: 3,
+        upsellingPercentage: 3,
+        rdvConversionRate: 35, // Default 35% RDV conversion rate
+        upsellingConversionRate: 3.78, // Default 3.78% upselling conversion rate
+        name: "FULL GAS"
+      }
   ]);
   
   const [predefinedEditFlags, setPredefinedEditFlags] = useState({
@@ -193,11 +203,11 @@ const Index = () => {
         const resiMensili = annualReturns / 12;
         const transactionFee = resiMensili * scenario.transactionFeeFixed;
 
-        const rdvAnnuali = annualReturns * 0.35;
+        const rdvAnnuali = annualReturns * ((scenario.rdvConversionRate || 35) / 100);
         const rdvMensili = rdvAnnuali / 12;
         const rdvPerPercent = (rdvMensili * clientData.carrelloMedio) / 100; // € per 1% RDV
         
-        const upsellingAnnuali = annualReturns * 0.0378;
+        const upsellingAnnuali = annualReturns * ((scenario.upsellingConversionRate || 3.78) / 100);
         const upsellingMensili = upsellingAnnuali / 12;
         const incrementoCarrello = clientData.carrelloMedio * 0.3;
         const upsPerPercent = (upsellingMensili * incrementoCarrello) / 100; // € per 1% Upselling
@@ -370,6 +380,8 @@ const Index = () => {
       transactionFeeFixed: 0,
       rdvPercentage: 0,
       upsellingPercentage: 0,
+      rdvConversionRate: 35, // Default 35% RDV conversion rate
+      upsellingConversionRate: 3.78, // Default 3.78% upselling conversion rate
       name: getCustomScenarioName()
     });
 
@@ -383,6 +395,8 @@ const Index = () => {
         transactionFeeFixed: 1.50,
         rdvPercentage: 0,
         upsellingPercentage: 0,
+        rdvConversionRate: 35,
+        upsellingConversionRate: 3.78,
         name: "ECO MODE"
       },
       {
@@ -390,6 +404,8 @@ const Index = () => {
         transactionFeeFixed: 1.20,
         rdvPercentage: 1,
         upsellingPercentage: 0,
+        rdvConversionRate: 35,
+        upsellingConversionRate: 3.78,
         name: "GAS"
       },
       {
@@ -397,6 +413,8 @@ const Index = () => {
         transactionFeeFixed: 1.00,
         rdvPercentage: 2,
         upsellingPercentage: 3,
+        rdvConversionRate: 35,
+        upsellingConversionRate: 3.78,
         name: "FULL GAS"
       }
     ]));
@@ -434,14 +452,14 @@ const Index = () => {
   const updateCustomScenarioRdvRate = (rate: number) => {
     setCustomScenario(prev => ({
       ...prev,
-      rdvPercentage: rate
+      rdvConversionRate: rate
     }));
   };
 
   const updateCustomScenarioUpsellingRate = (rate: number) => {
     setCustomScenario(prev => ({
       ...prev,
-      upsellingPercentage: rate
+      upsellingConversionRate: rate
     }));
   };
 
@@ -588,11 +606,11 @@ const Index = () => {
     // Transaction fee is 0 if absorbed, otherwise normal calculation
     const transactionFee = absorb ? 0 : resiMensili * scenario.transactionFeeFixed;
     
-    const rdvAnnuali = annualReturns * 0.35;
+    const rdvAnnuali = annualReturns * ((scenario.rdvConversionRate || 35) / 100);
     const rdvMensili = rdvAnnuali / 12;
     const rdvFee = (rdvMensili * clientData.carrelloMedio * scenario.rdvPercentage) / 100;
     
-    const upsellingAnnuali = annualReturns * 0.0378;
+    const upsellingAnnuali = annualReturns * ((scenario.upsellingConversionRate || 3.78) / 100);
     const upsellingMensili = upsellingAnnuali / 12;
     const incrementoCarrello = clientData.carrelloMedio * 0.3;
     const upsellingFee = (upsellingMensili * incrementoCarrello * scenario.upsellingPercentage) / 100;
@@ -621,10 +639,10 @@ const Index = () => {
     const resiValue = annualReturns * clientData.carrelloMedio;
     const fatturazioneNettaPreRever = fatturazione - resiValue;
     
-    const rdvResi = annualReturns * 0.35;
+    const rdvResi = annualReturns * ((customScenario.rdvConversionRate || 35) / 100);
     const rdvValue = rdvResi * clientData.carrelloMedio;
     
-    const upsellingResi = annualReturns * 0.0378;
+    const upsellingResi = annualReturns * ((customScenario.upsellingConversionRate || 3.78) / 100);
     const upsellingAOV = clientData.carrelloMedio * 1.3;
     const upsellingValue = upsellingResi * upsellingAOV;
     const fatturazioneNettaFinale = fatturazioneNettaPreRever + rdvValue + upsellingValue;

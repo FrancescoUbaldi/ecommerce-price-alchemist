@@ -17,6 +17,8 @@ interface ShareData {
     transactionFeeFixed: number;
     rdvPercentage: number;
     upsellingPercentage: number;
+    rdvConversionRate?: number;
+    upsellingConversionRate?: number;
     name: string;
     showUpfrontDiscount?: boolean;
     absorbTransactionFee?: boolean;
@@ -95,11 +97,11 @@ const ClientView = () => {
     const originalTransactionFee = resiMensili * scenario.transactionFeeFixed;
     const transactionFee = scenario.absorbTransactionFee ? 0 : originalTransactionFee;
     
-    const rdvAnnuali = annualReturns * 0.35;
+    const rdvAnnuali = annualReturns * ((scenario.rdvConversionRate || 35) / 100);
     const rdvMensili = rdvAnnuali / 12;
     const rdvFee = (rdvMensili * clientData.carrelloMedio * scenario.rdvPercentage) / 100;
     
-    const upsellingAnnuali = annualReturns * 0.0378;
+    const upsellingAnnuali = annualReturns * ((scenario.upsellingConversionRate || 3.78) / 100);
     const upsellingMensili = upsellingAnnuali / 12;
     const incrementoCarrello = clientData.carrelloMedio * 0.3;
     const upsellingFee = (upsellingMensili * incrementoCarrello * scenario.upsellingPercentage) / 100;
@@ -161,9 +163,9 @@ const ClientView = () => {
   const resiValue = annualReturns * shareData.business_case_data.carrelloMedio;
   const fatturazioneNettaPreRever = fatturazione - resiValue;
   
-  const rdvResi = annualReturns * 0.35;
+  const rdvResi = annualReturns * ((shareData.scenario_data.rdvConversionRate || 35) / 100);
   const rdvValue = rdvResi * shareData.business_case_data.carrelloMedio;
-  const upsellingResi = annualReturns * 0.0378;
+  const upsellingResi = annualReturns * ((shareData.scenario_data.upsellingConversionRate || 3.78) / 100);
   const upsellingAOV = shareData.business_case_data.carrelloMedio * 1.3;
   const upsellingValue = upsellingResi * upsellingAOV;
   const fatturazioneNettaFinale = fatturazioneNettaPreRever + rdvValue + upsellingValue;

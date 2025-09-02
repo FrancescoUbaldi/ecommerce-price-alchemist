@@ -41,6 +41,8 @@ interface BusinessCaseProps {
     transactionFeeFixed: number;
     rdvPercentage: number;
     upsellingPercentage: number;
+    rdvConversionRate?: number;
+    upsellingConversionRate?: number;
   };
   language: string;
   updateClientData: (field: keyof ClientData, value: number) => void;
@@ -218,9 +220,9 @@ const BusinessCase = ({
   // Get the annual returns (use annual if available, otherwise calculate from monthly)
   const annualReturns = clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12;
   
-  // Business Case calculations with scenario values (no local overrides)
-  const effectiveRdvRate = 0.35; // Default RDV rate
-  const effectiveUpsellingRate = 0.0378; // Default upselling rate
+  // Business Case calculations using scenario values
+  const effectiveRdvRate = (scenario.rdvConversionRate || 35) / 100; // RDV conversion rate
+  const effectiveUpsellingRate = (scenario.upsellingConversionRate || 3.78) / 100; // Upselling conversion rate
   const effectiveSaasFee = scenario.saasFee;
   const effectiveTransactionFee = scenario.transactionFeeFixed;
   const effectiveRdvPercentage = scenario.rdvPercentage;
@@ -403,7 +405,7 @@ const BusinessCase = ({
                 <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
                 <TableCell className="text-center">
                   <EditableValue 
-                    value={effectiveRdvRate * 100} 
+                    value={scenario.rdvConversionRate || 35} 
                     format="percentage" 
                     field="rdvRate"
                   /> <span className="text-sm text-gray-500">{getTranslation(language, 'rdvRate')}</span>
@@ -433,7 +435,7 @@ const BusinessCase = ({
                 <TableCell className="text-center">{formatCurrency(upsellingAOV)}</TableCell>
                 <TableCell className="text-center">
                   <EditableValue 
-                    value={effectiveUpsellingRate * 100} 
+                    value={scenario.upsellingConversionRate || 3.78} 
                     format="percentage" 
                     field="upsellingRate"
                   /> <span className="text-sm text-gray-500">{getTranslation(language, 'upsellingRate')}</span>

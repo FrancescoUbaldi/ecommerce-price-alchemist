@@ -14,6 +14,8 @@ interface ReadOnlyPaybackProps {
     transactionFeeFixed: number;
     rdvPercentage: number;
     upsellingPercentage: number;
+    rdvConversionRate?: number;
+    upsellingConversionRate?: number;
   };
   monthlyTotal: number;
   language: string;
@@ -23,9 +25,9 @@ const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, languag
   // Calculate payback period using the EXACT SAME business logic as BusinessCase.tsx
   const annualReturns = businessCaseData.resiAnnuali > 0 ? businessCaseData.resiAnnuali : businessCaseData.resiMensili * 12;
   
-  // Use scenario RDV and upselling rates instead of hardcoded values
-  const effectiveRdvRate = 0.35; // Default RDV rate (35%) 
-  const effectiveUpsellingRate = 0.0378; // Default upselling rate (3.78%)
+  // Use scenario RDV and upselling conversion rates
+  const effectiveRdvRate = (scenarioData.rdvConversionRate || 35) / 100; // RDV conversion rate
+  const effectiveUpsellingRate = (scenarioData.upsellingConversionRate || 3.78) / 100; // Upselling conversion rate
   
   // Calculate base revenue (matching BusinessCase exactly)
   const fatturazione = businessCaseData.totalOrdersAnnual * businessCaseData.carrelloMedio;
