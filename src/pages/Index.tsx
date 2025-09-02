@@ -430,6 +430,21 @@ const Index = () => {
   };
 
   // Intelligent calculation logic for Custom Scenario
+  // Callback functions to update scenario data from BusinessCase
+  const updateCustomScenarioRdvRate = (rate: number) => {
+    setCustomScenario(prev => ({
+      ...prev,
+      rdvPercentage: rate
+    }));
+  };
+
+  const updateCustomScenarioUpsellingRate = (rate: number) => {
+    setCustomScenario(prev => ({
+      ...prev,
+      upsellingPercentage: rate
+    }));
+  };
+
   const updateCustomScenarioField = (field: 'totalOrdersAnnual' | 'resiAnnuali' | 'returnRatePercentage', value: number) => {
     // Update field modification order
     setFieldModificationOrder(prev => {
@@ -1755,6 +1770,8 @@ const Index = () => {
               scenario={customScenario}
               language={language}
               updateClientData={updateClientData}
+              updateRdvRate={updateCustomScenarioRdvRate}
+              updateUpsellingRate={updateCustomScenarioUpsellingRate}
             />
           </TabsContent>
         </Tabs>

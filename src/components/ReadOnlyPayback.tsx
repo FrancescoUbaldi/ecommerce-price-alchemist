@@ -23,9 +23,9 @@ const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, languag
   // Calculate payback period using the EXACT SAME business logic as BusinessCase.tsx
   const annualReturns = businessCaseData.resiAnnuali > 0 ? businessCaseData.resiAnnuali : businessCaseData.resiMensili * 12;
   
-  // Use dynamic RDV and upselling rates from scenario (matching BusinessCase exactly)
-  const effectiveRdvRate = 0.35; // Default RDV rate from BusinessCase
-  const effectiveUpsellingRate = 0.0378; // Default upselling rate from BusinessCase
+  // Use scenario RDV and upselling rates instead of hardcoded values
+  const effectiveRdvRate = 0.35; // Default RDV rate (35%) 
+  const effectiveUpsellingRate = 0.0378; // Default upselling rate (3.78%)
   
   // Calculate base revenue (matching BusinessCase exactly)
   const fatturazione = businessCaseData.totalOrdersAnnual * businessCaseData.carrelloMedio;
@@ -67,7 +67,11 @@ const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, languag
     aumentoNetRevenues,
     totalPlatformCost,
     paybackMonths,
-    showPayback: paybackMonths && paybackMonths < 6
+    showPayback: paybackMonths && paybackMonths < 6,
+    scenarioRates: {
+      rdvPercentage: scenarioData.rdvPercentage,
+      upsellingPercentage: scenarioData.upsellingPercentage
+    }
   });
 
   // Show if payback exists and is meaningful (matching BusinessCase logic exactly)
@@ -79,7 +83,7 @@ const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, languag
     <div className="text-center">
       <div className="inline-block p-3 bg-green-50 border border-green-200 rounded-lg">
         <p className="text-sm text-green-700 font-medium">
-          ⏱️ {getTranslation(language, 'estimatedPayback')}: {paybackMonths.toFixed(1)} {getTranslation(language, 'monthsToRecoverInvestment')}
+          ⏱️ {getTranslation(language, 'paybackEstimated')}: {paybackMonths.toFixed(1)} {getTranslation(language, 'monthsToRecoverInvestment')}
         </p>
       </div>
     </div>

@@ -44,6 +44,8 @@ interface BusinessCaseProps {
   };
   language: string;
   updateClientData: (field: keyof ClientData, value: number) => void;
+  updateRdvRate?: (rate: number) => void;
+  updateUpsellingRate?: (rate: number) => void;
   readOnly?: boolean;
 }
 
@@ -54,6 +56,8 @@ const BusinessCase = ({
   scenario, 
   language, 
   updateClientData,
+  updateRdvRate,
+  updateUpsellingRate,
   readOnly = false
 }: BusinessCaseProps) => {
   const [fieldOverrides, setFieldOverrides] = useState<FieldOverrides>({});
@@ -90,8 +94,15 @@ const BusinessCase = ({
     const handleSave = () => {
       const numValue = parseFloat(editValue);
       if (!isNaN(numValue)) {
-        setFieldOverrides(prev => ({ ...prev, [field]: numValue }));
-        if (onUpdate) onUpdate(numValue);
+        // Handle special cases for RDV and upselling rates
+        if (field === 'rdvRate' && updateRdvRate) {
+          updateRdvRate(numValue);
+        } else if (field === 'upsellingRate' && updateUpsellingRate) {
+          updateUpsellingRate(numValue);
+        } else {
+          setFieldOverrides(prev => ({ ...prev, [field]: numValue }));
+          if (onUpdate) onUpdate(numValue);
+        }
       }
       setIsEditing(false);
     };
@@ -207,13 +218,13 @@ const BusinessCase = ({
   // Get the annual returns (use annual if available, otherwise calculate from monthly)
   const annualReturns = clientData.resiAnnuali > 0 ? clientData.resiAnnuali : clientData.resiMensili * 12;
   
-  // Business Case calculations with overrides
-  const effectiveRdvRate = fieldOverrides.rdvRate !== undefined ? fieldOverrides.rdvRate / 100 : 0.35;
-  const effectiveUpsellingRate = fieldOverrides.upsellingRate !== undefined ? fieldOverrides.upsellingRate / 100 : 0.0378;
-  const effectiveSaasFee = fieldOverrides.saasFee !== undefined ? fieldOverrides.saasFee : scenario.saasFee;
-  const effectiveTransactionFee = fieldOverrides.transactionFeeFixed !== undefined ? fieldOverrides.transactionFeeFixed : scenario.transactionFeeFixed;
-  const effectiveRdvPercentage = fieldOverrides.rdvPercentage !== undefined ? fieldOverrides.rdvPercentage : scenario.rdvPercentage;
-  const effectiveUpsellingPercentage = fieldOverrides.upsellingPercentage !== undefined ? fieldOverrides.upsellingPercentage : scenario.upsellingPercentage;
+  // Business Case calculations with scenario values (no local overrides)
+  const effectiveRdvRate = 0.35; // Default RDV rate
+  const effectiveUpsellingRate = 0.0378; // Default upselling rate
+  const effectiveSaasFee = scenario.saasFee;
+  const effectiveTransactionFee = scenario.transactionFeeFixed;
+  const effectiveRdvPercentage = scenario.rdvPercentage;
+  const effectiveUpsellingPercentage = scenario.upsellingPercentage;
   
   // Fatturazione (Pre REVER) = Orders × AOV
   const fatturazione = clientData.totalOrdersAnnual * clientData.carrelloMedio;
