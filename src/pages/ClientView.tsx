@@ -101,10 +101,12 @@ const ClientView = () => {
     const rdvMensili = rdvAnnuali / 12;
     const rdvFee = (rdvMensili * clientData.carrelloMedio * scenario.rdvPercentage) / 100;
     
-    const upsellingAnnuali = annualReturns * ((scenario.upsellingConversionRate || 3.78) / 100);
-    const upsellingMensili = upsellingAnnuali / 12;
-    const incrementoCarrello = clientData.carrelloMedio * 0.3;
-    const upsellingFee = (upsellingMensili * incrementoCarrello * scenario.upsellingPercentage) / 100;
+    // Calculate business case upselling value and use it for fee calculation
+    const upsellingConversionRate = (scenario.upsellingConversionRate || 3.78) / 100;
+    const upsellingAnnuali = annualReturns * upsellingConversionRate;
+    const incrementoCarrello = clientData.carrelloMedio * 0.2; // 20% increase per upselling order
+    const businessCaseUpsellingValue = upsellingAnnuali * incrementoCarrello;
+    const upsellingFee = (businessCaseUpsellingValue * scenario.upsellingPercentage) / 100 / 12;
     
     const totalMensile = scenario.saasFee + transactionFee + rdvFee + upsellingFee;
     const annualContractValue = totalMensile * 12;
