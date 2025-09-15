@@ -93,17 +93,17 @@ const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, languag
                 {getTranslation(language, 'paybackEstimated')}
               </span>
             </TooltipTrigger>
-            <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-              <div className="space-y-2 text-sm">
-                <p className="font-medium text-gray-900">Payback Period Calculation</p>
-                <p className="text-gray-600">
-                  Time needed to recover the platform investment through increased net revenues from RDV and Upselling features.
-                </p>
-                <p className="text-gray-600">
-                  Formula: Total Platform Cost ÷ (Monthly Net Revenue Increase)
-                </p>
-              </div>
-            </TooltipContent>
+        <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+          <div className="space-y-2 text-sm">
+            <p className="font-medium text-gray-900">{getTranslation(language, 'paybackTooltipTitle')}</p>
+            <p className="text-gray-600">
+              {getTranslation(language, 'paybackTooltipBody')}
+            </p>
+            <p className="text-gray-600">
+              {getTranslation(language, 'paybackTooltipFormula')}
+            </p>
+          </div>
+        </TooltipContent>
           </Tooltip>: {paybackMonths.toFixed(1)} {getTranslation(language, 'monthsToRecoverInvestment')}
         </p>
       </div>

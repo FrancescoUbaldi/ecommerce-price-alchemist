@@ -129,7 +129,11 @@ export const translations = {
     comboDeleted: 'Combo eliminata con successo',
     businessCaseUpdated: 'Business Case aggiornato con questa configurazione',
     undoReset: 'Annulla reset',
-    revenueConfigurationText: 'Con questa configurazione, REVER può generare un extra fatturato netto di'
+    revenueConfigurationText: 'Con questa configurazione, REVER può generare un extra fatturato netto di',
+    // Payback tooltip translations
+    paybackTooltipTitle: 'Calcolo del Periodo di Payback',
+    paybackTooltipBody: 'Tempo necessario per recuperare l\'investimento nella piattaforma grazie all\'aumento delle revenue nette da RDV e Upselling.',
+    paybackTooltipFormula: 'Formula: Costo Totale della Piattaforma / (Aumento Revenue Mensile)'
   },
   en: {
     title: "Price & Smile :)",
@@ -261,7 +265,11 @@ export const translations = {
     comboDeleted: 'Combo deleted successfully',
     businessCaseUpdated: 'Business Case updated with this configuration',
     undoReset: 'Undo reset',
-    revenueConfigurationText: 'With this configuration, REVER can generate an extra net revenue of'
+    revenueConfigurationText: 'With this configuration, REVER can generate an extra net revenue of',
+    // Payback tooltip translations
+    paybackTooltipTitle: 'Payback Period Calculation',
+    paybackTooltipBody: 'Time needed to recover the platform investment through increased net revenues from RDV and Upselling features.',
+    paybackTooltipFormula: 'Formula: Total Platform Cost / (Monthly Net Revenue Increase)'
   },
   es: {
     title: "Price & Smile :)",
@@ -393,7 +401,11 @@ export const translations = {
     comboDeleted: 'Combo eliminada con éxito',
     businessCaseUpdated: 'Caso de Negocio actualizado con esta configuración',
     undoReset: 'Deshacer reset',
-    revenueConfigurationText: 'Con esta configuración, REVER puede generar ingresos netos adicionales de'
+    revenueConfigurationText: 'Con esta configuración, REVER puede generar ingresos netos adicionales de',
+    // Payback tooltip translations
+    paybackTooltipTitle: 'Cálculo del Período de Recuperación',
+    paybackTooltipBody: 'Tiempo necesario para recuperar la inversión en la plataforma gracias al aumento de ingresos netos por RDV y Upselling.',
+    paybackTooltipFormula: 'Fórmula: Costo Total de la Plataforma / (Incremento de Ingresos Mensuales)'
   },
   fr: {
     title: "Price & Smile :)",

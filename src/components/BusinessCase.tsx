@@ -618,12 +618,12 @@ const BusinessCase = ({
                   </TooltipTrigger>
                   <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                     <div className="space-y-2 text-sm">
-                      <p className="font-medium text-gray-900">Payback Period Calculation</p>
+                      <p className="font-medium text-gray-900">{getTranslation(language, 'paybackTooltipTitle')}</p>
                       <p className="text-gray-600">
-                        Time needed to recover the platform investment through increased net revenues from RDV and Upselling features.
+                        {getTranslation(language, 'paybackTooltipBody')}
                       </p>
                       <p className="text-gray-600">
-                        Formula: Total Platform Cost ÷ (Monthly Net Revenue Increase)
+                        {getTranslation(language, 'paybackTooltipFormula')}
                       </p>
                     </div>
                   </TooltipContent>
