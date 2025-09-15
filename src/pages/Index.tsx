@@ -610,10 +610,9 @@ const Index = () => {
     const rdvMensili = rdvAnnuali / 12;
     const rdvFee = (rdvMensili * clientData.carrelloMedio * scenario.rdvPercentage) / 100;
     
-    const upsellingAnnuali = annualReturns * ((scenario.upsellingConversionRate || 3.78) / 100);
-    const upsellingMensili = upsellingAnnuali / 12;
-    const incrementoCarrello = clientData.carrelloMedio * 0.2;
-    const upsellingFee = (upsellingMensili * incrementoCarrello * scenario.upsellingPercentage) / 100;
+    // Use Business Case upselling value instead of recalculating
+    const businessCaseData = calculateBusinessCaseData();
+    const upsellingFee = (businessCaseData.upsellingValue * scenario.upsellingPercentage) / 100 / 12;
     
     const totalMensile = scenario.saasFee + transactionFee + rdvFee + upsellingFee;
     const annualContractValue = totalMensile * 12;
@@ -659,7 +658,8 @@ const Index = () => {
       fatturazioneNettaPreRever,
       netRevenuesEcommerce,
       totalPlatformCost,
-      aumentoNetRevenues
+      aumentoNetRevenues,
+      upsellingValue
     };
   };
 
