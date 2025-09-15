@@ -19,9 +19,10 @@ interface ReadOnlyPaybackProps {
   };
   monthlyTotal: number;
   language: string;
+  absorbTransactionFee?: boolean;
 }
 
-const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, language }: ReadOnlyPaybackProps) => {
+const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, language, absorbTransactionFee }: ReadOnlyPaybackProps) => {
   // Calculate payback period using the EXACT SAME business logic as BusinessCase.tsx
   const annualReturns = businessCaseData.resiAnnuali > 0 ? businessCaseData.resiAnnuali : businessCaseData.resiMensili * 12;
   
@@ -40,7 +41,7 @@ const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, languag
   
   // Calculate upselling revenue (matching BusinessCase exactly)
   const upsellingResi = annualReturns * effectiveUpsellingRate;
-  const upsellingAOV = businessCaseData.carrelloMedio * 1.3; // 30% increase
+  const upsellingAOV = businessCaseData.carrelloMedio * 1.2; // 20% increase
   const upsellingValue = upsellingResi * upsellingAOV;
   
   // Calculate final net billing (matching BusinessCase exactly)
@@ -49,7 +50,7 @@ const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, languag
   
   // Calculate total platform cost using SAME logic as BusinessCase
   const saasFeeAnnuale = scenarioData.saasFee * 12;
-  const transactionFeeAnnuale = scenarioData.transactionFeeFixed * annualReturns;
+  const transactionFeeAnnuale = absorbTransactionFee ? 0 : scenarioData.transactionFeeFixed * annualReturns;
   const rdvFeeAnnuale = (rdvValue * scenarioData.rdvPercentage) / 100;
   const upsellingFeeAnnuale = (upsellingValue * scenarioData.upsellingPercentage) / 100;
   const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale;

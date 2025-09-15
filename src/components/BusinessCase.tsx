@@ -49,6 +49,7 @@ interface BusinessCaseProps {
   updateRdvRate?: (rate: number) => void;
   updateUpsellingRate?: (rate: number) => void;
   readOnly?: boolean;
+  absorbTransactionFee?: boolean;
 }
 
 const BusinessCase = ({ 
@@ -60,6 +61,7 @@ const BusinessCase = ({
   updateClientData,
   updateRdvRate,
   updateUpsellingRate,
+  absorbTransactionFee,
   readOnly = false
 }: BusinessCaseProps) => {
   const [fieldOverrides, setFieldOverrides] = useState<FieldOverrides>({});
@@ -254,7 +256,7 @@ const BusinessCase = ({
   
   // REVER Platform Cost calculation with ANNUAL values (using effective overrides)
   const saasFeeAnnuale = effectiveSaasFee * 12;
-  const transactionFeeAnnuale = effectiveTransactionFee * annualReturns;
+  const transactionFeeAnnuale = (absorbTransactionFee ? 0 : effectiveTransactionFee * annualReturns);
   const rdvFeeAnnuale = (rdvValue * effectiveRdvPercentage) / 100;
   const upsellingFeeAnnuale = (upsellingValue * effectiveUpsellingPercentage) / 100;
   const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale;

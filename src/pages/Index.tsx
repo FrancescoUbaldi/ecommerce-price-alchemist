@@ -1448,6 +1448,7 @@ const Index = () => {
                           scenarioData={customScenario}
                           monthlyTotal={calculation.totalMensile}
                           language={language}
+                          absorbTransactionFee={absorbTransactionFee}
                         />
                       </div>
 
@@ -1790,6 +1791,7 @@ const Index = () => {
               updateClientData={updateClientData}
               updateRdvRate={updateCustomScenarioRdvRate}
               updateUpsellingRate={updateCustomScenarioUpsellingRate}
+              absorbTransactionFee={absorbTransactionFee}
             />
           </TabsContent>
         </Tabs>

@@ -390,6 +390,7 @@ const ClientView = () => {
                       scenarioData={shareData.scenario_data}
                       monthlyTotal={calculation.totalMensile}
                       language={shareData.language}
+                      absorbTransactionFee={shareData.scenario_data.absorbTransactionFee}
                     />
                   </div>
 
@@ -528,6 +529,7 @@ const ClientView = () => {
               language={shareData.language}
               updateClientData={() => {}} // Read-only
               readOnly={true}
+              absorbTransactionFee={shareData.scenario_data.absorbTransactionFee}
             />
           </TabsContent>
         </Tabs>
