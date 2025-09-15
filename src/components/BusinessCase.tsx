@@ -243,7 +243,7 @@ const BusinessCase = ({
   
   // Upselling (with editable upselling rate) = Upsell Orders × Upsell AOV
   const upsellingResi = annualReturns * effectiveUpsellingRate;
-  const upsellingAOV = clientData.carrelloMedio * 1.3; // 30% increase
+  const upsellingAOV = clientData.carrelloMedio * 1.2; // 20% increase
   const upsellingValue = upsellingResi * upsellingAOV;
   
   // Fatturazione Netta Finale = Fatturazione Netta Pre REVER + Vendite Ritenute + Upselling

@@ -209,7 +209,7 @@ const Index = () => {
         
         const upsellingAnnuali = annualReturns * ((scenario.upsellingConversionRate || 3.78) / 100);
         const upsellingMensili = upsellingAnnuali / 12;
-        const incrementoCarrello = clientData.carrelloMedio * 0.3;
+        const incrementoCarrello = clientData.carrelloMedio * 0.2;
         const upsPerPercent = (upsellingMensili * incrementoCarrello) / 100; // € per 1% Upselling
 
         // Decide dynamic defaults if not user-edited
@@ -612,7 +612,7 @@ const Index = () => {
     
     const upsellingAnnuali = annualReturns * ((scenario.upsellingConversionRate || 3.78) / 100);
     const upsellingMensili = upsellingAnnuali / 12;
-    const incrementoCarrello = clientData.carrelloMedio * 0.3;
+    const incrementoCarrello = clientData.carrelloMedio * 0.2;
     const upsellingFee = (upsellingMensili * incrementoCarrello * scenario.upsellingPercentage) / 100;
     
     const totalMensile = scenario.saasFee + transactionFee + rdvFee + upsellingFee;
@@ -643,7 +643,7 @@ const Index = () => {
     const rdvValue = rdvResi * clientData.carrelloMedio;
     
     const upsellingResi = annualReturns * ((customScenario.upsellingConversionRate || 3.78) / 100);
-    const upsellingAOV = clientData.carrelloMedio * 1.3;
+    const upsellingAOV = clientData.carrelloMedio * 1.2;
     const upsellingValue = upsellingResi * upsellingAOV;
     const fatturazioneNettaFinale = fatturazioneNettaPreRever + rdvValue + upsellingValue;
     
