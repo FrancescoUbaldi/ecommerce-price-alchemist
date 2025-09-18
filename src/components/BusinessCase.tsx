@@ -538,15 +538,6 @@ const BusinessCase = ({
                 </TableCell>
               </TableRow>
               
-              <TableRow className="border-b">
-                <TableCell className="font-medium pl-8 text-gray-600">{getTranslation(language, 'integrationCostLabel')}</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell className="text-center text-gray-600">
-                  {integrationCostValue > 0 ? formatCurrency(integrationCostValue) : getTranslation(language, 'included')}
-                </TableCell>
-              </TableRow>
               
               <TableRow className="bg-blue-50 font-semibold border-b">
                 <TableCell>{getTranslation(language, 'reverROI')}</TableCell>
