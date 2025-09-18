@@ -136,7 +136,8 @@ export const translations = {
     paybackTooltipFormula: 'Formula: Costo Totale della Piattaforma / (Aumento Revenue Mensile)',
     addIntegrationCost: '+ Aggiungi costo di integrazione',
     integrationCost: 'Costo di integrazione (€)',
-    integrationDescription: 'Descrizione (uso interno)'
+    integrationDescription: 'Descrizione (uso interno)',
+    integrationCostLabel: 'Costo di integrazione'
   },
   en: {
     title: "Price & Smile :)",
@@ -275,7 +276,8 @@ export const translations = {
     paybackTooltipFormula: 'Formula: Total Platform Cost / (Monthly Net Revenue Increase)',
     addIntegrationCost: '+ Add integration cost',
     integrationCost: 'Integration cost (€)',
-    integrationDescription: 'Description (internal use)'
+    integrationDescription: 'Description (internal use)',
+    integrationCostLabel: 'Integration Cost'
   },
   es: {
     title: "Price & Smile :)",
@@ -414,7 +416,8 @@ export const translations = {
     paybackTooltipFormula: 'Fórmula: Costo Total de la Plataforma / (Incremento de Ingresos Mensuales)',
     addIntegrationCost: '+ Agregar costo de integración',
     integrationCost: 'Costo de integración (€)',
-    integrationDescription: 'Descripción (uso interno)'
+    integrationDescription: 'Descripción (uso interno)',
+    integrationCostLabel: 'Costo de integración'
   },
   fr: {
     title: "Price & Smile :)",

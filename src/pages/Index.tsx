@@ -1267,7 +1267,7 @@ const Index = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="customSaasFee">{getTranslation(language, 'saasFee')}</Label>
@@ -1291,48 +1291,48 @@ const Index = () => {
                       })}
                       placeholder="0"
                     />
-                    {showIntegrationCost && (
-                      <div className="space-y-2 mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                        <div className="flex items-center justify-between">
-                          <Label className="text-sm text-blue-800">{getTranslation(language, 'integrationCost')}</Label>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setShowIntegrationCost(false);
-                              setCustomScenario({
-                                ...customScenario,
-                                integrationCost: 0,
-                                integrationDescription: ''
-                              });
-                            }}
-                            className="text-blue-600 hover:text-blue-800"
-                          >
-                            <X className="h-4 w-4" />
-                          </button>
-                        </div>
-                        <Input
-                          type="number"
-                          value={customScenario.integrationCost || ''}
-                          onChange={(e) => setCustomScenario({
-                            ...customScenario,
-                            integrationCost: parseFloat(e.target.value) || 0
-                          })}
-                          placeholder="0"
-                          className="text-sm"
-                        />
-                        <Input
-                          type="text"
-                          value={customScenario.integrationDescription || ''}
-                          onChange={(e) => setCustomScenario({
-                            ...customScenario,
-                            integrationDescription: e.target.value
-                          })}
-                          placeholder={getTranslation(language, 'integrationDescription')}
-                          className="text-sm"
-                        />
-                      </div>
-                    )}
                   </div>
+                  
+                  {showIntegrationCost && (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm">{getTranslation(language, 'integrationCost')}</Label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowIntegrationCost(false);
+                            setCustomScenario({
+                              ...customScenario,
+                              integrationCost: 0,
+                              integrationDescription: ''
+                            });
+                          }}
+                          className="text-gray-500 hover:text-gray-700"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                      <Input
+                        type="number"
+                        value={customScenario.integrationCost || ''}
+                        onChange={(e) => setCustomScenario({
+                          ...customScenario,
+                          integrationCost: parseFloat(e.target.value) || 0
+                        })}
+                        placeholder="0"
+                      />
+                      <Input
+                        type="text"
+                        value={customScenario.integrationDescription || ''}
+                        onChange={(e) => setCustomScenario({
+                          ...customScenario,
+                          integrationDescription: e.target.value
+                        })}
+                        placeholder={getTranslation(language, 'integrationDescription')}
+                        className="text-sm"
+                      />
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <Label htmlFor="customTransactionFee">{getTranslation(language, 'transactionFee')}</Label>
                     <Input
