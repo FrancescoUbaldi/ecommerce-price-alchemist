@@ -28,6 +28,8 @@ interface PricingData {
   upsellingPercentage: number;
   rdvConversionRate?: number; // RDV conversion rate (default 35%)
   upsellingConversionRate?: number; // Upselling conversion rate (default 3.78%)
+  integrationCost?: number; // One-time integration cost
+  integrationDescription?: string; // Internal description for integration cost
   name: string;
 }
 
@@ -82,8 +84,13 @@ const Index = () => {
     upsellingPercentage: 0,
     rdvConversionRate: 35, // Default 35% RDV conversion rate
     upsellingConversionRate: 3.78, // Default 3.78% upselling conversion rate
+    integrationCost: 0, // Default integration cost
+    integrationDescription: '', // Default integration description
     name: "Scenario Personalizzato"
   });
+
+  // State for showing integration cost form
+  const [showIntegrationCost, setShowIntegrationCost] = useState(false);
 
   // Dynamic scenario name based on client name
   const getCustomScenarioName = () => {
@@ -650,7 +657,8 @@ const Index = () => {
     const transactionFeeAnnuale = absorbTransactionFee ? 0 : customScenario.transactionFeeFixed * annualReturns;
     const rdvFeeAnnuale = (rdvValue * customScenario.rdvPercentage) / 100;
     const upsellingFeeAnnuale = (upsellingValue * customScenario.upsellingPercentage) / 100;
-    const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale;
+    const integrationCostValue = customScenario.integrationCost || 0;
+    const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale + integrationCostValue;
     const netRevenuesEcommerce = fatturazioneNettaFinale - totalPlatformCost;
     const aumentoNetRevenues = netRevenuesEcommerce - fatturazioneNettaPreRever;
 
@@ -691,7 +699,8 @@ const Index = () => {
     const transactionFeeAnnuale = absorbTransactionFee ? 0 : customScenario.transactionFeeFixed * annualReturns;
     const rdvFeeAnnuale = (rdvValue * customScenario.rdvPercentage) / 100;
     const upsellingFeeAnnuale = (upsellingValue * customScenario.upsellingPercentage) / 100;
-    const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale;
+    const integrationCostValue = customScenario.integrationCost || 0;
+    const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale + integrationCostValue;
     
     const netRevenuesEcommerce = fatturazioneNettaFinale - totalPlatformCost;
     const netRevenueIncrease = netRevenuesEcommerce - fatturazioneNettaPreRever;
@@ -1260,7 +1269,18 @@ const Index = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                   <div className="space-y-2">
-                    <Label htmlFor="customSaasFee">{getTranslation(language, 'saasFee')}</Label>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="customSaasFee">{getTranslation(language, 'saasFee')}</Label>
+                      {!showIntegrationCost && (
+                        <button
+                          type="button"
+                          onClick={() => setShowIntegrationCost(true)}
+                          className="text-xs text-blue-600 hover:text-blue-800 underline"
+                        >
+                          {getTranslation(language, 'addIntegrationCost')}
+                        </button>
+                      )}
+                    </div>
                     <Input
                       id="customSaasFee"
                       type="number"
@@ -1271,6 +1291,47 @@ const Index = () => {
                       })}
                       placeholder="0"
                     />
+                    {showIntegrationCost && (
+                      <div className="space-y-2 mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-sm text-blue-800">{getTranslation(language, 'integrationCost')}</Label>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowIntegrationCost(false);
+                              setCustomScenario({
+                                ...customScenario,
+                                integrationCost: 0,
+                                integrationDescription: ''
+                              });
+                            }}
+                            className="text-blue-600 hover:text-blue-800"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                        <Input
+                          type="number"
+                          value={customScenario.integrationCost || ''}
+                          onChange={(e) => setCustomScenario({
+                            ...customScenario,
+                            integrationCost: parseFloat(e.target.value) || 0
+                          })}
+                          placeholder="0"
+                          className="text-sm"
+                        />
+                        <Input
+                          type="text"
+                          value={customScenario.integrationDescription || ''}
+                          onChange={(e) => setCustomScenario({
+                            ...customScenario,
+                            integrationDescription: e.target.value
+                          })}
+                          placeholder={getTranslation(language, 'integrationDescription')}
+                          className="text-sm"
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="customTransactionFee">{getTranslation(language, 'transactionFee')}</Label>

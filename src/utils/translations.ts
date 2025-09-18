@@ -133,7 +133,10 @@ export const translations = {
     // Payback tooltip translations
     paybackTooltipTitle: 'Calcolo del Periodo di Payback',
     paybackTooltipBody: 'Tempo necessario per recuperare l\'investimento nella piattaforma grazie all\'aumento delle revenue nette da RDV e Upselling.',
-    paybackTooltipFormula: 'Formula: Costo Totale della Piattaforma / (Aumento Revenue Mensile)'
+    paybackTooltipFormula: 'Formula: Costo Totale della Piattaforma / (Aumento Revenue Mensile)',
+    addIntegrationCost: '+ Aggiungi costo di integrazione',
+    integrationCost: 'Costo di integrazione (€)',
+    integrationDescription: 'Descrizione (uso interno)'
   },
   en: {
     title: "Price & Smile :)",
@@ -269,7 +272,10 @@ export const translations = {
     // Payback tooltip translations
     paybackTooltipTitle: 'Payback Period Calculation',
     paybackTooltipBody: 'Time needed to recover the platform investment through increased net revenues from RDV and Upselling features.',
-    paybackTooltipFormula: 'Formula: Total Platform Cost / (Monthly Net Revenue Increase)'
+    paybackTooltipFormula: 'Formula: Total Platform Cost / (Monthly Net Revenue Increase)',
+    addIntegrationCost: '+ Add integration cost',
+    integrationCost: 'Integration cost (€)',
+    integrationDescription: 'Description (internal use)'
   },
   es: {
     title: "Price & Smile :)",
@@ -405,7 +411,10 @@ export const translations = {
     // Payback tooltip translations
     paybackTooltipTitle: 'Cálculo del Período de Recuperación',
     paybackTooltipBody: 'Tiempo necesario para recuperar la inversión en la plataforma gracias al aumento de ingresos netos por RDV y Upselling.',
-    paybackTooltipFormula: 'Fórmula: Costo Total de la Plataforma / (Incremento de Ingresos Mensuales)'
+    paybackTooltipFormula: 'Fórmula: Costo Total de la Plataforma / (Incremento de Ingresos Mensuales)',
+    addIntegrationCost: '+ Agregar costo de integración',
+    integrationCost: 'Costo de integración (€)',
+    integrationDescription: 'Descripción (uso interno)'
   },
   fr: {
     title: "Price & Smile :)",

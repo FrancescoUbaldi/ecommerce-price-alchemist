@@ -43,6 +43,8 @@ interface BusinessCaseProps {
     upsellingPercentage: number;
     rdvConversionRate?: number;
     upsellingConversionRate?: number;
+    integrationCost?: number;
+    integrationDescription?: string;
   };
   language: string;
   updateClientData: (field: keyof ClientData, value: number) => void;
@@ -259,7 +261,8 @@ const BusinessCase = ({
   const transactionFeeAnnuale = (absorbTransactionFee ? 0 : effectiveTransactionFee * annualReturns);
   const rdvFeeAnnuale = (rdvValue * effectiveRdvPercentage) / 100;
   const upsellingFeeAnnuale = (upsellingValue * effectiveUpsellingPercentage) / 100;
-  const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale;
+  const integrationCostValue = scenario.integrationCost || 0;
+  const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale + integrationCostValue;
   
   // Net Revenues Nome Ecommerce = Fatturazione Netta Finale - REVER Platform Cost
   const netRevenuesEcommerce = fatturazioneNettaFinale - totalPlatformCost;
@@ -523,6 +526,9 @@ const BusinessCase = ({
                         <div>+ Transaction Fee: <EditableValue value={transactionFeeAnnuale} format="currency" field="transactionFeeFixed" /></div>
                         <div>+ RDV Fee ({effectiveRdvPercentage}%): <EditableValue value={rdvFeeAnnuale} format="currency" field="rdvPercentage" /></div>
                         <div>+ Upselling Fee ({effectiveUpsellingPercentage}%): <EditableValue value={upsellingFeeAnnuale} format="currency" field="upsellingPercentage" /></div>
+                        {integrationCostValue > 0 && (
+                          <div>+ Integration Cost: {formatCurrency(integrationCostValue)}</div>
+                        )}
                         <div className="border-t pt-1 mt-2 font-semibold">
                           = {getTranslation(language, 'total')}: {formatCurrency(totalPlatformCost)}
                         </div>

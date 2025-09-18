@@ -17,6 +17,8 @@ interface ReadOnlyPaybackProps {
     upsellingPercentage: number;
     rdvConversionRate?: number;
     upsellingConversionRate?: number;
+    integrationCost?: number;
+    integrationDescription?: string;
   };
   monthlyTotal: number;
   language: string;
@@ -54,7 +56,8 @@ const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, languag
   const transactionFeeAnnuale = absorbTransactionFee ? 0 : scenarioData.transactionFeeFixed * annualReturns;
   const rdvFeeAnnuale = (rdvValue * scenarioData.rdvPercentage) / 100;
   const upsellingFeeAnnuale = (upsellingValue * scenarioData.upsellingPercentage) / 100;
-  const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale;
+  const integrationCostValue = scenarioData.integrationCost || 0;
+  const totalPlatformCost = saasFeeAnnuale + transactionFeeAnnuale + rdvFeeAnnuale + upsellingFeeAnnuale + integrationCostValue;
   
   // Calculate net revenues and increase (matching BusinessCase exactly)
   const netRevenuesEcommerce = fatturazioneNettaFinale - totalPlatformCost;
