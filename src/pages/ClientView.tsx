@@ -17,6 +17,7 @@ interface ShareData {
     transactionFeeFixed: number;
     rdvPercentage: number;
     upsellingPercentage: number;
+    integrationCost?: number;
     rdvConversionRate?: number;
     upsellingConversionRate?: number;
     name: string;
@@ -288,7 +289,7 @@ const ClientView = () => {
                   <div className="space-y-2">
                     <span className="text-sm font-medium text-gray-700">{getTranslation(shareData.language, 'integrationCost')}</span>
                     <div className="p-3 bg-white rounded-md border">
-                      {(shareData.scenario_data as any).integrationCost > 0 ? formatCurrency((shareData.scenario_data as any).integrationCost) : getTranslation(shareData.language, 'included')}
+                      {shareData.scenario_data.integrationCost && shareData.scenario_data.integrationCost > 0 ? formatCurrency(shareData.scenario_data.integrationCost) : getTranslation(shareData.language, 'included')}
                     </div>
                   </div>
                 </div>
