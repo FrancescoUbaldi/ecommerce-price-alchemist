@@ -137,7 +137,8 @@ export const translations = {
     addIntegrationCost: '+ Aggiungi costo di integrazione',
     integrationCost: 'Costo di integrazione (€)',
     integrationDescription: 'Descrizione (uso interno)',
-    integrationCostLabel: 'Costo di integrazione'
+    integrationCostLabel: 'Costo di integrazione',
+    included: 'Inclusi'
   },
   en: {
     title: "Price & Smile :)",
@@ -277,7 +278,8 @@ export const translations = {
     addIntegrationCost: '+ Add integration cost',
     integrationCost: 'Integration cost (€)',
     integrationDescription: 'Description (internal use)',
-    integrationCostLabel: 'Integration Cost'
+    integrationCostLabel: 'Integration Cost',
+    included: 'Included'
   },
   es: {
     title: "Price & Smile :)",
@@ -417,7 +419,8 @@ export const translations = {
     addIntegrationCost: '+ Agregar costo de integración',
     integrationCost: 'Costo de integración (€)',
     integrationDescription: 'Descripción (uso interno)',
-    integrationCostLabel: 'Costo de integración'
+    integrationCostLabel: 'Costo de integración',
+    included: 'Incluido'
   },
   fr: {
     title: "Price & Smile :)",
@@ -549,7 +552,16 @@ export const translations = {
     comboDeleted: 'Combo supprimée avec succès',
     businessCaseUpdated: 'Business Case mis à jour avec cette configuration',
     undoReset: 'Annuler reset',
-    revenueConfigurationText: 'Avec cette configuration, REVER peut générer un chiffre d\'affaires net supplémentaire de'
+    revenueConfigurationText: 'Avec cette configuration, REVER peut générer un chiffre d\'affaires net supplémentaire de',
+    // Payback tooltip translations
+    paybackTooltipTitle: 'Calcul de la Période de Retour sur Investissement',
+    paybackTooltipBody: 'Temps nécessaire pour récupérer l\'investissement dans la plateforme grâce à l\'augmentation des revenus nets de RDV et d\'Upselling.',
+    paybackTooltipFormula: 'Formule: Coût Total de la Plateforme / (Augmentation des Revenus Mensuels)',
+    addIntegrationCost: '+ Ajouter coût d\'intégration',
+    integrationCost: 'Coût d\'intégration (€)',
+    integrationDescription: 'Description (usage interne)',
+    integrationCostLabel: 'Coût d\'intégration',
+    included: 'Inclus'
   },
   de: {
     title: "Price & Smile :)",
@@ -681,7 +693,16 @@ export const translations = {
     comboDeleted: 'Combo erfolgreich gelöscht',
     businessCaseUpdated: 'Business Case mit dieser Konfiguration aktualisiert',
     undoReset: 'Zurücksetzen rückgängig machen',
-    revenueConfigurationText: 'Mit dieser Konfiguration kann REVER zusätzliche Nettoerlöse von'
+    revenueConfigurationText: 'Mit dieser Konfiguration kann REVER zusätzliche Nettoerlöse von',
+    // Payback tooltip translations
+    paybackTooltipTitle: 'Berechnung der Amortisationszeit',
+    paybackTooltipBody: 'Zeit, die benötigt wird, um die Plattforminvestition durch erhöhte Nettoerlöse aus RDV- und Upselling-Features zurückzugewinnen.',
+    paybackTooltipFormula: 'Formel: Gesamte Plattformkosten / (Monatliche Nettoerlössteigerung)',
+    addIntegrationCost: '+ Integrationskosten hinzufügen',
+    integrationCost: 'Integrationskosten (€)',
+    integrationDescription: 'Beschreibung (interne Verwendung)',
+    integrationCostLabel: 'Integrationskosten',
+    included: 'Enthalten'
   },
   nl: {
     title: "Price & Smile :)",
@@ -813,7 +834,16 @@ export const translations = {
     comboDeleted: 'Combo succesvol verwijderd',
     businessCaseUpdated: 'Business Case bijgewerkt met deze configuratie',
     undoReset: 'Reset ongedaan maken',
-    revenueConfigurationText: 'Met deze configuratie kan REVER extra netto inkomsten genereren van'
+    revenueConfigurationText: 'Met deze configuratie kan REVER extra netto inkomsten genereren van',
+    // Payback tooltip translations
+    paybackTooltipTitle: 'Berekening van de Terugverdientijd',
+    paybackTooltipBody: 'Tijd die nodig is om de platforminvestering terug te verdienen door verhoogde netto-inkomsten uit RDV- en Upselling-functies.',
+    paybackTooltipFormula: 'Formule: Totale Platformkosten / (Maandelijkse Netto-inkomsten Toename)',
+    addIntegrationCost: '+ Integratiekosten toevoegen',
+    integrationCost: 'Integratiekosten (€)',
+    integrationDescription: 'Beschrijving (intern gebruik)',
+    integrationCostLabel: 'Integratiekosten',
+    included: 'Inbegrepen'
   }
 };
 
