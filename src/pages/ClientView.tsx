@@ -251,7 +251,7 @@ const ClientView = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                   <div className="space-y-2">
                     <span className="text-sm font-medium text-gray-700">{getTranslation(shareData.language, 'saasFee')}</span>
                     <div className="p-3 bg-white rounded-md border">
@@ -283,6 +283,12 @@ const ClientView = () => {
                     <span className="text-sm font-medium text-gray-700">{getTranslation(shareData.language, 'upsellingFee')}</span>
                     <div className="p-3 bg-white rounded-md border">
                       {shareData.scenario_data.upsellingPercentage}%
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <span className="text-sm font-medium text-gray-700">{getTranslation(shareData.language, 'integrationCost')}</span>
+                    <div className="p-3 bg-white rounded-md border">
+                      {(shareData.scenario_data as any).integrationCost > 0 ? formatCurrency((shareData.scenario_data as any).integrationCost) : getTranslation(shareData.language, 'included')}
                     </div>
                   </div>
                 </div>
