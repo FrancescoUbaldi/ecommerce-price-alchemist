@@ -89,8 +89,7 @@ const Index = () => {
     name: "Scenario Personalizzato"
   });
 
-  // State for showing integration cost form
-  const [showIntegrationCost, setShowIntegrationCost] = useState(false);
+  // Integration cost is now always visible
 
   // Dynamic scenario name based on client name
   const getCustomScenarioName = () => {
@@ -1267,20 +1266,9 @@ const Index = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="customSaasFee">{getTranslation(language, 'saasFee')}</Label>
-                      {!showIntegrationCost && (
-                        <button
-                          type="button"
-                          onClick={() => setShowIntegrationCost(true)}
-                          className="text-xs text-blue-600 hover:text-blue-800 underline"
-                        >
-                          {getTranslation(language, 'addIntegrationCost')}
-                        </button>
-                      )}
-                    </div>
+                    <Label htmlFor="customSaasFee">{getTranslation(language, 'saasFee')}</Label>
                     <Input
                       id="customSaasFee"
                       type="number"
@@ -1293,46 +1281,6 @@ const Index = () => {
                     />
                   </div>
                   
-                  {showIntegrationCost && (
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <Label className="text-sm">{getTranslation(language, 'integrationCost')}</Label>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setShowIntegrationCost(false);
-                            setCustomScenario({
-                              ...customScenario,
-                              integrationCost: 0,
-                              integrationDescription: ''
-                            });
-                          }}
-                          className="text-gray-500 hover:text-gray-700"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      </div>
-                      <Input
-                        type="number"
-                        value={customScenario.integrationCost || ''}
-                        onChange={(e) => setCustomScenario({
-                          ...customScenario,
-                          integrationCost: parseFloat(e.target.value) || 0
-                        })}
-                        placeholder="0"
-                      />
-                      <Input
-                        type="text"
-                        value={customScenario.integrationDescription || ''}
-                        onChange={(e) => setCustomScenario({
-                          ...customScenario,
-                          integrationDescription: e.target.value
-                        })}
-                        placeholder={getTranslation(language, 'integrationDescription')}
-                        className="text-sm"
-                      />
-                    </div>
-                  )}
                   <div className="space-y-2">
                     <Label htmlFor="customTransactionFee">{getTranslation(language, 'transactionFee')}</Label>
                     <Input
@@ -1363,6 +1311,7 @@ const Index = () => {
                       </Label>
                     </div>
                   </div>
+                  
                   <div className="space-y-2">
                     <Label htmlFor="customRdvFee">{getTranslation(language, 'rdvFee')}</Label>
                     <Input
@@ -1377,6 +1326,7 @@ const Index = () => {
                       placeholder="0"
                     />
                   </div>
+                  
                   <div className="space-y-2">
                     <Label htmlFor="customUpsellingFee">{getTranslation(language, 'upsellingFee')}</Label>
                      <Input
@@ -1390,6 +1340,20 @@ const Index = () => {
                        })}
                        placeholder="0"
                      />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="customIntegrationCost">{getTranslation(language, 'integrationCost')}</Label>
+                    <Input
+                      id="customIntegrationCost"
+                      type="number"
+                      value={customScenario.integrationCost || ''}
+                      onChange={(e) => setCustomScenario({
+                        ...customScenario,
+                        integrationCost: parseFloat(e.target.value) || 0
+                      })}
+                      placeholder="0"
+                    />
                   </div>
                 </div>
 
