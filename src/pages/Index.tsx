@@ -112,7 +112,7 @@ const Index = () => {
         upsellingPercentage: 0,
         rdvConversionRate: 35, // Default 35% RDV conversion rate
         upsellingConversionRate: 3.78, // Default 3.78% upselling conversion rate
-        name: "ECO MODE"
+        name: "Professional"
       },
       {
         saasFee: 109, // Will be dynamically calculated
@@ -121,7 +121,7 @@ const Index = () => {
         upsellingPercentage: 0,
         rdvConversionRate: 35, // Default 35% RDV conversion rate
         upsellingConversionRate: 3.78, // Default 3.78% upselling conversion rate
-        name: "GAS"
+        name: "Enterprise"
       },
       {
         saasFee: 149, // Will be dynamically calculated
@@ -130,7 +130,7 @@ const Index = () => {
         upsellingPercentage: 3,
         rdvConversionRate: 35, // Default 35% RDV conversion rate
         upsellingConversionRate: 3.78, // Default 3.78% upselling conversion rate
-        name: "FULL GAS"
+        name: "REVER"
       }
   ]);
   
@@ -170,7 +170,7 @@ const Index = () => {
     }
   };
 
-  // Enforce progressive rules (Eco -> Gas -> Full Gas) allowing full manual override
+  // Enforce progressive rules (Professional -> Enterprise -> REVER) allowing full manual override
   const enforceProgressivePredefined = (scenarios: PricingData[]): PricingData[] => {
     const adjusted = scenarios.map(s => ({ ...s }));
     
@@ -192,7 +192,7 @@ const Index = () => {
     if (gtv > 0) {
       const round1 = (n: number) => Math.round(n * 10) / 10;
 
-      // Target Take Rate ranges: ECO MODE (≤3.0%), GAS (3.5%-5.0%), FULL GAS (4.0%-6.5%)
+      // Target Take Rate ranges: Professional (≤3.0%), Enterprise (3.5%-5.0%), REVER (4.0%-6.5%)
       // Reduce by 1% for high-value clients (Annual GTV > €1,000,000)
       const baseTakeRates = [0.03, 0.0425, 0.0525]; // Base target rates (center of ranges)
       const targetTakeRates = gtv > 1000000 
@@ -225,36 +225,36 @@ const Index = () => {
         const rdvEdited = predefinedEditFlags.rdvEdited[index];
         const upsEdited = predefinedEditFlags.upsellingEdited[index];
 
-        // Always keep ECO MODE at 0% RDV and 0% Upselling in defaults
+        // Always keep Professional at 0% RDV and 0% Upselling in defaults
         if (index === 0) {
           if (!rdvEdited) rdvPct = 0;
           if (!upsEdited) upsPct = 0;
         }
 
-        // GAS: RDV in [1,4], Upselling = 0 by default
+        // Enterprise: RDV in [1,4], Upselling = 0 by default
         if (index === 1) {
           if (!upsEdited) upsPct = 0;
           if (!rdvEdited) {
             // Calculate optimal RDV to stay within take rate range
             if (rdvPerPercent > 0) {
-              rdvPct = Math.min(4, Math.max(1, round1(2))); // Default to 2% for GAS
+              rdvPct = Math.min(4, Math.max(1, round1(2))); // Default to 2% for Enterprise
             } else {
               rdvPct = 1;
             }
           }
         }
 
-        // FULL GAS: RDV in [2,4], Upselling in [3,5]
+        // REVER: RDV in [2,4], Upselling in [3,5]
         if (index === 2) {
           const rdvMin = 2, rdvMax = 4;
           const upsMin = 3, upsMax = 5;
-
+          
           if (!rdvEdited) rdvPct = rdvMin;
           if (!upsEdited) upsPct = upsMin;
 
-          // Default values for FULL GAS within ranges
-          if (!rdvEdited) rdvPct = 3; // Default to 3% for FULL GAS
-          if (!upsEdited) upsPct = 3; // Default to 3% for FULL GAS
+          // Default values for REVER within ranges
+          if (!rdvEdited) rdvPct = 3; // Default to 3% for REVER
+          if (!upsEdited) upsPct = 3; // Default to 3% for REVER
         }
 
         // Compute fees with decided percentages
@@ -403,7 +403,7 @@ const Index = () => {
         upsellingPercentage: 0,
         rdvConversionRate: 35,
         upsellingConversionRate: 3.78,
-        name: "ECO MODE"
+        name: "Professional"
       },
       {
         saasFee: 299,
@@ -412,7 +412,7 @@ const Index = () => {
         upsellingPercentage: 0,
         rdvConversionRate: 35,
         upsellingConversionRate: 3.78,
-        name: "GAS"
+        name: "Enterprise"
       },
       {
         saasFee: 399,
@@ -421,7 +421,7 @@ const Index = () => {
         upsellingPercentage: 3,
         rdvConversionRate: 35,
         upsellingConversionRate: 3.78,
-        name: "FULL GAS"
+        name: "REVER"
       }
     ]));
 
@@ -741,7 +741,7 @@ const Index = () => {
 
   const getScenarioFeatures = (index: number) => {
     const featuresByScenario = [
-      // ECO MODE (index 0)
+      // Professional (index 0)
       [
         getTranslation(language, 'nationalCoverage'),
         getTranslation(language, 'refundItemVerified'),
@@ -749,7 +749,7 @@ const Index = () => {
         '-',
         '-'
       ],
-      // GAS (index 1)
+      // Enterprise (index 1)
       [
         getTranslation(language, 'internationalCoverage'),
         getTranslation(language, 'refundVerifiedSent'),
@@ -757,7 +757,7 @@ const Index = () => {
         getTranslation(language, 'oneToOneExchanges'),
         '-'
       ],
-      // FULL GAS (index 2)
+      // REVER (index 2)
       [
         getTranslation(language, 'internationalCoverage'),
         getTranslation(language, 'refundVerifiedSentStart'),
@@ -771,11 +771,11 @@ const Index = () => {
   };
 
   const getTakeRateStatus = (takeRate: number, scenarioName: string) => {
-    if (scenarioName === "ECO MODE") {
+    if (scenarioName === "Professional") {
       return takeRate <= 3.0 ? "✅ In range (≤3.0%)" : "⚠️ Out of range";
-    } else if (scenarioName === "GAS") {
+    } else if (scenarioName === "Enterprise") {
       return takeRate >= 3.5 && takeRate <= 5.0 ? "✅ In range (3.5%-5.0%)" : "⚠️ Out of range";
-    } else if (scenarioName === "FULL GAS") {
+    } else if (scenarioName === "REVER") {
       return takeRate >= 4.0 && takeRate <= 6.5 ? "✅ In range (4.0%-6.5%)" : "⚠️ Out of range";
     }
     return "";
