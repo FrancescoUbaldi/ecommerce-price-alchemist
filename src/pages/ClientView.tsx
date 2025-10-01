@@ -98,12 +98,12 @@ const ClientView = () => {
     const originalTransactionFee = resiMensili * scenario.transactionFeeFixed;
     const transactionFee = scenario.absorbTransactionFee ? 0 : originalTransactionFee;
     
-    const rdvAnnuali = annualReturns * ((scenario.rdvConversionRate || 35) / 100);
+    const rdvAnnuali = annualReturns * ((scenario.rdvConversionRate ?? 35) / 100);
     const rdvMensili = rdvAnnuali / 12;
     const rdvFee = (rdvMensili * clientData.carrelloMedio * scenario.rdvPercentage) / 100;
     
     // Calculate Business Case upselling value to match editable version
-    const upsellingResi = annualReturns * ((scenario.upsellingConversionRate || 3.78) / 100);
+    const upsellingResi = annualReturns * ((scenario.upsellingConversionRate ?? 3.78) / 100);
     const upsellingAOV = clientData.carrelloMedio * 1.2; // Use 1.2 like Business Case
     const businessCaseUpsellingValue = upsellingResi * upsellingAOV;
     const upsellingFee = (businessCaseUpsellingValue * scenario.upsellingPercentage) / 100 / 12;
@@ -165,9 +165,9 @@ const ClientView = () => {
   const resiValue = annualReturns * shareData.business_case_data.carrelloMedio;
   const fatturazioneNettaPreRever = fatturazione - resiValue;
   
-  const rdvResi = annualReturns * ((shareData.scenario_data.rdvConversionRate || 35) / 100);
+  const rdvResi = annualReturns * ((shareData.scenario_data.rdvConversionRate ?? 35) / 100);
   const rdvValue = rdvResi * shareData.business_case_data.carrelloMedio;
-  const upsellingResi = annualReturns * ((shareData.scenario_data.upsellingConversionRate || 3.78) / 100);
+  const upsellingResi = annualReturns * ((shareData.scenario_data.upsellingConversionRate ?? 3.78) / 100);
   const upsellingAOV = shareData.business_case_data.carrelloMedio * 1.2;
   const upsellingValue = upsellingResi * upsellingAOV;
   const fatturazioneNettaFinale = fatturazioneNettaPreRever + rdvValue + upsellingValue;

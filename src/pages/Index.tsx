@@ -209,11 +209,11 @@ const Index = () => {
         const resiMensili = annualReturns / 12;
         const transactionFee = resiMensili * scenario.transactionFeeFixed;
 
-        const rdvAnnuali = annualReturns * ((scenario.rdvConversionRate || 35) / 100);
+        const rdvAnnuali = annualReturns * ((scenario.rdvConversionRate ?? 35) / 100);
         const rdvMensili = rdvAnnuali / 12;
         const rdvPerPercent = (rdvMensili * clientData.carrelloMedio) / 100; // € per 1% RDV
         
-        const upsellingAnnuali = annualReturns * ((scenario.upsellingConversionRate || 3.78) / 100);
+        const upsellingAnnuali = annualReturns * ((scenario.upsellingConversionRate ?? 3.78) / 100);
         const upsellingMensili = upsellingAnnuali / 12;
         const incrementoCarrello = clientData.carrelloMedio * 0.2;
         const upsPerPercent = (upsellingMensili * incrementoCarrello) / 100; // € per 1% Upselling
@@ -612,7 +612,7 @@ const Index = () => {
     // Transaction fee is 0 if absorbed, otherwise normal calculation
     const transactionFee = absorb ? 0 : resiMensili * scenario.transactionFeeFixed;
     
-    const rdvAnnuali = annualReturns * ((scenario.rdvConversionRate || 35) / 100);
+    const rdvAnnuali = annualReturns * ((scenario.rdvConversionRate ?? 35) / 100);
     const rdvMensili = rdvAnnuali / 12;
     const rdvFee = (rdvMensili * clientData.carrelloMedio * scenario.rdvPercentage) / 100;
     
@@ -644,10 +644,10 @@ const Index = () => {
     const resiValue = annualReturns * clientData.carrelloMedio;
     const fatturazioneNettaPreRever = fatturazione - resiValue;
     
-    const rdvResi = annualReturns * ((customScenario.rdvConversionRate || 35) / 100);
+    const rdvResi = annualReturns * ((customScenario.rdvConversionRate ?? 35) / 100);
     const rdvValue = rdvResi * clientData.carrelloMedio;
     
-    const upsellingResi = annualReturns * ((customScenario.upsellingConversionRate || 3.78) / 100);
+    const upsellingResi = annualReturns * ((customScenario.upsellingConversionRate ?? 3.78) / 100);
     const upsellingAOV = clientData.carrelloMedio * 1.2;
     const upsellingValue = upsellingResi * upsellingAOV;
     const fatturazioneNettaFinale = fatturazioneNettaPreRever + rdvValue + upsellingValue;

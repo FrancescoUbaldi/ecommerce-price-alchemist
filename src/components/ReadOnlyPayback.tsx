@@ -30,8 +30,8 @@ const ReadOnlyPayback = ({ businessCaseData, scenarioData, monthlyTotal, languag
   const annualReturns = businessCaseData.resiAnnuali > 0 ? businessCaseData.resiAnnuali : businessCaseData.resiMensili * 12;
   
   // Use scenario RDV and upselling conversion rates
-  const effectiveRdvRate = (scenarioData.rdvConversionRate || 35) / 100; // RDV conversion rate
-  const effectiveUpsellingRate = (scenarioData.upsellingConversionRate || 3.78) / 100; // Upselling conversion rate
+  const effectiveRdvRate = (scenarioData.rdvConversionRate ?? 35) / 100; // RDV conversion rate
+  const effectiveUpsellingRate = (scenarioData.upsellingConversionRate ?? 3.78) / 100; // Upselling conversion rate
   
   // Calculate base revenue (matching BusinessCase exactly)
   const fatturazione = businessCaseData.totalOrdersAnnual * businessCaseData.carrelloMedio;
