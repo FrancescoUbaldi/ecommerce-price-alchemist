@@ -99,7 +99,8 @@ const BusinessCase = ({
 
     const handleSave = () => {
       const numValue = parseFloat(editValue);
-      if (!isNaN(numValue)) {
+      // Allow 0 and positive numbers, but not NaN or negative
+      if (!isNaN(numValue) && numValue >= 0) {
         // Handle special cases for RDV and upselling rates
         if (field === 'rdvRate' && updateRdvRate) {
           updateRdvRate(numValue);
