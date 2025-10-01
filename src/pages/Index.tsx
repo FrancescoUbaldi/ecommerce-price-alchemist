@@ -1119,8 +1119,12 @@ const Index = () => {
                            <Input
                              type="number"
                              step="1"
-                             value={scenario.upsellingPercentage}
-                             onChange={(e) => updatePredefinedScenario(index, 'upsellingPercentage', Math.round(parseFloat(e.target.value)) || 0)}
+                             min="0"
+                             value={scenario.upsellingPercentage ?? ''}
+                             onChange={(e) => {
+                               const value = e.target.value;
+                               updatePredefinedScenario(index, 'upsellingPercentage', value === '' ? 0 : Math.round(parseFloat(value)) || 0);
+                             }}
                              className="h-8 text-sm"
                            />
                         </div>
@@ -1333,11 +1337,15 @@ const Index = () => {
                        id="customUpsellingFee"
                        type="number"
                        step="1"
-                       value={customScenario.upsellingPercentage || ''}
-                       onChange={(e) => setCustomScenario({
-                         ...customScenario,
-                         upsellingPercentage: Math.round(parseFloat(e.target.value)) || 0
-                       })}
+                       min="0"
+                       value={customScenario.upsellingPercentage ?? ''}
+                       onChange={(e) => {
+                         const value = e.target.value;
+                         setCustomScenario({
+                           ...customScenario,
+                           upsellingPercentage: value === '' ? 0 : Math.round(parseFloat(value)) || 0
+                         });
+                       }}
                        placeholder="0"
                      />
                   </div>
@@ -1714,8 +1722,12 @@ const Index = () => {
                          <Input
                            type="number"
                            step="1"
-                           value={scenario.upsellingPercentage || ''}
-                           onChange={(e) => updateDuplicatedScenario(index, 'upsellingPercentage', Math.round(parseFloat(e.target.value)) || 0)}
+                           min="0"
+                           value={scenario.upsellingPercentage ?? ''}
+                           onChange={(e) => {
+                             const value = e.target.value;
+                             updateDuplicatedScenario(index, 'upsellingPercentage', value === '' ? 0 : Math.round(parseFloat(value)) || 0);
+                           }}
                           placeholder="0"
                         />
                       </div>
