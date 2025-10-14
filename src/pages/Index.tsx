@@ -904,8 +904,8 @@ const Index = () => {
     );
     
     const hasRequiredScenarioData = (
-      customScenario.saasFee > 0 &&
-      customScenario.transactionFeeFixed > 0
+      typeof customScenario.saasFee === 'number' &&
+      typeof customScenario.transactionFeeFixed === 'number'
     );
     
     return hasRequiredClientData && hasRequiredScenarioData;
