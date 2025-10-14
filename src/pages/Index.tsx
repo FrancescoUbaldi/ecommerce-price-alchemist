@@ -1089,8 +1089,9 @@ const Index = () => {
                           <label className="text-xs text-gray-600">{getTranslation(language, 'saasFee')}</label>
                           <Input
                             type="number"
-                            value={scenario.saasFee}
+                            value={scenario.saasFee || ''}
                             onChange={(e) => updatePredefinedScenario(index, 'saasFee', parseFloat(e.target.value) || 0)}
+                            placeholder="0"
                             className="h-8 text-sm"
                           />
                         </div>
@@ -1099,8 +1100,9 @@ const Index = () => {
                           <Input
                             type="number"
                             step="0.10"
-                            value={scenario.transactionFeeFixed}
+                            value={scenario.transactionFeeFixed || ''}
                             onChange={(e) => updatePredefinedScenario(index, 'transactionFeeFixed', parseFloat(e.target.value) || 0)}
+                            placeholder="0.00"
                             className="h-8 text-sm"
                           />
                         </div>
@@ -1109,8 +1111,9 @@ const Index = () => {
                            <Input
                              type="number"
                              step="1"
-                             value={scenario.rdvPercentage}
+                             value={scenario.rdvPercentage || ''}
                              onChange={(e) => updatePredefinedScenario(index, 'rdvPercentage', Math.round(parseFloat(e.target.value)) || 0)}
+                             placeholder="0"
                              className="h-8 text-sm"
                            />
                         </div>
@@ -1125,6 +1128,7 @@ const Index = () => {
                                const value = e.target.value;
                                updatePredefinedScenario(index, 'upsellingPercentage', value === '' ? 0 : Math.round(parseFloat(value)) || 0);
                              }}
+                             placeholder="0"
                              className="h-8 text-sm"
                            />
                         </div>
