@@ -1110,10 +1110,10 @@ const Index = () => {
                           <label className="text-xs text-gray-600">{getTranslation(language, 'rdvFee')}</label>
                            <Input
                              type="number"
-                             step="1"
+                             step="0.01"
                              value={scenario.rdvPercentage || ''}
-                             onChange={(e) => updatePredefinedScenario(index, 'rdvPercentage', Math.round(parseFloat(e.target.value)) || 0)}
-                             placeholder="0"
+                             onChange={(e) => updatePredefinedScenario(index, 'rdvPercentage', parseFloat(e.target.value) || 0)}
+                             placeholder="0.00"
                              className="h-8 text-sm"
                            />
                         </div>
@@ -1121,14 +1121,14 @@ const Index = () => {
                           <label className="text-xs text-gray-600">{getTranslation(language, 'upsellingFee')}</label>
                            <Input
                              type="number"
-                             step="1"
+                             step="0.01"
                              min="0"
                              value={scenario.upsellingPercentage ?? ''}
                              onChange={(e) => {
                                const value = e.target.value;
-                               updatePredefinedScenario(index, 'upsellingPercentage', value === '' ? 0 : Math.round(parseFloat(value)) || 0);
+                               updatePredefinedScenario(index, 'upsellingPercentage', value === '' ? 0 : parseFloat(value) || 0);
                              }}
-                             placeholder="0"
+                             placeholder="0.00"
                              className="h-8 text-sm"
                            />
                         </div>
