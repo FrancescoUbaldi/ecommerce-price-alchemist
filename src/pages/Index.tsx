@@ -1111,8 +1111,11 @@ const Index = () => {
                            <Input
                              type="number"
                              step="0.01"
-                             value={scenario.rdvPercentage || ''}
-                             onChange={(e) => updatePredefinedScenario(index, 'rdvPercentage', parseFloat(e.target.value) || 0)}
+                             value={scenario.rdvPercentage ?? ''}
+                             onChange={(e) => {
+                               const value = e.target.value;
+                               updatePredefinedScenario(index, 'rdvPercentage', value === '' ? 0 : parseFloat(value) || 0);
+                             }}
                              placeholder="0.00"
                              className="h-8 text-sm"
                            />
