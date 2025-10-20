@@ -1106,35 +1106,51 @@ const Index = () => {
                             className="h-8 text-sm"
                           />
                         </div>
-                        <div className="space-y-1">
-                          <label className="text-xs text-gray-600">{getTranslation(language, 'rdvFee')}</label>
-                           <Input
-                             type="number"
-                             step="0.01"
-                             value={scenario.rdvPercentage ?? ''}
-                             onChange={(e) => {
-                               const value = e.target.value;
-                               updatePredefinedScenario(index, 'rdvPercentage', value === '' ? 0 : parseFloat(value) || 0);
-                             }}
-                             placeholder="0.00"
-                             className="h-8 text-sm"
-                           />
-                        </div>
-                        <div className="space-y-1">
-                          <label className="text-xs text-gray-600">{getTranslation(language, 'upsellingFee')}</label>
-                           <Input
-                             type="number"
-                             step="0.01"
-                             min="0"
-                             value={scenario.upsellingPercentage ?? ''}
-                             onChange={(e) => {
-                               const value = e.target.value;
-                               updatePredefinedScenario(index, 'upsellingPercentage', value === '' ? 0 : parseFloat(value) || 0);
-                             }}
-                             placeholder="0.00"
-                             className="h-8 text-sm"
-                           />
-                        </div>
+                         <div className="space-y-1">
+                           <label className="text-xs text-gray-600">{getTranslation(language, 'rdvFee')}</label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={scenario.rdvPercentage === 0 ? '0' : (scenario.rdvPercentage?.toString() || '')}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                // Allow any input during typing, only convert to number on blur
+                                if (value === '') {
+                                  updatePredefinedScenario(index, 'rdvPercentage', 0);
+                                } else {
+                                  const numValue = parseFloat(value);
+                                  if (!isNaN(numValue)) {
+                                    updatePredefinedScenario(index, 'rdvPercentage', numValue);
+                                  }
+                                }
+                              }}
+                              placeholder="0.00"
+                              className="h-8 text-sm"
+                            />
+                         </div>
+                         <div className="space-y-1">
+                           <label className="text-xs text-gray-600">{getTranslation(language, 'upsellingFee')}</label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              value={scenario.upsellingPercentage === 0 ? '0' : (scenario.upsellingPercentage?.toString() || '')}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                // Allow any input during typing, only convert to number on blur
+                                if (value === '') {
+                                  updatePredefinedScenario(index, 'upsellingPercentage', 0);
+                                } else {
+                                  const numValue = parseFloat(value);
+                                  if (!isNaN(numValue)) {
+                                    updatePredefinedScenario(index, 'upsellingPercentage', numValue);
+                                  }
+                                }
+                              }}
+                              placeholder="0.00"
+                              className="h-8 text-sm"
+                            />
+                         </div>
                       </div>
 
                        {/* Caratteristiche Incluse Section */}
