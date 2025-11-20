@@ -4,7 +4,7 @@ import { Check } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
-import { getTranslation } from '@/utils/translations';
+import { getTranslation, formatCurrency as formatCurrencyUtil } from '@/utils/translations';
 import BusinessCase from '@/components/BusinessCase';
 import ReadOnlyPayback from '@/components/ReadOnlyPayback';
 
@@ -127,11 +127,7 @@ const ClientView = () => {
   };
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('it-IT', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 2
-    }).format(value);
+    return formatCurrencyUtil(value, shareData?.language || 'it');
   };
 
   if (loading) {

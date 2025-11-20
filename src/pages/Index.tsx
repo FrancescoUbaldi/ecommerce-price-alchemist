@@ -19,7 +19,7 @@ import LanguageSelector from '@/components/LanguageSelector';
 import ComboActions from '@/components/ComboActions';
 import ShareModal from '@/components/ShareModal';
 import ReadOnlyPayback from '@/components/ReadOnlyPayback';
-import { getTranslation } from '@/utils/translations';
+import { getTranslation, formatCurrency as formatCurrencyUtil } from '@/utils/translations';
 
 interface PricingData {
   saasFee: number;
@@ -713,21 +713,13 @@ const Index = () => {
     return paybackMonths < 6 ? paybackMonths : null;
   }, [clientData, customScenario, absorbTransactionFee]);
 
+
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('it-IT', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 2
-    }).format(value);
+    return formatCurrencyUtil(value, language);
   };
 
   const formatCurrencyNoDecimals = (value: number) => {
-    return new Intl.NumberFormat('it-IT', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(value);
+    return formatCurrencyUtil(value, language);
   };
 
   const formatPercentage = (value: number) => {
