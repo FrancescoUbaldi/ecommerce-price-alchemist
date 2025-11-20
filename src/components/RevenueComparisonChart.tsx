@@ -3,7 +3,7 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp } from 'lucide-react';
-import { getTranslation } from '@/utils/translations';
+import { getTranslation, formatCurrency as formatCurrencyUtil } from '@/utils/translations';
 
 interface RevenueComparisonChartProps {
   preReverNetBilling: number;
@@ -17,12 +17,7 @@ const RevenueComparisonChart = ({
   language 
 }: RevenueComparisonChartProps) => {
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('it-IT', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(value);
+    return formatCurrencyUtil(value, language);
   };
 
   const difference = finalNetBilling - preReverNetBilling;

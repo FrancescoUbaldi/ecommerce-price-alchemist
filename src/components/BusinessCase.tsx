@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { getTranslation } from '@/utils/translations';
+import { getTranslation, formatCurrency as formatCurrencyUtil } from '@/utils/translations';
 import ClientLogoBanner from './ClientLogoBanner';
 
 interface ClientData {
@@ -210,12 +210,9 @@ const BusinessCase = ({
     );
   };
   
+  
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('it-IT', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 2
-    }).format(value);
+    return formatCurrencyUtil(value, language);
   };
 
   const formatPercentage = (value: number) => {

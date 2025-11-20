@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Lightbulb } from 'lucide-react';
-import { getTranslation } from '@/utils/translations';
+import { getTranslation, formatCurrency as formatCurrencyUtil } from '@/utils/translations';
 
 interface RevenueSuggestionBoxProps {
   extraRevenue: number;
@@ -10,12 +10,7 @@ interface RevenueSuggestionBoxProps {
 
 const RevenueSuggestionBox = ({ extraRevenue, language }: RevenueSuggestionBoxProps) => {
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('it-IT', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(value);
+    return formatCurrencyUtil(value, language);
   };
 
   // Only show if extraRevenue is positive and meaningful
