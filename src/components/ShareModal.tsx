@@ -107,7 +107,10 @@ const ShareModal = ({ clientData, customScenario, language, clientName: initialC
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="bg-[#1790FF] hover:bg-[#1470CC] text-white">
+        <Button 
+          className="bg-[#1790FF] hover:bg-[#1470CC] text-white"
+          type="button"
+        >
           <Share className="h-4 w-4 mr-2" />
           {getTranslation(language, 'shareWithClient')}
         </Button>
