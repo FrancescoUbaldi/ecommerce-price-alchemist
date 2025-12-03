@@ -996,14 +996,18 @@ export const getCurrencySymbol = (language: string): string => {
   return language === 'usa' ? '$' : '€';
 };
 
-export const formatCurrency = (value: number, language: string): string => {
+export const formatCurrency = (value: number, language: string, forceDecimals: boolean = false): string => {
   const locale = language === 'usa' ? 'en-US' : 'it-IT';
   const currency = language === 'usa' ? 'USD' : 'EUR';
+  
+  // Show decimals for small values (< 100) or if explicitly requested, or if value has meaningful decimals
+  const hasDecimals = value % 1 !== 0;
+  const showDecimals = forceDecimals || hasDecimals || Math.abs(value) < 100;
   
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
+    minimumFractionDigits: showDecimals ? 2 : 0,
+    maximumFractionDigits: showDecimals ? 2 : 0
   }).format(value);
 };
