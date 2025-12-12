@@ -25,24 +25,11 @@ const ClientLogoBanner = ({ language }: ClientLogoBannerProps) => {
   // Duplicate logos for seamless infinite scroll
   const duplicatedLogos = [...logos, ...logos, ...logos];
 
-  const getHeading = () => {
-    switch (language) {
-      case 'es':
-        return 'Ya han confiado en nosotros:';
-      case 'en':
-        return 'Trusted by:';
-      case 'fr':
-        return 'Ils nous ont déjà choisi:';
-      default: // 'it'
-        return 'Ci hanno già scelto:';
-    }
-  };
-
   return (
     <div className="w-full overflow-hidden bg-white py-8 mt-6">
       <div className="text-center mb-4 mt-6">
         <h3 className="text-lg font-medium text-gray-700">
-          {getHeading()}
+          {getTranslation(language, 'clientsBannerHeading')}
         </h3>
       </div>
       
