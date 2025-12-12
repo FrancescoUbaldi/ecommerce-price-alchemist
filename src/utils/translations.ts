@@ -757,7 +757,7 @@ export const translations = {
     netRevenuePreRever: 'Nettoerlös Pre REVER',
     netRevenueWithRever: 'Nettoerlös mit REVER',
     growthIndicator: 'Wachstum',
-    clientsBannerHeading: "Vertrauen uns bereits:",
+    clientsBannerHeading: "Unsere Kunden:",
     shareWithClient: 'Mit Kunden teilen',
     clientName: 'Kundenname',
     optional: 'optional',
