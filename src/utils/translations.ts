@@ -739,7 +739,7 @@ export const translations = {
     upsellingWithRever: "Upselling (mit REVER)",
     finalNetBilling: "Finaler Nettoumsatz",
     netBillingGeneratedByRever: "Von REVER generierter Nettoumsatz",
-    reverPlatformCost: "REVER Platform Cost",
+    reverPlatformCost: "REVER Plattform Kosten",
     reverROI: "REVER ROI",
     netRevenues: "Nettoerlöse",
     netRevenueUplift: "Nettoerlös-Steigerung mit REVER",
