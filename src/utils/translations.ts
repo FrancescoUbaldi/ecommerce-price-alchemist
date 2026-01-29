@@ -979,6 +979,147 @@ export const translations = {
     integrationDescription: 'Beschrijving (intern gebruik)',
     integrationCostLabel: 'Integratiekosten',
     included: 'Inbegrepen'
+  },
+  pl: {
+    title: "Price & Smile :)",
+    subtitle: "Twoja propozycja cenowa",
+    clientData: "Dane klienta",
+    annualReturns: "Zwroty roczne",
+    monthlyReturns: "Zwroty miesięczne",
+    averageCart: "Średnia wartość koszyka (zł)",
+    annualGTV: "Roczny GTV",
+    totalAnnualOrders: "Całkowita liczba zamówień rocznych",
+    returnRate: "Wskaźnik zwrotów (%)",
+    predefinedScenarios: "Scenariusze predefiniowane",
+    customScenario: "Scenariusz niestandardowy",
+    businessCase: "Business Case",
+    saasFee: "Opłata SaaS (zł/miesiąc)",
+    transactionFee: "Opłata transakcyjna (zł/zwrot)",
+    rdvFee: "Opłata RDV (%)",
+    upsellingFee: "Opłata upsellingowa (%)",
+    monthlyTotal: "Łącznie miesięcznie",
+    businessCaseConfig: "Konfiguracja Business Case",
+    ecommerceName: "Nazwa sklepu",
+    enterEcommerceName: "Wprowadź nazwę sklepu",
+    useThisScenario: "Użyj tego scenariusza",
+    takeRate: "Take Rate",
+    reset: "Resetuj",
+    scenarioApplied: "Scenariusz zastosowany!",
+    calculationResults: "Propozycja",
+    offerValidUntil: "Oferta ważna do:",
+    selectDate: "Wybierz datę",
+    annualACV: "Roczne ACV",
+    // Business Case translations
+    orders: "Zamówienia",
+    aov: "AOV",
+    percentage: "%",
+    total: "Łącznie",
+    preReverBilling: "Przychody (przed REVER)",
+    preReverReturns: "Zwroty (przed REVER)",
+    preReverNetBilling: "Przychód netto (przed REVER)",
+    retainedSalesWithRever: "Zatrzymana sprzedaż (35% z REVER)",
+    upsellingWithRever: "Upselling (z REVER)",
+    finalNetBilling: "Końcowy przychód netto",
+    netBillingGeneratedByRever: "Przychód netto wygenerowany przez REVER",
+    reverPlatformCost: "Koszt platformy REVER",
+    reverROI: "REVER ROI",
+    netRevenues: "Przychody netto",
+    netRevenueUplift: "Wzrost przychodu netto z REVER",
+    returnRate2: "wskaźnik zwrotów",
+    rdvRate: "Wskaźnik RDV",
+    upsellingRate: "Wskaźnik upsellingu",
+    revenueImpactTitle: "Wpływ REVER na przychody",
+    revenueSuggestion: "💡 Przy tej konfiguracji REVER może wygenerować dodatkowy przychód netto w wysokości",
+    revenueSuggestionEnd: "rocznie w porównaniu do obecnego scenariusza.",
+    duplicateCombo: "Duplikuj Combo",
+    saveCombo: "Zapisz Combo",
+    comboSaved: "Combo zapisane!",
+    duplicatedCombo: "Zduplikowane combo - do edycji",
+    netRevenueGrowthTitle: 'Wzrost przychodu netto dzięki REVER',
+    netRevenuePreRever: 'Przychód netto przed REVER',
+    netRevenueWithRever: 'Przychód netto z REVER',
+    growthIndicator: 'wzrost',
+    clientsBannerHeading: "Zaufali nam:",
+    shareWithClient: 'Udostępnij klientowi',
+    clientName: 'Nazwa klienta',
+    optional: 'opcjonalne',
+    enterClientName: 'Wprowadź nazwę klienta',
+    generateLink: 'Wygeneruj link',
+    generating: 'Generowanie...',
+    generatedLink: 'Wygenerowany link',
+    linkDescription: 'Ten link można udostępnić klientowi, aby obejrzał scenariusz i business case w trybie tylko do odczytu.',
+    linkNotFound: 'Nieprawidłowy lub wygasły link',
+    linkExpiredMessage: 'Link, do którego próbujesz uzyskać dostęp, jest nieprawidłowy lub wygasł.',
+    businessCaseFor: 'Business Case dla',
+    estimatedPayback: 'Szacowany zwrot',
+    monthsToRecoverInvestment: 'miesięcy do zwrotu inwestycji',
+    // Additional interface strings
+    includedFeatures: 'Zawarte funkcje',
+    includedFeaturesInPlan: 'Funkcje zawarte w wybranym planie',
+    selectableExtras: 'Opcjonalne dodatki',
+    advancedProtection: 'Zaawansowana ochrona zwrotów',
+    intelligentSuggestions: 'Inteligentne sugestie rozmiarów',
+    addFeature: 'Dodaj funkcję',
+    upfrontPayment: 'Płatność z góry',
+    absorbTransactionCosts: 'Absorpcja kosztów opłaty transakcyjnej',
+    roiBreakdownAnnual: 'Rozbicie ROI (roczne):',
+    currentNetRevenues: 'Obecne przychody netto (bez REVER):',
+    netRevenuesWithRever: 'Przychody netto z REVER:',
+    reverPlatformCosts: 'Koszty platformy REVER:',
+    estimatedNetIncrease: 'Szacowany wzrost netto:',
+    useThisCombo: 'Użyj tego Combo',
+    deleteCombo: 'Usuń Combo',
+    absorbed: 'Zaabsorbowane',
+    upfrontDiscount: 'Rabat za płatność z góry',
+    sixMonthsDiscount: '6 miesięcy (-10% SaaS)',
+    twelveMonthsDiscount: '12 miesięcy (-15% SaaS)',
+    newMonthly: 'Nowa kwota miesięczna',
+    totalAnnual: 'Łącznie rocznie',
+    includedFeaturesInSelectedPlan: 'Funkcje zawarte w wybranym planie',
+    selectableExtrasColon: 'Opcjonalne dodatki:',
+    roiBreakdownAnnualColon: 'Rozbicie ROI (roczne):',
+    currentNetRevenueWithoutRever: 'Obecne przychody netto (bez REVER):',
+    netRevenueWithReverColon: 'Przychody netto z REVER:',
+    reverPlatformCostsColon: 'Koszty platformy REVER:',
+    estimatedNetIncreaseColon: 'Szacowany wzrost netto:',
+    clickToEdit: 'Kliknij, aby edytować',
+    upsellOrders: 'Zamówienia upsell',
+    feeDistribution: 'Rozkład opłat',
+    saasLabel: 'SaaS',
+    transactionLabel: 'Transakcja',
+    rdvLabel: 'RDV',
+    upsellingLabel: 'Upselling',
+    // Feature names for predefined scenarios
+    nationalCoverage: 'Zasięg krajowy',
+    internationalCoverage: 'Zasięg międzynarodowy',
+    refundItemVerified: 'Zwrot: "przedmiot zweryfikowany"',
+    refundVerifiedSent: 'Zwrot: "zweryfikowany", "wysłany"',
+    refundVerifiedSentStart: 'Zwrot: "zweryfikowany", "wysłany", "start"',
+    onlyRefunds: 'Tylko zwroty',
+    giftCards: 'Karty podarunkowe',
+    giftCardsRdvSurplus: 'Karty podarunkowe + nadwyżka RDV',
+    oneToOneExchanges: 'Wymiany 1:1',
+    oneToNExchanges: 'Wymiany 1:n',
+    fullCatalog: 'Pełny katalog',
+    // Additional strings
+    includedCharacteristicsTitle: 'Zawarte funkcje',
+    paybackEstimated: 'Szacowany zwrot',
+    reverProtectTitle: 'REVER Protect',
+    sizeSuggestionsTitle: 'Sugestie rozmiarów',
+    // Additional UI strings
+    comboDeleted: 'Combo pomyślnie usunięte',
+    businessCaseUpdated: 'Business Case zaktualizowany tą konfiguracją',
+    undoReset: 'Cofnij reset',
+    revenueConfigurationText: 'Przy tej konfiguracji REVER może wygenerować dodatkowy przychód netto w wysokości',
+    // Payback tooltip translations
+    paybackTooltipTitle: 'Obliczanie okresu zwrotu',
+    paybackTooltipBody: 'Czas potrzebny na zwrot inwestycji w platformę dzięki zwiększonym przychodom netto z funkcji RDV i Upselling.',
+    paybackTooltipFormula: 'Wzór: Całkowity koszt platformy / (Miesięczny wzrost przychodu netto)',
+    addIntegrationCost: '+ Dodaj koszt integracji',
+    integrationCost: 'Koszt integracji (zł)',
+    integrationDescription: 'Opis (do użytku wewnętrznego)',
+    integrationCostLabel: 'Koszt integracji',
+    included: 'Zawarte'
   }
 };
 
@@ -986,19 +1127,32 @@ export const getTranslation = (language: string, key: string): string => {
   const translation = translations[language as keyof typeof translations]?.[key as keyof typeof translations['it']];
   if (translation) return translation;
   
-  // For new languages (de, nl, usa), fallback to English, otherwise fallback to Italian
-  const fallbackLanguage = ['de', 'nl', 'usa'].includes(language) ? 'en' : 'it';
+  // For new languages (de, nl, usa, pl), fallback to English, otherwise fallback to Italian
+  const fallbackLanguage = ['de', 'nl', 'usa', 'pl'].includes(language) ? 'en' : 'it';
   return translations[fallbackLanguage][key as keyof typeof translations['it']];
 };
 
 // Currency formatting utility
 export const getCurrencySymbol = (language: string): string => {
-  return language === 'usa' ? '$' : '€';
+  if (language === 'usa') return '$';
+  if (language === 'pl') return 'zł';
+  return '€';
 };
 
 export const formatCurrency = (value: number, language: string, forceDecimals: boolean = false): string => {
-  const locale = language === 'usa' ? 'en-US' : 'it-IT';
-  const currency = language === 'usa' ? 'USD' : 'EUR';
+  let locale: string;
+  let currency: string;
+  
+  if (language === 'usa') {
+    locale = 'en-US';
+    currency = 'USD';
+  } else if (language === 'pl') {
+    locale = 'pl-PL';
+    currency = 'PLN';
+  } else {
+    locale = 'it-IT';
+    currency = 'EUR';
+  }
   
   // Show decimals for small values (< 100) or if explicitly requested, or if value has meaningful decimals
   const hasDecimals = value % 1 !== 0;
