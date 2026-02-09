@@ -1504,7 +1504,7 @@ const Index = () => {
                       {(customFeatures.length > 0 || newFeature || true) && (
                         <div className="mt-6 bg-white p-4 rounded-lg border">
                           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                            ✅ {getTranslation(language, 'includedFeaturesInSelectedPlan')}
+                            {getTranslation(language, 'includedFeaturesInSelectedPlan')}
                           </h3>
                           
                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1645,7 +1645,7 @@ const Index = () => {
                       {businessData.fatturazioneNettaPreRever > 0 && businessData.netRevenuesEcommerce > 0 && businessData.totalPlatformCost > 0 && (
                         <div className="mt-6 bg-white p-6 rounded-lg border">
                           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                            📊 {getTranslation(language, 'roiBreakdownAnnualColon')}
+                            {getTranslation(language, 'roiBreakdownAnnualColon')}
                           </h3>
                           <div className="space-y-2 text-gray-700">
                             <div>• {getTranslation(language, 'currentNetRevenueWithoutRever')} <span className="font-medium">{formatCurrency(businessData.fatturazioneNettaPreRever)}</span></div>
