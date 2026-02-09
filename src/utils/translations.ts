@@ -416,6 +416,12 @@ export const translations = {
     integrationCostLabel: 'Integration Cost',
     included: 'Included'
   },
+  'en-GB': {
+    averageCart: "Average Basket (£)",
+    saasFee: "SaaS Fee (£/month)",
+    transactionFee: "Transaction Fee (£/return)",
+    integrationCost: "Integration cost (£)",
+  },
   es: {
     title: "Price & Smile :)",
     subtitle: "Tu propuesta económica",
