@@ -401,7 +401,7 @@ const ClientView = () => {
                   {(shareData.scenario_data.features && shareData.scenario_data.features.length > 0) || shareData.scenario_data.extraServices ? (
                     <div className="mt-6 bg-white p-4 rounded-lg border">
                       <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                        ✅ {getTranslation(shareData.language, 'includedFeaturesInSelectedPlan')}
+                        {getTranslation(shareData.language, 'includedFeaturesInSelectedPlan')}
                       </h3>
                       
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -504,7 +504,7 @@ const ClientView = () => {
                 {fatturazioneNettaPreRever > 0 && netRevenuesEcommerce > 0 && totalPlatformCost > 0 && (
                   <div className="mt-6 bg-white p-6 rounded-lg border">
                     <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                      📊 {getTranslation(shareData.language, 'roiBreakdownAnnualColon')}
+                      {getTranslation(shareData.language, 'roiBreakdownAnnualColon')}
                     </h3>
                     <div className="space-y-2 text-gray-700">
                       <div>• {getTranslation(shareData.language, 'currentNetRevenueWithoutRever')} <span className="font-medium">{formatCurrency(fatturazioneNettaPreRever)}</span></div>
