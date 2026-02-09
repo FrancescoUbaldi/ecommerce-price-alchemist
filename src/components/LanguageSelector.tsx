@@ -19,6 +19,7 @@ const LanguageSelector = ({ language, setLanguage }: LanguageSelectorProps) => {
     { code: 'it', name: 'Italiano' },
     { code: 'es', name: 'Español' },
     { code: 'en', name: 'English' },
+    { code: 'en-GB', name: 'English (UK)' },
     { code: 'usa', name: 'USA' },
     { code: 'fr', name: 'Français' },
     { code: 'de', name: 'Deutsch' },

@@ -1127,8 +1127,8 @@ export const getTranslation = (language: string, key: string): string => {
   const translation = translations[language as keyof typeof translations]?.[key as keyof typeof translations['it']];
   if (translation) return translation;
   
-  // For new languages (de, nl, usa, pl), fallback to English, otherwise fallback to Italian
-  const fallbackLanguage = ['de', 'nl', 'usa', 'pl'].includes(language) ? 'en' : 'it';
+  // For new languages (de, nl, usa, pl, en-GB), fallback to English, otherwise fallback to Italian
+  const fallbackLanguage = ['de', 'nl', 'usa', 'pl', 'en-GB'].includes(language) ? 'en' : 'it';
   return translations[fallbackLanguage][key as keyof typeof translations['it']];
 };
 
@@ -1136,6 +1136,7 @@ export const getTranslation = (language: string, key: string): string => {
 export const getCurrencySymbol = (language: string): string => {
   if (language === 'usa') return '$';
   if (language === 'pl') return 'zł';
+  if (language === 'en-GB') return '£';
   return '€';
 };
 
@@ -1149,6 +1150,9 @@ export const formatCurrency = (value: number, language: string, forceDecimals: b
   } else if (language === 'pl') {
     locale = 'pl-PL';
     currency = 'PLN';
+  } else if (language === 'en-GB') {
+    locale = 'en-GB';
+    currency = 'GBP';
   } else {
     locale = 'it-IT';
     currency = 'EUR';
