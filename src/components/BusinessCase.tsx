@@ -396,13 +396,7 @@ const BusinessCase = ({
               
               <TableRow className="border-b">
                 <TableCell className="font-medium">
-                  {language === 'it' ? `Vendite ritenute (${Math.round(effectiveRdvRate * 100)}% con REVER)` :
-                   language === 'en' ? `Retained Sales (${Math.round(effectiveRdvRate * 100)}% with REVER)` :
-                   language === 'es' ? `Ventas Retenidas (${Math.round(effectiveRdvRate * 100)}% con REVER)` :
-                   language === 'fr' ? `Ventes Conservées (${Math.round(effectiveRdvRate * 100)}% avec REVER)` :
-                   language === 'de' ? `Zurückbehaltene Verkäufe (${Math.round(effectiveRdvRate * 100)}% mit REVER)` :
-                   language === 'nl' ? `Behouden Verkopen (${Math.round(effectiveRdvRate * 100)}% met REVER)` :
-                   `Vendite ritenute (${Math.round(effectiveRdvRate * 100)}% con REVER)`}
+                  {`${getTranslation(language, 'retainedSalesWithRever')} (${Math.round(effectiveRdvRate * 100)}%)`}
                 </TableCell>
                 <TableCell className="text-center">{Math.round(rdvResi).toLocaleString()}</TableCell>
                 <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
