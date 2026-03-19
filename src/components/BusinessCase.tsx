@@ -491,7 +491,7 @@ const BusinessCase = ({
                     </TooltipTrigger>
                     <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                       <div className="space-y-1 text-sm">
-                        <div>{getTranslation(language, 'retainedSalesWithRever')}: {formatCurrency(rdvValue)}</div>
+                        <div>{getTranslation(language, 'retainedSalesWithRever').replace('{rate}', String(Math.round(effectiveRdvRate * 100)))}: {formatCurrency(rdvValue)}</div>
                         <div>+ {getTranslation(language, 'upsellingWithRever')}: {formatCurrency(upsellingValue)}</div>
                         <div className="border-t pt-1 mt-2 font-semibold">
                           = {getTranslation(language, 'total')}: {formatCurrency(fatturazioneGenerataRever)}
