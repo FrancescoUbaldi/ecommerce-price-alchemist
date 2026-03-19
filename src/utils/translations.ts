@@ -741,7 +741,7 @@ export const translations = {
     preReverBilling: "Umsatz (Pre REVER)",
     preReverReturns: "Retouren (Pre REVER)",
     preReverNetBilling: "Nettoumsatz (Pre REVER)",
-    retainedSalesWithRever: "Behaltene Verkäufe (35% mit REVER)",
+    retainedSalesWithRever: "Behaltene Verkäufe ({rate}% mit REVER)",
     upsellingWithRever: "Upselling (mit REVER)",
     finalNetBilling: "Finaler Nettoumsatz",
     netBillingGeneratedByRever: "Von REVER generierter Nettoumsatz",
