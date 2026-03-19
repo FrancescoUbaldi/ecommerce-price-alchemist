@@ -882,7 +882,7 @@ export const translations = {
     preReverBilling: "Omzet (Pre REVER)",
     preReverReturns: "Retourzendingen (Pre REVER)",
     preReverNetBilling: "Netto Omzet (Pre REVER)",
-    retainedSalesWithRever: "Behouden Verkopen (35% met REVER)",
+    retainedSalesWithRever: "Behouden Verkopen ({rate}% met REVER)",
     upsellingWithRever: "Upselling (met REVER)",
     finalNetBilling: "Definitieve Netto Omzet",
     netBillingGeneratedByRever: "Door REVER Gegenereerde Netto Omzet",
