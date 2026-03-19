@@ -396,7 +396,7 @@ const BusinessCase = ({
               
               <TableRow className="border-b">
                 <TableCell className="font-medium">
-                  {getTranslation(language, 'retainedSalesWithRever').replace('{rate}', String(Math.round(effectiveRdvRate * 100)))}
+                  {`${getTranslation(language, 'retainedSalesWithRever')} (${Math.round(effectiveRdvRate * 100)}% ${getTranslation(language, 'withRever')})`}
                 </TableCell>
                 <TableCell className="text-center">{Math.round(rdvResi).toLocaleString()}</TableCell>
                 <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
