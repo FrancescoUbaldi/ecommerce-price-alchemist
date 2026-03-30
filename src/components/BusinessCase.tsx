@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -72,6 +73,11 @@ const BusinessCase = ({
   sizeSuggestorReduction = 3
 }: BusinessCaseProps) => {
   const [fieldOverrides, setFieldOverrides] = useState<FieldOverrides>({});
+  const [sizeSuggestorActive, setSizeSuggestorActive] = useState(sizeSuggestorEnabled);
+
+  useEffect(() => {
+    setSizeSuggestorActive(sizeSuggestorEnabled);
+  }, [sizeSuggestorEnabled]);
 
   // Editable Value Component
   interface EditableValueProps {
@@ -245,8 +251,8 @@ const BusinessCase = ({
   const fatturazioneNettaPreRever = fatturazione - resiValue;
   
   // Size Suggestor AI calculations
-  const sizeSuggestorResiRidotti = sizeSuggestorEnabled ? annualReturns * (sizeSuggestorReduction / 100) : 0;
-  const adjustedAnnualReturns = sizeSuggestorEnabled ? annualReturns - sizeSuggestorResiRidotti : annualReturns;
+  const sizeSuggestorResiRidotti = sizeSuggestorActive ? annualReturns * (sizeSuggestorReduction / 100) : 0;
+  const adjustedAnnualReturns = sizeSuggestorActive ? annualReturns - sizeSuggestorResiRidotti : annualReturns;
   const adjustedResiValue = adjustedAnnualReturns * clientData.carrelloMedio;
   const adjustedFatturazioneNettaPreRever = fatturazione - adjustedResiValue;
   const sizeSuggestorImpact = adjustedFatturazioneNettaPreRever - fatturazioneNettaPreRever;
@@ -316,7 +322,7 @@ const BusinessCase = ({
             backgroundColor: 'white'
           }}
         >
-          <div className="mb-6">
+          <div className="mb-6 flex items-center justify-between">
             <h2 className="text-2xl font-semibold leading-none tracking-tight">
               Business Case: <EditableClientName 
                 value={clientName}
@@ -325,6 +331,19 @@ const BusinessCase = ({
                 disabled={readOnly}
               />
             </h2>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSizeSuggestorActive(!sizeSuggestorActive)}
+                  className="flex items-center gap-2"
+                >
+                  <Sparkles className={`h-4 w-4 ${sizeSuggestorActive ? 'text-purple-600' : 'text-gray-400'}`} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Size Suggestor AI</TooltipContent>
+            </Tooltip>
           </div>
           <Table>
             <TableHeader>
@@ -363,7 +382,7 @@ const BusinessCase = ({
               <TableRow className="border-b">
                 <TableCell className="font-medium">{getTranslation(language, 'preReverReturns')}</TableCell>
                 <TableCell className="text-center">
-                  {sizeSuggestorEnabled ? (
+                  {<sizeSuggestorActive ? (
                     <div>
                       <span className="line-through text-gray-400">{annualReturns.toLocaleString()}</span>
                       <div className="text-purple-600 font-medium">{Math.round(adjustedAnnualReturns).toLocaleString()}</div>
@@ -374,7 +393,7 @@ const BusinessCase = ({
                 </TableCell>
                 <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
                 <TableCell className="text-center">
-                  {sizeSuggestorEnabled ? (
+                  {<sizeSuggestorActive ? (
                     <div>
                       <span className="line-through text-gray-400">{formatPercentage(clientData.returnRatePercentage)}</span>
                       <div className="text-purple-600 font-medium">{formatPercentage(clientData.returnRatePercentage - sizeSuggestorReduction)}</div>
@@ -384,7 +403,7 @@ const BusinessCase = ({
                   )}
                 </TableCell>
                 <TableCell className="text-center">
-                  {sizeSuggestorEnabled ? (
+                  {<sizeSuggestorActive ? (
                     <div>
                       <span className="line-through text-gray-400">{formatCurrency(resiValue)}</span>
                       <div className="text-purple-600 font-medium">{formatCurrency(adjustedResiValue)}</div>
@@ -414,7 +433,7 @@ const BusinessCase = ({
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell className="text-center">
-                  {sizeSuggestorEnabled ? (
+                  {<sizeSuggestorActive ? (
                     <div>
                       <span className="line-through text-gray-400 font-bold">{formatCurrency(fatturazioneNettaPreRever)}</span>
                       <div className="text-purple-600 font-bold">{formatCurrency(adjustedFatturazioneNettaPreRever)}</div>
@@ -438,7 +457,7 @@ const BusinessCase = ({
                 </TableCell>
               </TableRow>
 
-              {sizeSuggestorEnabled && (
+              {sizeSuggestorActive && (
                 <TableRow className="bg-purple-50 border-b border-l-4 border-purple-400">
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
@@ -662,7 +681,7 @@ const BusinessCase = ({
                     <TooltipTrigger asChild>
                       <div className="cursor-help">
                         <span className="font-bold">{formatCurrency(aumentoNetRevenues)}</span>
-                        {sizeSuggestorEnabled && (
+                        {sizeSuggestorActive && (
                           <div className="text-purple-600 text-sm font-medium text-center">+{formatCurrency(sizeSuggestorImpact)}</div>
                         )}
                       </div>
