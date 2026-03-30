@@ -1284,6 +1284,32 @@ const Index = () => {
                         onCheckedChange={setShowUpfrontDiscount}
                       />
                     </div>
+                    {/* Size Suggestor toggle */}
+                    <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
+                      <Label htmlFor="size-suggestor-toggle" className="text-sm font-medium">
+                        Size Suggestor
+                      </Label>
+                      <Switch
+                        id="size-suggestor-toggle"
+                        checked={sizeSuggestorEnabled}
+                        onCheckedChange={setSizeSuggestorEnabled}
+                      />
+                    </div>
+                    {sizeSuggestorEnabled && (
+                      <div className="space-y-1">
+                        <Label htmlFor="size-suggestor-reduction" className="text-sm font-medium">
+                          Riduzione tasso di reso (punti %)
+                        </Label>
+                        <Input
+                          id="size-suggestor-reduction"
+                          type="number"
+                          min={0}
+                          max={100}
+                          value={sizeSuggestorReduction}
+                          onChange={(e) => setSizeSuggestorReduction(Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)))}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
 
