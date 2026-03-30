@@ -660,12 +660,12 @@ const BusinessCase = ({
                 <TableCell className="text-center">
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <span className="cursor-help font-bold">
-                        {formatCurrency(aumentoNetRevenues)}
-                      </span>
-                      {sizeSuggestorEnabled && (
-                        <div className="text-purple-600 text-sm font-medium text-center">+{formatCurrency(sizeSuggestorImpact)}</div>
-                      )}
+                      <div className="cursor-help">
+                        <span className="font-bold">{formatCurrency(aumentoNetRevenues)}</span>
+                        {sizeSuggestorEnabled && (
+                          <div className="text-purple-600 text-sm font-medium text-center">+{formatCurrency(sizeSuggestorImpact)}</div>
+                        )}
+                      </div>
                     </TooltipTrigger>
                     <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                       <div className="space-y-1 text-sm">
