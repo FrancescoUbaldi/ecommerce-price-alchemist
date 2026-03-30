@@ -244,6 +244,13 @@ const BusinessCase = ({
   // Fatturazione netta (Pre REVER) = Fatturazione - Resi
   const fatturazioneNettaPreRever = fatturazione - resiValue;
   
+  // Size Suggestor AI calculations
+  const sizeSuggestorResiRidotti = sizeSuggestorEnabled ? annualReturns * (sizeSuggestorReduction / 100) : 0;
+  const adjustedAnnualReturns = sizeSuggestorEnabled ? annualReturns - sizeSuggestorResiRidotti : annualReturns;
+  const adjustedResiValue = adjustedAnnualReturns * clientData.carrelloMedio;
+  const adjustedFatturazioneNettaPreRever = fatturazione - adjustedResiValue;
+  const sizeSuggestorImpact = adjustedFatturazioneNettaPreRever - fatturazioneNettaPreRever;
+  
   // Vendite ritenute (with editable RDV rate) = Returns × RDV rate × AOV
   const rdvResi = annualReturns * effectiveRdvRate;
   const rdvValue = rdvResi * clientData.carrelloMedio;
