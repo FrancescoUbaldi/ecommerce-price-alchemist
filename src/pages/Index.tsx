@@ -1646,7 +1646,7 @@ const Index = () => {
                               <Collapsible className="mt-3 pt-3 border-t">
                                 <CollapsibleTrigger className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors py-1 [&[data-state=open]>svg]:rotate-180">
                                   <ChevronDown className="h-3 w-3 transition-transform duration-200" />
-                                  Opzioni avanzate AE
+                                  {getTranslation(language, 'aeAdvancedOptions')}
                                 </CollapsibleTrigger>
                                 <CollapsibleContent className="space-y-2 pt-2">
                                   <div className="flex items-center justify-between p-3 border rounded-md">
@@ -1662,7 +1662,7 @@ const Index = () => {
                                   {sizeSuggestorEnabled && (
                                     <div className="space-y-1 px-1">
                                       <Label htmlFor="size-suggestor-reduction" className="text-sm font-medium">
-                                        Riduzione tasso di reso (punti %)
+                                        {getTranslation(language, 'returnRateReduction')}
                                       </Label>
                                       <Input
                                         id="size-suggestor-reduction"

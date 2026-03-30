@@ -343,7 +343,7 @@ const BusinessCase = ({
                     <Sparkles className={`h-4 w-4 ${sizeSuggestorActive ? 'text-purple-600' : 'text-gray-400'}`} />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Size Suggestor AI</TooltipContent>
+                <TooltipContent>{getTranslation(language, 'sizeSuggestorTooltip')}</TooltipContent>
               </Tooltip>
             )}
           </div>
@@ -464,7 +464,7 @@ const BusinessCase = ({
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
                       <Sparkles className="text-purple-600" size={16} />
-                      <span className="text-purple-700 font-medium">Size Suggestor AI</span>
+                      <span className="text-purple-700 font-medium">{getTranslation(language, 'sizeSuggestorLabel')}</span>
                     </div>
                   </TableCell>
                   <TableCell className="text-center text-purple-600">{Math.round(sizeSuggestorResiRidotti).toLocaleString()}</TableCell>

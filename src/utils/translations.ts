@@ -139,7 +139,11 @@ export const translations = {
     integrationCost: 'Costo di integrazione (€)',
     integrationDescription: 'Descrizione (uso interno)',
     integrationCostLabel: 'Costo di integrazione',
-    included: 'Inclusi'
+    included: 'Inclusi',
+    aeAdvancedOptions: 'Opzioni avanzate AE',
+    sizeSuggestorLabel: 'Size Suggestor AI',
+    returnRateReduction: 'Riduzione tasso di reso (punti %)',
+    sizeSuggestorTooltip: 'Size Suggestor AI'
   },
   en: {
     title: "Price & Smile :)",
@@ -281,7 +285,11 @@ export const translations = {
     integrationCost: 'Integration cost (€)',
     integrationDescription: 'Description (internal use)',
     integrationCostLabel: 'Integration Cost',
-    included: 'Included'
+    included: 'Included',
+    aeAdvancedOptions: 'AE Advanced Options',
+    sizeSuggestorLabel: 'Size Suggestor AI',
+    returnRateReduction: 'Return rate reduction (% points)',
+    sizeSuggestorTooltip: 'Size Suggestor AI'
   },
   usa: {
     title: "Price & Smile :)",
@@ -417,13 +425,21 @@ export const translations = {
     integrationCost: 'Integration cost ($)',
     integrationDescription: 'Description (internal use)',
     integrationCostLabel: 'Integration Cost',
-    included: 'Included'
+    included: 'Included',
+    aeAdvancedOptions: 'AE Advanced Options',
+    sizeSuggestorLabel: 'Size Suggestor AI',
+    returnRateReduction: 'Return rate reduction (% points)',
+    sizeSuggestorTooltip: 'Size Suggestor AI'
   },
   'en-GB': {
     averageCart: "Average Basket (£)",
     saasFee: "SaaS Fee (£/month)",
     transactionFee: "Transaction Fee (£/return)",
     integrationCost: "Integration cost (£)",
+    aeAdvancedOptions: 'AE Advanced Options',
+    sizeSuggestorLabel: 'Size Suggestor AI',
+    returnRateReduction: 'Return rate reduction (% points)',
+    sizeSuggestorTooltip: 'Size Suggestor AI'
   },
   es: {
     title: "Price & Smile :)",
@@ -565,7 +581,11 @@ export const translations = {
     integrationCost: 'Costo de integración (€)',
     integrationDescription: 'Descripción (uso interno)',
     integrationCostLabel: 'Costo de integración',
-    included: 'Incluido'
+    included: 'Incluido',
+    aeAdvancedOptions: 'Opciones avanzadas AE',
+    sizeSuggestorLabel: 'Size Suggestor IA',
+    returnRateReduction: 'Reducción tasa de devolución (puntos %)',
+    sizeSuggestorTooltip: 'Size Suggestor IA'
   },
   fr: {
     title: "Price & Smile :)",
@@ -707,7 +727,11 @@ export const translations = {
     integrationCost: 'Coût d\'intégration (€)',
     integrationDescription: 'Description (usage interne)',
     integrationCostLabel: 'Coût d\'intégration',
-    included: 'Inclus'
+    included: 'Inclus',
+    aeAdvancedOptions: 'Options avancées AE',
+    sizeSuggestorLabel: 'Size Suggestor IA',
+    returnRateReduction: 'Réduction taux de retour (points %)',
+    sizeSuggestorTooltip: 'Size Suggestor IA'
   },
   de: {
     title: "Price & Smile :)",
@@ -849,7 +873,11 @@ export const translations = {
     integrationCost: 'Integrationskosten (€)',
     integrationDescription: 'Beschreibung (interne Verwendung)',
     integrationCostLabel: 'Integrationskosten',
-    included: 'Enthalten'
+    included: 'Enthalten',
+    aeAdvancedOptions: 'Erweiterte AE-Optionen',
+    sizeSuggestorLabel: 'Size Suggestor KI',
+    returnRateReduction: 'Retourenquote-Reduktion (Prozentpunkte)',
+    sizeSuggestorTooltip: 'Size Suggestor KI'
   },
   nl: {
     title: "Price & Smile :)",
@@ -991,7 +1019,11 @@ export const translations = {
     integrationCost: 'Integratiekosten (€)',
     integrationDescription: 'Beschrijving (intern gebruik)',
     integrationCostLabel: 'Integratiekosten',
-    included: 'Inbegrepen'
+    included: 'Inbegrepen',
+    aeAdvancedOptions: 'Geavanceerde AE-opties',
+    sizeSuggestorLabel: 'Size Suggestor AI',
+    returnRateReduction: 'Vermindering retourpercentage (procentpunten)',
+    sizeSuggestorTooltip: 'Size Suggestor AI'
   },
   pl: {
     title: "Price & Smile :)",
@@ -1133,7 +1165,11 @@ export const translations = {
     integrationCost: 'Koszt integracji (zł)',
     integrationDescription: 'Opis (do użytku wewnętrznego)',
     integrationCostLabel: 'Koszt integracji',
-    included: 'Zawarte'
+    included: 'Zawarte',
+    aeAdvancedOptions: 'Zaawansowane opcje AE',
+    sizeSuggestorLabel: 'Size Suggestor AI',
+    returnRateReduction: 'Redukcja wskaźnika zwrotów (punkty %)',
+    sizeSuggestorTooltip: 'Size Suggestor AI'
   }
 };
 
