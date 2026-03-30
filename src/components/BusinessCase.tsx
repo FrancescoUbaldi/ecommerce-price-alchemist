@@ -251,8 +251,8 @@ const BusinessCase = ({
   const fatturazioneNettaPreRever = fatturazione - resiValue;
   
   // Size Suggestor AI calculations
-  const sizeSuggestorResiRidotti = sizeSuggestorEnabled ? annualReturns * (sizeSuggestorReduction / 100) : 0;
-  const adjustedAnnualReturns = sizeSuggestorEnabled ? annualReturns - sizeSuggestorResiRidotti : annualReturns;
+  const sizeSuggestorResiRidotti = sizeSuggestorActive ? annualReturns * (sizeSuggestorReduction / 100) : 0;
+  const adjustedAnnualReturns = sizeSuggestorActive ? annualReturns - sizeSuggestorResiRidotti : annualReturns;
   const adjustedResiValue = adjustedAnnualReturns * clientData.carrelloMedio;
   const adjustedFatturazioneNettaPreRever = fatturazione - adjustedResiValue;
   const sizeSuggestorImpact = adjustedFatturazioneNettaPreRever - fatturazioneNettaPreRever;
@@ -382,7 +382,7 @@ const BusinessCase = ({
               <TableRow className="border-b">
                 <TableCell className="font-medium">{getTranslation(language, 'preReverReturns')}</TableCell>
                 <TableCell className="text-center">
-                  {sizeSuggestorEnabled ? (
+                  {<sizeSuggestorActive ? (
                     <div>
                       <span className="line-through text-gray-400">{annualReturns.toLocaleString()}</span>
                       <div className="text-purple-600 font-medium">{Math.round(adjustedAnnualReturns).toLocaleString()}</div>
@@ -393,7 +393,7 @@ const BusinessCase = ({
                 </TableCell>
                 <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
                 <TableCell className="text-center">
-                  {sizeSuggestorEnabled ? (
+                  {<sizeSuggestorActive ? (
                     <div>
                       <span className="line-through text-gray-400">{formatPercentage(clientData.returnRatePercentage)}</span>
                       <div className="text-purple-600 font-medium">{formatPercentage(clientData.returnRatePercentage - sizeSuggestorReduction)}</div>
@@ -403,7 +403,7 @@ const BusinessCase = ({
                   )}
                 </TableCell>
                 <TableCell className="text-center">
-                  {sizeSuggestorEnabled ? (
+                  {<sizeSuggestorActive ? (
                     <div>
                       <span className="line-through text-gray-400">{formatCurrency(resiValue)}</span>
                       <div className="text-purple-600 font-medium">{formatCurrency(adjustedResiValue)}</div>
@@ -433,7 +433,7 @@ const BusinessCase = ({
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell className="text-center">
-                  {sizeSuggestorEnabled ? (
+                  {<sizeSuggestorActive ? (
                     <div>
                       <span className="line-through text-gray-400 font-bold">{formatCurrency(fatturazioneNettaPreRever)}</span>
                       <div className="text-purple-600 font-bold">{formatCurrency(adjustedFatturazioneNettaPreRever)}</div>
@@ -457,7 +457,7 @@ const BusinessCase = ({
                 </TableCell>
               </TableRow>
 
-              {sizeSuggestorEnabled && (
+              {sizeSuggestorActive && (
                 <TableRow className="bg-purple-50 border-b border-l-4 border-purple-400">
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
@@ -681,7 +681,7 @@ const BusinessCase = ({
                     <TooltipTrigger asChild>
                       <div className="cursor-help">
                         <span className="font-bold">{formatCurrency(aumentoNetRevenues)}</span>
-                        {sizeSuggestorEnabled && (
+                        {sizeSuggestorActive && (
                           <div className="text-purple-600 text-sm font-medium text-center">+{formatCurrency(sizeSuggestorImpact)}</div>
                         )}
                       </div>
