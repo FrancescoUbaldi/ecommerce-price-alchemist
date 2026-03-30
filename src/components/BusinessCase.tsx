@@ -13,6 +13,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTranslation, formatCurrency as formatCurrencyUtil } from '@/utils/translations';
 import ClientLogoBanner from './ClientLogoBanner';
+import { Sparkles } from 'lucide-react';
 
 interface ClientData {
   resiAnnuali: number;
