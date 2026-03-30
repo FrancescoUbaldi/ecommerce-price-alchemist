@@ -322,7 +322,7 @@ const BusinessCase = ({
             backgroundColor: 'white'
           }}
         >
-          <div className="mb-6">
+          <div className="mb-6 flex items-center justify-between">
             <h2 className="text-2xl font-semibold leading-none tracking-tight">
               Business Case: <EditableClientName 
                 value={clientName}
@@ -331,6 +331,19 @@ const BusinessCase = ({
                 disabled={readOnly}
               />
             </h2>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSizeSuggestorActive(!sizeSuggestorActive)}
+                  className="flex items-center gap-2"
+                >
+                  <Sparkles className={`h-4 w-4 ${sizeSuggestorActive ? 'text-purple-600' : 'text-gray-400'}`} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Size Suggestor AI</TooltipContent>
+            </Tooltip>
           </div>
           <Table>
             <TableHeader>
