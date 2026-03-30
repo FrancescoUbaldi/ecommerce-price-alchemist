@@ -373,7 +373,16 @@ const BusinessCase = ({
                   )}
                 </TableCell>
                 <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
-                <TableCell className="text-center">{formatPercentage(clientData.returnRatePercentage)} <span className="text-sm text-gray-500">{getTranslation(language, 'returnRate2')}</span></TableCell>
+                <TableCell className="text-center">
+                  {sizeSuggestorEnabled ? (
+                    <div>
+                      <span className="line-through text-gray-400">{formatPercentage(clientData.returnRatePercentage)}</span>
+                      <div className="text-purple-600 font-medium">{formatPercentage(clientData.returnRatePercentage - sizeSuggestorReduction)}</div>
+                    </div>
+                  ) : (
+                    <>{formatPercentage(clientData.returnRatePercentage)} <span className="text-sm text-gray-500">{getTranslation(language, 'returnRate2')}</span></>
+                  )}
+                </TableCell>
                 <TableCell className="text-center">
                   {sizeSuggestorEnabled ? (
                     <div>
@@ -628,7 +637,12 @@ const BusinessCase = ({
                 <TableCell className="text-center">
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <span className="cursor-help font-bold">{formatCurrency(netRevenuesEcommerce)}</span>
+                      <span className="cursor-help font-bold">
+                        {formatCurrency(netRevenuesEcommerce)}
+                        {sizeSuggestorEnabled && (
+                          <span className="text-purple-600 text-sm font-medium ml-1">+{formatCurrency(sizeSuggestorImpact)}</span>
+                        )}
+                      </span>
                     </TooltipTrigger>
                     <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                       <div className="space-y-1 text-sm">
