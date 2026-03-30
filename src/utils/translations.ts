@@ -873,7 +873,11 @@ export const translations = {
     integrationCost: 'Integrationskosten (€)',
     integrationDescription: 'Beschreibung (interne Verwendung)',
     integrationCostLabel: 'Integrationskosten',
-    included: 'Enthalten'
+    included: 'Enthalten',
+    aeAdvancedOptions: 'Erweiterte AE-Optionen',
+    sizeSuggestorLabel: 'Size Suggestor KI',
+    returnRateReduction: 'Retourenquote-Reduktion (Prozentpunkte)',
+    sizeSuggestorTooltip: 'Size Suggestor KI'
   },
   nl: {
     title: "Price & Smile :)",
