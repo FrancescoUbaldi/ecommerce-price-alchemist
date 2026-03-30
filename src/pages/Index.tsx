@@ -1640,6 +1640,39 @@ const Index = () => {
                                 </div>
                               </div>
                             </div>
+
+                            {/* Third Column - Opzioni avanzate AE */}
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-gray-700 mb-2">Opzioni avanzate AE</h4>
+                              
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between p-3 border rounded-md">
+                                  <div className="flex-1">
+                                    <div className="font-medium text-sm text-gray-800">Size Suggestor</div>
+                                  </div>
+                                  <Switch
+                                    id="size-suggestor-toggle"
+                                    checked={sizeSuggestorEnabled}
+                                    onCheckedChange={setSizeSuggestorEnabled}
+                                  />
+                                </div>
+                                {sizeSuggestorEnabled && (
+                                  <div className="space-y-1 px-1">
+                                    <Label htmlFor="size-suggestor-reduction" className="text-sm font-medium">
+                                      Riduzione tasso di reso (punti %)
+                                    </Label>
+                                    <Input
+                                      id="size-suggestor-reduction"
+                                      type="number"
+                                      min={0}
+                                      max={100}
+                                      value={sizeSuggestorReduction}
+                                      onChange={(e) => setSizeSuggestorReduction(Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)))}
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
                           </div>
                         </div>
                       )}
