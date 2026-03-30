@@ -38,6 +38,8 @@ interface ShareModalProps {
     reverProtect: boolean;
     sizeSuggestions: boolean;
   };
+  sizeSuggestorEnabled?: boolean;
+  sizeSuggestorReduction?: number;
 }
 
 const ShareModal = ({ clientData, customScenario, language, clientName: initialClientName = '', showUpfrontDiscount = false, absorbTransactionFee = false, offerExpirationDate, customFeatures = [], extraServices = { reverProtect: false, sizeSuggestions: false } }: ShareModalProps) => {
