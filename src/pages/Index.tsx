@@ -1236,6 +1236,8 @@ const Index = () => {
                       offerExpirationDate={offerExpirationDate}
                       customFeatures={customFeatures}
                       extraServices={extraServices}
+                      sizeSuggestorEnabled={sizeSuggestorEnabled}
+                      sizeSuggestorReduction={sizeSuggestorReduction}
                     />
                   )}
                 </div>

@@ -29,6 +29,8 @@ interface ShareData {
       reverProtect: boolean;
       sizeSuggestions: boolean;
     };
+    sizeSuggestorEnabled?: boolean;
+    sizeSuggestorReduction?: number;
   };
   business_case_data: {
     resiAnnuali: number;
@@ -533,6 +535,8 @@ const ClientView = () => {
               updateClientData={() => {}} // Read-only
               readOnly={true}
               absorbTransactionFee={shareData.scenario_data.absorbTransactionFee}
+              sizeSuggestorEnabled={shareData.scenario_data.sizeSuggestorEnabled ?? false}
+              sizeSuggestorReduction={shareData.scenario_data.sizeSuggestorReduction ?? 3}
             />
           </TabsContent>
         </Tabs>
