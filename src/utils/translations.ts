@@ -139,7 +139,11 @@ export const translations = {
     integrationCost: 'Costo di integrazione (€)',
     integrationDescription: 'Descrizione (uso interno)',
     integrationCostLabel: 'Costo di integrazione',
-    included: 'Inclusi'
+    included: 'Inclusi',
+    aeAdvancedOptions: 'Opzioni avanzate AE',
+    sizeSuggestorLabel: 'Size Suggestor AI',
+    returnRateReduction: 'Riduzione tasso di reso (punti %)',
+    sizeSuggestorTooltip: 'Size Suggestor AI'
   },
   en: {
     title: "Price & Smile :)",
