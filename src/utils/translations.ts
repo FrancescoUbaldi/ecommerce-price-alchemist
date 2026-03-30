@@ -436,6 +436,10 @@ export const translations = {
     saasFee: "SaaS Fee (£/month)",
     transactionFee: "Transaction Fee (£/return)",
     integrationCost: "Integration cost (£)",
+    aeAdvancedOptions: 'AE Advanced Options',
+    sizeSuggestorLabel: 'Size Suggestor AI',
+    returnRateReduction: 'Return rate reduction (% points)',
+    sizeSuggestorTooltip: 'Size Suggestor AI'
   },
   es: {
     title: "Price & Smile :)",
