@@ -59,7 +59,7 @@ const Index = () => {
   const [showComboUsedNotification, setShowComboUsedNotification] = useState(false);
   const [showUpfrontDiscount, setShowUpfrontDiscount] = useState(false);
   const [absorbTransactionFee, setAbsorbTransactionFee] = useState<boolean>(false);
-  const [sizeSuggestorEnabled, setSizeSuggestorEnabled] = useState(false);
+  const [sizeSuggestorEnabled, setSizeSuggestorEnabled] = useState(true);
   const [sizeSuggestorReduction, setSizeSuggestorReduction] = useState(3);
   const [offerExpirationDate, setOfferExpirationDate] = useState<Date | undefined>();
   const [lastSelectedPredefinedScenario, setLastSelectedPredefinedScenario] = useState<PricingData | null>(null);
