@@ -53,6 +53,8 @@ interface BusinessCaseProps {
   updateUpsellingRate?: (rate: number) => void;
   readOnly?: boolean;
   absorbTransactionFee?: boolean;
+  sizeSuggestorEnabled?: boolean;
+  sizeSuggestorReduction?: number;
 }
 
 const BusinessCase = ({ 
