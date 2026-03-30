@@ -61,7 +61,9 @@ const ShareModal = ({ clientData, customScenario, language, clientName: initialC
           absorbTransactionFee,
           offerExpirationDate: offerExpirationDate?.toISOString(),
           features: customFeatures,
-          extraServices
+          extraServices,
+          sizeSuggestorEnabled,
+          sizeSuggestorReduction
         },
         business_case_data: clientData
       };
