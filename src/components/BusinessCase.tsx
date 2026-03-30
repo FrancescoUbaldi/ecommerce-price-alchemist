@@ -13,6 +13,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTranslation, formatCurrency as formatCurrencyUtil } from '@/utils/translations';
 import ClientLogoBanner from './ClientLogoBanner';
+import { Sparkles } from 'lucide-react';
 
 interface ClientData {
   resiAnnuali: number;
@@ -52,6 +53,8 @@ interface BusinessCaseProps {
   updateUpsellingRate?: (rate: number) => void;
   readOnly?: boolean;
   absorbTransactionFee?: boolean;
+  sizeSuggestorEnabled?: boolean;
+  sizeSuggestorReduction?: number;
 }
 
 const BusinessCase = ({ 
@@ -64,7 +67,9 @@ const BusinessCase = ({
   updateRdvRate,
   updateUpsellingRate,
   absorbTransactionFee,
-  readOnly = false
+  readOnly = false,
+  sizeSuggestorEnabled = false,
+  sizeSuggestorReduction = 3
 }: BusinessCaseProps) => {
   const [fieldOverrides, setFieldOverrides] = useState<FieldOverrides>({});
 
@@ -239,6 +244,13 @@ const BusinessCase = ({
   // Fatturazione netta (Pre REVER) = Fatturazione - Resi
   const fatturazioneNettaPreRever = fatturazione - resiValue;
   
+  // Size Suggestor AI calculations
+  const sizeSuggestorResiRidotti = sizeSuggestorEnabled ? annualReturns * (sizeSuggestorReduction / 100) : 0;
+  const adjustedAnnualReturns = sizeSuggestorEnabled ? annualReturns - sizeSuggestorResiRidotti : annualReturns;
+  const adjustedResiValue = adjustedAnnualReturns * clientData.carrelloMedio;
+  const adjustedFatturazioneNettaPreRever = fatturazione - adjustedResiValue;
+  const sizeSuggestorImpact = adjustedFatturazioneNettaPreRever - fatturazioneNettaPreRever;
+  
   // Vendite ritenute (with editable RDV rate) = Returns × RDV rate × AOV
   const rdvResi = annualReturns * effectiveRdvRate;
   const rdvValue = rdvResi * clientData.carrelloMedio;
@@ -350,24 +362,40 @@ const BusinessCase = ({
               
               <TableRow className="border-b">
                 <TableCell className="font-medium">{getTranslation(language, 'preReverReturns')}</TableCell>
-                <TableCell className="text-center">{annualReturns.toLocaleString()}</TableCell>
+                <TableCell className="text-center">
+                  {sizeSuggestorEnabled ? (
+                    <div>
+                      <span className="line-through text-gray-400">{annualReturns.toLocaleString()}</span>
+                      <div className="text-purple-600 font-medium">{Math.round(adjustedAnnualReturns).toLocaleString()}</div>
+                    </div>
+                  ) : (
+                    annualReturns.toLocaleString()
+                  )}
+                </TableCell>
                 <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
                 <TableCell className="text-center">{formatPercentage(clientData.returnRatePercentage)} <span className="text-sm text-gray-500">{getTranslation(language, 'returnRate2')}</span></TableCell>
                 <TableCell className="text-center">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span className="cursor-help">{formatCurrency(resiValue)}</span>
-                    </TooltipTrigger>
-                    <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-                      <div className="space-y-1 text-sm">
-                        <div>{getTranslation(language, 'annualReturns')}: {annualReturns.toLocaleString()}</div>
-                        <div>× {getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
-                        <div className="border-t pt-1 mt-2 font-semibold">
-                          = {getTranslation(language, 'total')}: {formatCurrency(resiValue)}
+                  {sizeSuggestorEnabled ? (
+                    <div>
+                      <span className="line-through text-gray-400">{formatCurrency(resiValue)}</span>
+                      <div className="text-purple-600 font-medium">{formatCurrency(adjustedResiValue)}</div>
+                    </div>
+                  ) : (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help">{formatCurrency(resiValue)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <div className="space-y-1 text-sm">
+                          <div>{getTranslation(language, 'annualReturns')}: {annualReturns.toLocaleString()}</div>
+                          <div>× {getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
+                          <div className="border-t pt-1 mt-2 font-semibold">
+                            = {getTranslation(language, 'total')}: {formatCurrency(resiValue)}
+                          </div>
                         </div>
-                      </div>
-                    </TooltipContent>
-                  </Tooltip>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
                 </TableCell>
               </TableRow>
               
@@ -377,22 +405,59 @@ const BusinessCase = ({
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell className="text-center">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span className="cursor-help font-bold">{formatCurrency(fatturazioneNettaPreRever)}</span>
-                    </TooltipTrigger>
-                    <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
-                      <div className="space-y-1 text-sm">
-                        <div>{getTranslation(language, 'preReverBilling')}: {formatCurrency(fatturazione)}</div>
-                        <div>− {getTranslation(language, 'preReverReturns')}: {formatCurrency(resiValue)}</div>
-                        <div className="border-t pt-1 mt-2 font-semibold">
-                          = {getTranslation(language, 'total')}: {formatCurrency(fatturazioneNettaPreRever)}
+                  {sizeSuggestorEnabled ? (
+                    <div>
+                      <span className="line-through text-gray-400 font-bold">{formatCurrency(fatturazioneNettaPreRever)}</span>
+                      <div className="text-purple-600 font-bold">{formatCurrency(adjustedFatturazioneNettaPreRever)}</div>
+                    </div>
+                  ) : (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help font-bold">{formatCurrency(fatturazioneNettaPreRever)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <div className="space-y-1 text-sm">
+                          <div>{getTranslation(language, 'preReverBilling')}: {formatCurrency(fatturazione)}</div>
+                          <div>− {getTranslation(language, 'preReverReturns')}: {formatCurrency(resiValue)}</div>
+                          <div className="border-t pt-1 mt-2 font-semibold">
+                            = {getTranslation(language, 'total')}: {formatCurrency(fatturazioneNettaPreRever)}
+                          </div>
                         </div>
-                      </div>
-                    </TooltipContent>
-                  </Tooltip>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
                 </TableCell>
               </TableRow>
+
+              {sizeSuggestorEnabled && (
+                <TableRow className="bg-purple-50 border-b border-l-4 border-purple-400">
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="text-purple-600" size={16} />
+                      <span className="text-purple-700 font-medium">Size Suggestor AI</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-center text-purple-600">{Math.round(sizeSuggestorResiRidotti).toLocaleString()}</TableCell>
+                  <TableCell className="text-center text-purple-600">{formatCurrency(clientData.carrelloMedio)}</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell className="text-center">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help text-purple-700 font-bold">{formatCurrency(sizeSuggestorImpact)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <div className="space-y-1 text-sm">
+                          <div>Resi evitati: {Math.round(sizeSuggestorResiRidotti).toLocaleString()}</div>
+                          <div>× {getTranslation(language, 'aov')}: {formatCurrency(clientData.carrelloMedio)}</div>
+                          <div className="border-t pt-1 mt-2 font-semibold">
+                            = Impatto: {formatCurrency(sizeSuggestorImpact)}
+                          </div>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              )}
               
               <TableRow className="border-b">
                 <TableCell className="font-medium">

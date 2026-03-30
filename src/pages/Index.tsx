@@ -1882,6 +1882,8 @@ const Index = () => {
               updateRdvRate={updateCustomScenarioRdvRate}
               updateUpsellingRate={updateCustomScenarioUpsellingRate}
               absorbTransactionFee={absorbTransactionFee}
+              sizeSuggestorEnabled={sizeSuggestorEnabled}
+              sizeSuggestorReduction={sizeSuggestorReduction}
             />
           </TabsContent>
         </Tabs>
