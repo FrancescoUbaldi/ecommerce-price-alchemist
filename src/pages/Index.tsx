@@ -1285,40 +1285,6 @@ const Index = () => {
                         onCheckedChange={setShowUpfrontDiscount}
                       />
                     </div>
-                    {/* Opzioni avanzate AE collapsible */}
-                    <Collapsible>
-                      <CollapsibleTrigger className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors py-1 [&[data-state=open]>svg]:rotate-180">
-                        <ChevronDown className="h-3 w-3 transition-transform duration-200" />
-                        Opzioni avanzate AE
-                      </CollapsibleTrigger>
-                      <CollapsibleContent className="space-y-3 pt-2">
-                        <div className="flex items-center justify-between p-3 bg-white rounded-lg border">
-                          <Label htmlFor="size-suggestor-toggle" className="text-sm font-medium">
-                            Size Suggestor
-                          </Label>
-                          <Switch
-                            id="size-suggestor-toggle"
-                            checked={sizeSuggestorEnabled}
-                            onCheckedChange={setSizeSuggestorEnabled}
-                          />
-                        </div>
-                        {sizeSuggestorEnabled && (
-                          <div className="space-y-1">
-                            <Label htmlFor="size-suggestor-reduction" className="text-sm font-medium">
-                              Riduzione tasso di reso (punti %)
-                            </Label>
-                            <Input
-                              id="size-suggestor-reduction"
-                              type="number"
-                              min={0}
-                              max={100}
-                              value={sizeSuggestorReduction}
-                              onChange={(e) => setSizeSuggestorReduction(Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)))}
-                            />
-                          </div>
-                        )}
-                      </CollapsibleContent>
-                    </Collapsible>
                   </div>
                 </div>
 
@@ -1544,7 +1510,7 @@ const Index = () => {
                             {getTranslation(language, 'includedFeaturesInSelectedPlan')}
                           </h3>
                           
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             {/* Left Column - Editable Features */}
                             <div className="space-y-3">
                               <h4 className="font-medium text-gray-700 mb-2">{getTranslation(language, 'includedCharacteristicsTitle')}</h4>
@@ -1672,6 +1638,39 @@ const Index = () => {
                                     onCheckedChange={() => toggleExtraService('sizeSuggestions')}
                                   />
                                 </div>
+                              </div>
+                            </div>
+
+                            {/* Third Column - Opzioni avanzate AE */}
+                            <div className="space-y-3">
+                              <h4 className="font-medium text-gray-700 mb-2">Opzioni avanzate AE</h4>
+                              
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between p-3 border rounded-md">
+                                  <div className="flex-1">
+                                    <div className="font-medium text-sm text-gray-800">Size Suggestor</div>
+                                  </div>
+                                  <Switch
+                                    id="size-suggestor-toggle"
+                                    checked={sizeSuggestorEnabled}
+                                    onCheckedChange={setSizeSuggestorEnabled}
+                                  />
+                                </div>
+                                {sizeSuggestorEnabled && (
+                                  <div className="space-y-1 px-1">
+                                    <Label htmlFor="size-suggestor-reduction" className="text-sm font-medium">
+                                      Riduzione tasso di reso (punti %)
+                                    </Label>
+                                    <Input
+                                      id="size-suggestor-reduction"
+                                      type="number"
+                                      min={0}
+                                      max={100}
+                                      value={sizeSuggestorReduction}
+                                      onChange={(e) => setSizeSuggestorReduction(Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)))}
+                                    />
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
