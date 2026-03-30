@@ -1510,7 +1510,7 @@ const Index = () => {
                             {getTranslation(language, 'includedFeaturesInSelectedPlan')}
                           </h3>
                           
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             {/* Left Column - Editable Features */}
                             <div className="space-y-3">
                               <h4 className="font-medium text-gray-700 mb-2">{getTranslation(language, 'includedCharacteristicsTitle')}</h4>
