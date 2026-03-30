@@ -382,7 +382,7 @@ const BusinessCase = ({
               <TableRow className="border-b">
                 <TableCell className="font-medium">{getTranslation(language, 'preReverReturns')}</TableCell>
                 <TableCell className="text-center">
-                  {<sizeSuggestorActive ? (
+                  {sizeSuggestorActive ? (
                     <div>
                       <span className="line-through text-gray-400">{annualReturns.toLocaleString()}</span>
                       <div className="text-purple-600 font-medium">{Math.round(adjustedAnnualReturns).toLocaleString()}</div>
@@ -393,7 +393,7 @@ const BusinessCase = ({
                 </TableCell>
                 <TableCell className="text-center">{formatCurrency(clientData.carrelloMedio)}</TableCell>
                 <TableCell className="text-center">
-                  {<sizeSuggestorActive ? (
+                  {sizeSuggestorActive ? (
                     <div>
                       <span className="line-through text-gray-400">{formatPercentage(clientData.returnRatePercentage)}</span>
                       <div className="text-purple-600 font-medium">{formatPercentage(clientData.returnRatePercentage - sizeSuggestorReduction)}</div>
@@ -403,7 +403,7 @@ const BusinessCase = ({
                   )}
                 </TableCell>
                 <TableCell className="text-center">
-                  {<sizeSuggestorActive ? (
+                  {sizeSuggestorActive ? (
                     <div>
                       <span className="line-through text-gray-400">{formatCurrency(resiValue)}</span>
                       <div className="text-purple-600 font-medium">{formatCurrency(adjustedResiValue)}</div>
@@ -433,7 +433,7 @@ const BusinessCase = ({
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell className="text-center">
-                  {<sizeSuggestorActive ? (
+                  {sizeSuggestorActive ? (
                     <div>
                       <span className="line-through text-gray-400 font-bold">{formatCurrency(fatturazioneNettaPreRever)}</span>
                       <div className="text-purple-600 font-bold">{formatCurrency(adjustedFatturazioneNettaPreRever)}</div>
