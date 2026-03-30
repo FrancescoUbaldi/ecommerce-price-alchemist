@@ -67,7 +67,9 @@ const BusinessCase = ({
   updateRdvRate,
   updateUpsellingRate,
   absorbTransactionFee,
-  readOnly = false
+  readOnly = false,
+  sizeSuggestorEnabled = false,
+  sizeSuggestorReduction = 3
 }: BusinessCaseProps) => {
   const [fieldOverrides, setFieldOverrides] = useState<FieldOverrides>({});
 
