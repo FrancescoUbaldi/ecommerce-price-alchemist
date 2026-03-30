@@ -29,6 +29,8 @@ interface ShareData {
       reverProtect: boolean;
       sizeSuggestions: boolean;
     };
+    sizeSuggestorEnabled?: boolean;
+    sizeSuggestorReduction?: number;
   };
   business_case_data: {
     resiAnnuali: number;
