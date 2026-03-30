@@ -1662,7 +1662,7 @@ const Index = () => {
                                   {sizeSuggestorEnabled && (
                                     <div className="space-y-1 px-1">
                                       <Label htmlFor="size-suggestor-reduction" className="text-sm font-medium">
-                                        Riduzione tasso di reso (punti %)
+                                        {getTranslation(language, 'returnRateReduction')}
                                       </Label>
                                       <Input
                                         id="size-suggestor-reduction"

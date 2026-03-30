@@ -1165,7 +1165,11 @@ export const translations = {
     integrationCost: 'Koszt integracji (zł)',
     integrationDescription: 'Opis (do użytku wewnętrznego)',
     integrationCostLabel: 'Koszt integracji',
-    included: 'Zawarte'
+    included: 'Zawarte',
+    aeAdvancedOptions: 'Zaawansowane opcje AE',
+    sizeSuggestorLabel: 'Size Suggestor AI',
+    returnRateReduction: 'Redukcja wskaźnika zwrotów (punkty %)',
+    sizeSuggestorTooltip: 'Size Suggestor AI'
   }
 };
 
