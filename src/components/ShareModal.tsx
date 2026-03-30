@@ -42,7 +42,7 @@ interface ShareModalProps {
   sizeSuggestorReduction?: number;
 }
 
-const ShareModal = ({ clientData, customScenario, language, clientName: initialClientName = '', showUpfrontDiscount = false, absorbTransactionFee = false, offerExpirationDate, customFeatures = [], extraServices = { reverProtect: false, sizeSuggestions: false } }: ShareModalProps) => {
+const ShareModal = ({ clientData, customScenario, language, clientName: initialClientName = '', showUpfrontDiscount = false, absorbTransactionFee = false, offerExpirationDate, customFeatures = [], extraServices = { reverProtect: false, sizeSuggestions: false }, sizeSuggestorEnabled = false, sizeSuggestorReduction = 3 }: ShareModalProps) => {
   const [clientName, setClientName] = useState(initialClientName);
   const [isOpen, setIsOpen] = useState(false);
   const [generatedLink, setGeneratedLink] = useState('');
