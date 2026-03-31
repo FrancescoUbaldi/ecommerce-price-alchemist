@@ -258,9 +258,74 @@ const ClientView = () => {
           <TabsContent value="personalizzato" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  {getTranslation(shareData.language, 'customScenario')}
-                </CardTitle>
+                <div className="flex items-center justify-between w-full">
+                  <CardTitle className="flex items-center gap-2">
+                    {getTranslation(shareData.language, 'customScenario')}
+                  </CardTitle>
+                  {(() => {
+                    const countdown = getCountdownInfo();
+                    const lang = shareData.language;
+                    const counterOfferEnabled = shareData.scenario_data.counterOfferEnabled ?? false;
+
+                    if (clientResponse) {
+                      return (
+                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium ${
+                          clientResponse === 'accepted' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+                        }`}>
+                          {clientResponse === 'accepted' ? (
+                            <CheckCircle2 className="h-4 w-4" />
+                          ) : (
+                            <XCircle className="h-4 w-4" />
+                          )}
+                          {getTranslation(lang, clientResponse === 'accepted' ? 'offerAccepted' : 'offerRejected')}
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div className="flex items-center gap-3">
+                        {countdown && (
+                          <span className="flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
+                            <Clock className="h-3.5 w-3.5" />
+                            {countdown.isExpired
+                              ? getTranslation(lang, 'offerExpired')
+                              : `${countdown.daysLeft} ${getTranslation(lang, 'daysRemaining')}`}
+                          </span>
+                        )}
+                        <Button
+                          onClick={() => handleResponse('accepted')}
+                          disabled={isSubmitting || (countdown?.isExpired ?? false)}
+                          className="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-2 rounded-xl h-auto"
+                          size="sm"
+                        >
+                          <CheckCircle2 className="h-4 w-4 mr-1.5" />
+                          {getTranslation(lang, 'acceptOffer')}
+                        </Button>
+                        <Button
+                          onClick={() => handleResponse('rejected')}
+                          disabled={isSubmitting || (countdown?.isExpired ?? false)}
+                          variant="outline"
+                          className="border-red-400 text-red-500 hover:bg-red-50 bg-white text-sm px-4 py-2 rounded-xl h-auto"
+                          size="sm"
+                        >
+                          <X className="h-4 w-4 mr-1.5" />
+                          {getTranslation(lang, 'rejectOffer')}
+                        </Button>
+                        {counterOfferEnabled && (
+                          <Button
+                            variant="outline"
+                            disabled={isSubmitting || (countdown?.isExpired ?? false)}
+                            className="border-gray-300 text-gray-600 hover:bg-gray-50 bg-white text-sm px-4 py-2 rounded-xl h-auto"
+                            size="sm"
+                          >
+                            <MessageSquare className="h-4 w-4 mr-1.5" />
+                            Fai una controfferta
+                          </Button>
+                        )}
+                      </div>
+                    );
+                  })()}
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
