@@ -925,7 +925,8 @@ export const translations = {
     aeAdvancedOptions: 'Erweiterte AE-Optionen',
     sizeSuggestorLabel: 'KI Größenvorschläge',
     returnRateReduction: 'Retourenquote-Reduktion (Prozentpunkte)',
-    sizeSuggestorTooltip: 'KI Größenvorschläge'
+    sizeSuggestorTooltip: 'KI Größenvorschläge',
+    counterOffer: 'Ein Gegenangebot machen'
   },
   nl: {
     title: "Price & Smile :)",
