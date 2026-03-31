@@ -470,7 +470,9 @@ export const translations = {
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Return rate reduction (% points)',
     sizeSuggestorTooltip: 'Size Suggestor AI',
-    counterOffer: 'Make a counteroffer'
+    counterOffer: 'Make a counteroffer',
+    offerAcceptedMessage: 'We will send you the contract to sign shortly.',
+    offerRejectedMessage: 'Thank you for considering us. We remain available if the conditions change.'
   },
   es: {
     title: "Price & Smile :)",
