@@ -653,6 +653,5 @@ const ClientView = () => {
     </div>
   );
 };
-};
 
 export default ClientView;
