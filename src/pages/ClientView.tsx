@@ -32,6 +32,7 @@ interface ShareData {
     };
     sizeSuggestorEnabled?: boolean;
     sizeSuggestorReduction?: number;
+    counterOfferEnabled?: boolean;
   };
   business_case_data: {
     resiAnnuali: number;
