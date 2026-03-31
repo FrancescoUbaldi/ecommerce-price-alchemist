@@ -278,6 +278,9 @@ const ClientView = () => {
                             <XCircle className="h-4 w-4" />
                           )}
                           {getTranslation(lang, clientResponse === 'accepted' ? 'offerAccepted' : 'offerRejected')}
+                          <span className="block text-xs font-normal text-muted-foreground mt-0.5">
+                            {getTranslation(lang, clientResponse === 'accepted' ? 'offerAcceptedMessage' : 'offerRejectedMessage')}
+                          </span>
                         </div>
                       );
                     }

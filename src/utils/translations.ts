@@ -1250,7 +1250,9 @@ export const translations = {
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Redukcja wskaźnika zwrotów (punkty %)',
     sizeSuggestorTooltip: 'Size Suggestor AI',
-    counterOffer: 'Złóż kontrofertę'
+    counterOffer: 'Złóż kontrofertę',
+    offerAcceptedMessage: 'Wkrótce wyślemy Ci umowę do podpisania.',
+    offerRejectedMessage: 'Dziękujemy za rozważenie naszej oferty. Pozostajemy do dyspozycji, jeśli warunki się zmienią.'
   }
 };
 
