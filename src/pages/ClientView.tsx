@@ -319,7 +319,7 @@ const ClientView = () => {
                             size="sm"
                           >
                             <MessageSquare className="h-4 w-4 mr-1.5" />
-                            Fai una controfferta
+                            {getTranslation(lang, 'counterOffer')}
                           </Button>
                         )}
                       </div>

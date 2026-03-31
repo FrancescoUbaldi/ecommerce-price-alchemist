@@ -1233,7 +1233,8 @@ export const translations = {
     aeAdvancedOptions: 'Zaawansowane opcje AE',
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Redukcja wskaźnika zwrotów (punkty %)',
-    sizeSuggestorTooltip: 'Size Suggestor AI'
+    sizeSuggestorTooltip: 'Size Suggestor AI',
+    counterOffer: 'Złóż kontrofertę'
   }
 };
 
