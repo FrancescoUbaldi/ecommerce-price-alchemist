@@ -150,7 +150,8 @@ export const translations = {
     aeAdvancedOptions: 'Opzioni avanzate AE',
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Riduzione tasso di reso (punti %)',
-    sizeSuggestorTooltip: 'Size Suggestor AI'
+    sizeSuggestorTooltip: 'Size Suggestor AI',
+    counterOffer: 'Fai una controfferta'
   },
   en: {
     title: "Price & Smile :)",
