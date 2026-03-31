@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import ClientView from "./pages/ClientView";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import HideLovableBadge from "./components/HideLovableBadge";
 
