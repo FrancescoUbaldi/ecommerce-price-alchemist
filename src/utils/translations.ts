@@ -875,9 +875,9 @@ export const translations = {
     integrationCostLabel: 'Integrationskosten',
     included: 'Enthalten',
     aeAdvancedOptions: 'Erweiterte AE-Optionen',
-    sizeSuggestorLabel: 'Size Suggestor KI',
+    sizeSuggestorLabel: 'KI Größenvorschläge',
     returnRateReduction: 'Retourenquote-Reduktion (Prozentpunkte)',
-    sizeSuggestorTooltip: 'Size Suggestor KI'
+    sizeSuggestorTooltip: 'KI Größenvorschläge'
   },
   nl: {
     title: "Price & Smile :)",
