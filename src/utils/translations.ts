@@ -151,7 +151,9 @@ export const translations = {
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Riduzione tasso di reso (punti %)',
     sizeSuggestorTooltip: 'Size Suggestor AI',
-    counterOffer: 'Fai una controfferta'
+    counterOffer: 'Fai una controfferta',
+    offerAcceptedMessage: 'Ti invieremo a breve il contratto da firmare.',
+    offerRejectedMessage: 'Grazie per averci considerato. Restiamo a disposizione se le condizioni cambiano.'
   },
   en: {
     title: "Price & Smile :)",
@@ -305,7 +307,9 @@ export const translations = {
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Return rate reduction (% points)',
     sizeSuggestorTooltip: 'Size Suggestor AI',
-    counterOffer: 'Make a counteroffer'
+    counterOffer: 'Make a counteroffer',
+    offerAcceptedMessage: 'We will send you the contract to sign shortly.',
+    offerRejectedMessage: 'Thank you for considering us. We remain available if the conditions change.'
   },
   usa: {
     title: "Price & Smile :)",
@@ -453,7 +457,9 @@ export const translations = {
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Return rate reduction (% points)',
     sizeSuggestorTooltip: 'Size Suggestor AI',
-    counterOffer: 'Make a counteroffer'
+    counterOffer: 'Make a counteroffer',
+    offerAcceptedMessage: 'We will send you the contract to sign shortly.',
+    offerRejectedMessage: 'Thank you for considering us. We remain available if the conditions change.'
   },
   'en-GB': {
     averageCart: "Average Basket (£)",
@@ -464,7 +470,9 @@ export const translations = {
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Return rate reduction (% points)',
     sizeSuggestorTooltip: 'Size Suggestor AI',
-    counterOffer: 'Make a counteroffer'
+    counterOffer: 'Make a counteroffer',
+    offerAcceptedMessage: 'We will send you the contract to sign shortly.',
+    offerRejectedMessage: 'Thank you for considering us. We remain available if the conditions change.'
   },
   es: {
     title: "Price & Smile :)",
@@ -618,7 +626,9 @@ export const translations = {
     sizeSuggestorLabel: 'Size Suggestor IA',
     returnRateReduction: 'Reducción tasa de devolución (puntos %)',
     sizeSuggestorTooltip: 'Size Suggestor IA',
-    counterOffer: 'Hacer una contraoferta'
+    counterOffer: 'Hacer una contraoferta',
+    offerAcceptedMessage: 'En breve te enviaremos el contrato para firmar.',
+    offerRejectedMessage: 'Gracias por considerarnos. Seguimos disponibles si las condiciones cambian.'
   },
   fr: {
     title: "Price & Smile :)",
@@ -772,7 +782,9 @@ export const translations = {
     sizeSuggestorLabel: 'Size Suggestor IA',
     returnRateReduction: 'Réduction taux de retour (points %)',
     sizeSuggestorTooltip: 'Size Suggestor IA',
-    counterOffer: 'Faire une contre-offre'
+    counterOffer: 'Faire une contre-offre',
+    offerAcceptedMessage: 'Nous vous enverrons le contrat à signer très prochainement.',
+    offerRejectedMessage: 'Merci de nous avoir considérés. Nous restons disponibles si les conditions changent.'
   },
   de: {
     title: "Price & Smile :)",
@@ -926,7 +938,9 @@ export const translations = {
     sizeSuggestorLabel: 'KI Größenvorschläge',
     returnRateReduction: 'Retourenquote-Reduktion (Prozentpunkte)',
     sizeSuggestorTooltip: 'KI Größenvorschläge',
-    counterOffer: 'Ein Gegenangebot machen'
+    counterOffer: 'Ein Gegenangebot machen',
+    offerAcceptedMessage: 'Wir werden Ihnen in Kürze den Vertrag zur Unterzeichnung zusenden.',
+    offerRejectedMessage: 'Danke, dass Sie uns in Betracht gezogen haben. Wir stehen zur Verfügung, falls sich die Bedingungen ändern.'
   },
   nl: {
     title: "Price & Smile :)",
@@ -1080,7 +1094,9 @@ export const translations = {
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Vermindering retourpercentage (procentpunten)',
     sizeSuggestorTooltip: 'Size Suggestor AI',
-    counterOffer: 'Een tegenbod doen'
+    counterOffer: 'Een tegenbod doen',
+    offerAcceptedMessage: 'We sturen u binnenkort het contract ter ondertekening.',
+    offerRejectedMessage: 'Bedankt voor uw overweging. We blijven beschikbaar als de omstandigheden veranderen.'
   },
   pl: {
     title: "Price & Smile :)",
@@ -1234,7 +1250,9 @@ export const translations = {
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Redukcja wskaźnika zwrotów (punkty %)',
     sizeSuggestorTooltip: 'Size Suggestor AI',
-    counterOffer: 'Złóż kontrofertę'
+    counterOffer: 'Złóż kontrofertę',
+    offerAcceptedMessage: 'Wkrótce wyślemy Ci umowę do podpisania.',
+    offerRejectedMessage: 'Dziękujemy za rozważenie naszej oferty. Pozostajemy do dyspozycji, jeśli warunki się zmienią.'
   }
 };
 
