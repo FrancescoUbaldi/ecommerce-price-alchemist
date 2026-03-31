@@ -1675,6 +1675,16 @@ const Index = () => {
                                       />
                                     </div>
                                   )}
+                                  <div className="flex items-center justify-between p-3 border rounded-md">
+                                    <div className="flex-1">
+                                      <div className="font-medium text-sm text-gray-800">Abilita controfferta</div>
+                                    </div>
+                                    <Switch
+                                      id="counter-offer-toggle"
+                                      checked={counterOfferEnabled}
+                                      onCheckedChange={setCounterOfferEnabled}
+                                    />
+                                  </div>
                                 </CollapsibleContent>
                               </Collapsible>
                             </div>
