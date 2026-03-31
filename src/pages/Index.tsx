@@ -1239,6 +1239,7 @@ const Index = () => {
                       extraServices={extraServices}
                       sizeSuggestorEnabled={sizeSuggestorEnabled}
                       sizeSuggestorReduction={sizeSuggestorReduction}
+                      counterOfferEnabled={counterOfferEnabled}
                     />
                   )}
                 </div>

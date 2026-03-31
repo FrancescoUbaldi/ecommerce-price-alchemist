@@ -64,7 +64,8 @@ const ShareModal = ({ clientData, customScenario, language, clientName: initialC
           features: customFeatures,
           extraServices,
           sizeSuggestorEnabled,
-          sizeSuggestorReduction
+          sizeSuggestorReduction,
+          counterOfferEnabled
         },
         business_case_data: clientData
       };
