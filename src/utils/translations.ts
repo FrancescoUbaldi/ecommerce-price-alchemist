@@ -771,7 +771,8 @@ export const translations = {
     aeAdvancedOptions: 'Options avancées AE',
     sizeSuggestorLabel: 'Size Suggestor IA',
     returnRateReduction: 'Réduction taux de retour (points %)',
-    sizeSuggestorTooltip: 'Size Suggestor IA'
+    sizeSuggestorTooltip: 'Size Suggestor IA',
+    counterOffer: 'Faire une contre-offre'
   },
   de: {
     title: "Price & Smile :)",
