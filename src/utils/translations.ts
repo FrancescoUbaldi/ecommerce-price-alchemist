@@ -938,7 +938,9 @@ export const translations = {
     sizeSuggestorLabel: 'KI Größenvorschläge',
     returnRateReduction: 'Retourenquote-Reduktion (Prozentpunkte)',
     sizeSuggestorTooltip: 'KI Größenvorschläge',
-    counterOffer: 'Ein Gegenangebot machen'
+    counterOffer: 'Ein Gegenangebot machen',
+    offerAcceptedMessage: 'Wir werden Ihnen in Kürze den Vertrag zur Unterzeichnung zusenden.',
+    offerRejectedMessage: 'Danke, dass Sie uns in Betracht gezogen haben. Wir stehen zur Verfügung, falls sich die Bedingungen ändern.'
   },
   nl: {
     title: "Price & Smile :)",
