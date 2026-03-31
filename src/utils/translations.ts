@@ -151,7 +151,9 @@ export const translations = {
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Riduzione tasso di reso (punti %)',
     sizeSuggestorTooltip: 'Size Suggestor AI',
-    counterOffer: 'Fai una controfferta'
+    counterOffer: 'Fai una controfferta',
+    offerAcceptedMessage: 'Ti invieremo a breve il contratto da firmare.',
+    offerRejectedMessage: 'Grazie per averci considerato. Restiamo a disposizione se le condizioni cambiano.'
   },
   en: {
     title: "Price & Smile :)",
