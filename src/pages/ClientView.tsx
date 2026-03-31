@@ -136,7 +136,36 @@ const ClientView = () => {
     return formatCurrencyUtil(value, shareData?.language || 'it');
   };
 
-  if (loading) {
+  const handleResponse = async (response: 'accepted' | 'rejected') => {
+    if (!id || isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from('client_shares')
+        .update({
+          client_response: response,
+          client_response_at: new Date().toISOString(),
+        } as any)
+        .eq('id', id);
+      if (error) throw error;
+      setClientResponse(response);
+    } catch (err) {
+      console.error('Error saving response:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const getCountdownInfo = () => {
+    if (!shareData?.scenario_data.offerExpirationDate) return null;
+    const expDate = new Date(shareData.scenario_data.offerExpirationDate);
+    const now = new Date();
+    const diffMs = expDate.getTime() - now.getTime();
+    const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+    return { daysLeft, expDate, isExpired: daysLeft <= 0 };
+  };
+
+
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-lg">Loading...</div>
