@@ -165,8 +165,7 @@ const ClientView = () => {
     return { daysLeft, expDate, isExpired: daysLeft <= 0 };
   };
 
-
-    return (
+  if (loading) {
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-lg">Loading...</div>
       </div>
