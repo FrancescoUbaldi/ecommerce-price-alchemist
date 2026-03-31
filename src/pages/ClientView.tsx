@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Check } from 'lucide-react';
+import { Check, Clock, CheckCircle2, XCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { getTranslation, formatCurrency as formatCurrencyUtil } from '@/utils/translations';
 import BusinessCase from '@/components/BusinessCase';
@@ -46,6 +47,8 @@ const ClientView = () => {
   const [shareData, setShareData] = useState<ShareData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [clientResponse, setClientResponse] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchShareData = async () => {
@@ -68,6 +71,7 @@ const ClientView = () => {
           setError('Link not found or expired');
         } else {
           setShareData(data);
+          setClientResponse((data as any).client_response || null);
         }
       } catch (error) {
         console.error('Error fetching share data:', error);
@@ -130,6 +134,35 @@ const ClientView = () => {
 
   const formatCurrency = (value: number) => {
     return formatCurrencyUtil(value, shareData?.language || 'it');
+  };
+
+  const handleResponse = async (response: 'accepted' | 'rejected') => {
+    if (!id || isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from('client_shares')
+        .update({
+          client_response: response,
+          client_response_at: new Date().toISOString(),
+        } as any)
+        .eq('id', id);
+      if (error) throw error;
+      setClientResponse(response);
+    } catch (err) {
+      console.error('Error saving response:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const getCountdownInfo = () => {
+    if (!shareData?.scenario_data.offerExpirationDate) return null;
+    const expDate = new Date(shareData.scenario_data.offerExpirationDate);
+    const now = new Date();
+    const diffMs = expDate.getTime() - now.getTime();
+    const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+    return { daysLeft, expDate, isExpired: daysLeft <= 0 };
   };
 
   if (loading) {
@@ -204,6 +237,71 @@ const ClientView = () => {
             </h1>
           </div>
         )}
+
+        {/* Offer countdown and Accept/Reject */}
+        {(() => {
+          const countdown = getCountdownInfo();
+          const lang = shareData.language;
+
+          if (clientResponse) {
+            return (
+              <div className={`flex items-center justify-center gap-3 p-4 rounded-lg mb-6 ${
+                clientResponse === 'accepted' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
+              }`}>
+                {clientResponse === 'accepted' ? (
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                ) : (
+                  <XCircle className="h-5 w-5 text-red-600" />
+                )}
+                <span className={`font-semibold ${clientResponse === 'accepted' ? 'text-green-700' : 'text-red-700'}`}>
+                  {getTranslation(lang, clientResponse === 'accepted' ? 'offerAccepted' : 'offerRejected')}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  — {getTranslation(lang, 'offerResponseRecorded')}
+                </span>
+              </div>
+            );
+          }
+
+          return (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-lg border bg-card mb-6">
+              {countdown && (
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  {countdown.isExpired ? (
+                    <span className="text-sm font-medium text-destructive">
+                      {getTranslation(lang, 'offerExpired')}
+                    </span>
+                  ) : (
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {countdown.daysLeft} {getTranslation(lang, 'daysRemaining')} ({countdown.expDate.toLocaleDateString(lang === 'it' ? 'it-IT' : lang === 'de' ? 'de-DE' : lang === 'fr' ? 'fr-FR' : lang === 'es' ? 'es-ES' : lang === 'nl' ? 'nl-NL' : lang === 'pl' ? 'pl-PL' : 'en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })})
+                    </span>
+                  )}
+                </div>
+              )}
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => handleResponse('accepted')}
+                  disabled={isSubmitting || (countdown?.isExpired ?? false)}
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <CheckCircle2 className="h-4 w-4 mr-2" />
+                  {getTranslation(lang, 'acceptOffer')}
+                </Button>
+                <Button
+                  onClick={() => handleResponse('rejected')}
+                  disabled={isSubmitting || (countdown?.isExpired ?? false)}
+                  variant="outline"
+                  className="border-red-300 text-red-600 hover:bg-red-50"
+                >
+                  <XCircle className="h-4 w-4 mr-2" />
+                  {getTranslation(lang, 'rejectOffer')}
+                </Button>
+              </div>
+            </div>
+          );
+        })()}
+
 
         <Tabs defaultValue="business-case" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-gray-100 p-1 rounded-lg">

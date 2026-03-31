@@ -17,6 +17,8 @@ export type Database = {
       client_shares: {
         Row: {
           business_case_data: Json
+          client_response: string | null
+          client_response_at: string | null
           created_at: string
           id: string
           language: string
@@ -25,6 +27,8 @@ export type Database = {
         }
         Insert: {
           business_case_data: Json
+          client_response?: string | null
+          client_response_at?: string | null
           created_at?: string
           id?: string
           language?: string
@@ -33,6 +37,8 @@ export type Database = {
         }
         Update: {
           business_case_data?: Json
+          client_response?: string | null
+          client_response_at?: string | null
           created_at?: string
           id?: string
           language?: string
