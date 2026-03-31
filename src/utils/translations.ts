@@ -150,7 +150,8 @@ export const translations = {
     aeAdvancedOptions: 'Opzioni avanzate AE',
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Riduzione tasso di reso (punti %)',
-    sizeSuggestorTooltip: 'Size Suggestor AI'
+    sizeSuggestorTooltip: 'Size Suggestor AI',
+    counterOffer: 'Fai una controfferta'
   },
   en: {
     title: "Price & Smile :)",
@@ -303,7 +304,8 @@ export const translations = {
     aeAdvancedOptions: 'AE Advanced Options',
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Return rate reduction (% points)',
-    sizeSuggestorTooltip: 'Size Suggestor AI'
+    sizeSuggestorTooltip: 'Size Suggestor AI',
+    counterOffer: 'Make a counteroffer'
   },
   usa: {
     title: "Price & Smile :)",
@@ -450,7 +452,8 @@ export const translations = {
     aeAdvancedOptions: 'AE Advanced Options',
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Return rate reduction (% points)',
-    sizeSuggestorTooltip: 'Size Suggestor AI'
+    sizeSuggestorTooltip: 'Size Suggestor AI',
+    counterOffer: 'Make a counteroffer'
   },
   'en-GB': {
     averageCart: "Average Basket (£)",
@@ -460,7 +463,8 @@ export const translations = {
     aeAdvancedOptions: 'AE Advanced Options',
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Return rate reduction (% points)',
-    sizeSuggestorTooltip: 'Size Suggestor AI'
+    sizeSuggestorTooltip: 'Size Suggestor AI',
+    counterOffer: 'Make a counteroffer'
   },
   es: {
     title: "Price & Smile :)",
@@ -613,7 +617,8 @@ export const translations = {
     aeAdvancedOptions: 'Opciones avanzadas AE',
     sizeSuggestorLabel: 'Size Suggestor IA',
     returnRateReduction: 'Reducción tasa de devolución (puntos %)',
-    sizeSuggestorTooltip: 'Size Suggestor IA'
+    sizeSuggestorTooltip: 'Size Suggestor IA',
+    counterOffer: 'Hacer una contraoferta'
   },
   fr: {
     title: "Price & Smile :)",
@@ -766,7 +771,8 @@ export const translations = {
     aeAdvancedOptions: 'Options avancées AE',
     sizeSuggestorLabel: 'Size Suggestor IA',
     returnRateReduction: 'Réduction taux de retour (points %)',
-    sizeSuggestorTooltip: 'Size Suggestor IA'
+    sizeSuggestorTooltip: 'Size Suggestor IA',
+    counterOffer: 'Faire une contre-offre'
   },
   de: {
     title: "Price & Smile :)",
@@ -919,7 +925,8 @@ export const translations = {
     aeAdvancedOptions: 'Erweiterte AE-Optionen',
     sizeSuggestorLabel: 'KI Größenvorschläge',
     returnRateReduction: 'Retourenquote-Reduktion (Prozentpunkte)',
-    sizeSuggestorTooltip: 'KI Größenvorschläge'
+    sizeSuggestorTooltip: 'KI Größenvorschläge',
+    counterOffer: 'Ein Gegenangebot machen'
   },
   nl: {
     title: "Price & Smile :)",
@@ -1072,7 +1079,8 @@ export const translations = {
     aeAdvancedOptions: 'Geavanceerde AE-opties',
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Vermindering retourpercentage (procentpunten)',
-    sizeSuggestorTooltip: 'Size Suggestor AI'
+    sizeSuggestorTooltip: 'Size Suggestor AI',
+    counterOffer: 'Een tegenbod doen'
   },
   pl: {
     title: "Price & Smile :)",
@@ -1225,7 +1233,8 @@ export const translations = {
     aeAdvancedOptions: 'Zaawansowane opcje AE',
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Redukcja wskaźnika zwrotów (punkty %)',
-    sizeSuggestorTooltip: 'Size Suggestor AI'
+    sizeSuggestorTooltip: 'Size Suggestor AI',
+    counterOffer: 'Złóż kontrofertę'
   }
 };
 
