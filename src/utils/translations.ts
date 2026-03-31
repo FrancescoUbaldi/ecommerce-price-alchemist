@@ -452,7 +452,8 @@ export const translations = {
     aeAdvancedOptions: 'AE Advanced Options',
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Return rate reduction (% points)',
-    sizeSuggestorTooltip: 'Size Suggestor AI'
+    sizeSuggestorTooltip: 'Size Suggestor AI',
+    counterOffer: 'Make a counteroffer'
   },
   'en-GB': {
     averageCart: "Average Basket (£)",
