@@ -1094,7 +1094,9 @@ export const translations = {
     sizeSuggestorLabel: 'Size Suggestor AI',
     returnRateReduction: 'Vermindering retourpercentage (procentpunten)',
     sizeSuggestorTooltip: 'Size Suggestor AI',
-    counterOffer: 'Een tegenbod doen'
+    counterOffer: 'Een tegenbod doen',
+    offerAcceptedMessage: 'We sturen u binnenkort het contract ter ondertekening.',
+    offerRejectedMessage: 'Bedankt voor uw overweging. We blijven beschikbaar als de omstandigheden veranderen.'
   },
   pl: {
     title: "Price & Smile :)",
