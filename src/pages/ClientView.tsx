@@ -303,6 +303,7 @@ const ClientView = () => {
         })()}
 
 
+        <Tabs defaultValue="business-case" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-gray-100 p-1 rounded-lg">
             <TabsTrigger 
               value="business-case"
