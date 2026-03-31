@@ -71,6 +71,7 @@ const ClientView = () => {
           setError('Link not found or expired');
         } else {
           setShareData(data);
+          setClientResponse((data as any).client_response || null);
         }
       } catch (error) {
         console.error('Error fetching share data:', error);
