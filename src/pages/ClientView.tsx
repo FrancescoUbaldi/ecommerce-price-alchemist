@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Check, Clock, CheckCircle2, XCircle } from 'lucide-react';
+import { Check, Clock, CheckCircle2, XCircle, X, MessageSquare } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -32,6 +32,7 @@ interface ShareData {
     };
     sizeSuggestorEnabled?: boolean;
     sizeSuggestorReduction?: number;
+    counterOfferEnabled?: boolean;
   };
   business_case_data: {
     resiAnnuali: number;
@@ -237,71 +238,6 @@ const ClientView = () => {
             </h1>
           </div>
         )}
-
-        {/* Offer countdown and Accept/Reject */}
-        {(() => {
-          const countdown = getCountdownInfo();
-          const lang = shareData.language;
-
-          if (clientResponse) {
-            return (
-              <div className={`flex items-center justify-center gap-3 p-4 rounded-lg mb-6 ${
-                clientResponse === 'accepted' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
-              }`}>
-                {clientResponse === 'accepted' ? (
-                  <CheckCircle2 className="h-5 w-5 text-green-600" />
-                ) : (
-                  <XCircle className="h-5 w-5 text-red-600" />
-                )}
-                <span className={`font-semibold ${clientResponse === 'accepted' ? 'text-green-700' : 'text-red-700'}`}>
-                  {getTranslation(lang, clientResponse === 'accepted' ? 'offerAccepted' : 'offerRejected')}
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  — {getTranslation(lang, 'offerResponseRecorded')}
-                </span>
-              </div>
-            );
-          }
-
-          return (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-lg border bg-card mb-6">
-              {countdown && (
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  {countdown.isExpired ? (
-                    <span className="text-sm font-medium text-destructive">
-                      {getTranslation(lang, 'offerExpired')}
-                    </span>
-                  ) : (
-                    <span className="text-sm font-medium text-muted-foreground">
-                      {countdown.daysLeft} {getTranslation(lang, 'daysRemaining')} ({countdown.expDate.toLocaleDateString(lang === 'it' ? 'it-IT' : lang === 'de' ? 'de-DE' : lang === 'fr' ? 'fr-FR' : lang === 'es' ? 'es-ES' : lang === 'nl' ? 'nl-NL' : lang === 'pl' ? 'pl-PL' : 'en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })})
-                    </span>
-                  )}
-                </div>
-              )}
-              <div className="flex gap-3">
-                <Button
-                  onClick={() => handleResponse('accepted')}
-                  disabled={isSubmitting || (countdown?.isExpired ?? false)}
-                  className="bg-green-600 hover:bg-green-700 text-white"
-                >
-                  <CheckCircle2 className="h-4 w-4 mr-2" />
-                  {getTranslation(lang, 'acceptOffer')}
-                </Button>
-                <Button
-                  onClick={() => handleResponse('rejected')}
-                  disabled={isSubmitting || (countdown?.isExpired ?? false)}
-                  variant="outline"
-                  className="border-red-300 text-red-600 hover:bg-red-50"
-                >
-                  <XCircle className="h-4 w-4 mr-2" />
-                  {getTranslation(lang, 'rejectOffer')}
-                </Button>
-              </div>
-            </div>
-          );
-        })()}
-
 
         <Tabs defaultValue="business-case" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-gray-100 p-1 rounded-lg">
@@ -638,6 +574,81 @@ const ClientView = () => {
             />
           </TabsContent>
         </Tabs>
+
+        {/* Offer countdown and Accept/Reject CTA */}
+        {(() => {
+          const countdown = getCountdownInfo();
+          const lang = shareData.language;
+          const counterOfferEnabled = shareData.scenario_data.counterOfferEnabled ?? false;
+
+          if (clientResponse) {
+            return (
+              <div className={`flex flex-col items-center gap-3 p-8 rounded-2xl border shadow-sm mb-6 ${
+                clientResponse === 'accepted' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
+              }`}>
+                {clientResponse === 'accepted' ? (
+                  <CheckCircle2 className="h-8 w-8 text-green-600" />
+                ) : (
+                  <XCircle className="h-8 w-8 text-red-600" />
+                )}
+                <span className={`text-lg font-semibold ${clientResponse === 'accepted' ? 'text-green-700' : 'text-red-700'}`}>
+                  {getTranslation(lang, clientResponse === 'accepted' ? 'offerAccepted' : 'offerRejected')}
+                </span>
+                <span className="text-sm text-gray-500">
+                  {getTranslation(lang, 'offerResponseRecorded')}
+                </span>
+              </div>
+            );
+          }
+
+          return (
+            <div className="flex flex-col items-center gap-5 p-8 rounded-2xl border border-gray-200 shadow-sm mb-6">
+              {countdown && (
+                <div className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-gray-400" />
+                  {countdown.isExpired ? (
+                    <span className="text-base font-medium text-destructive">
+                      {getTranslation(lang, 'offerExpired')}
+                    </span>
+                  ) : (
+                    <span className="text-base font-medium text-gray-500">
+                      {countdown.daysLeft} {getTranslation(lang, 'daysRemaining')} ({countdown.expDate.toLocaleDateString(lang === 'it' ? 'it-IT' : lang === 'de' ? 'de-DE' : lang === 'fr' ? 'fr-FR' : lang === 'es' ? 'es-ES' : lang === 'nl' ? 'nl-NL' : lang === 'pl' ? 'pl-PL' : 'en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })})
+                    </span>
+                  )}
+                </div>
+              )}
+              <div className="flex gap-4">
+                <Button
+                  onClick={() => handleResponse('accepted')}
+                  disabled={isSubmitting || (countdown?.isExpired ?? false)}
+                  className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl text-base font-medium h-auto min-w-[180px]"
+                >
+                  <CheckCircle2 className="h-5 w-5 mr-2" />
+                  {getTranslation(lang, 'acceptOffer')}
+                </Button>
+                <Button
+                  onClick={() => handleResponse('rejected')}
+                  disabled={isSubmitting || (countdown?.isExpired ?? false)}
+                  variant="outline"
+                  className="border-red-400 text-red-500 hover:bg-red-50 bg-white px-8 py-3 rounded-xl text-base font-medium h-auto min-w-[180px]"
+                >
+                  <X className="h-5 w-5 mr-2" />
+                  {getTranslation(lang, 'rejectOffer')}
+                </Button>
+              </div>
+              {counterOfferEnabled && (
+                <Button
+                  variant="outline"
+                  disabled={isSubmitting || (countdown?.isExpired ?? false)}
+                  className="border-gray-300 text-gray-600 hover:bg-gray-50 bg-white px-8 py-3 rounded-xl text-base font-medium h-auto w-full max-w-[376px]"
+                >
+                  <MessageSquare className="h-5 w-5 mr-2" />
+                  Fai una controfferta
+                </Button>
+              )}
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
