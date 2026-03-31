@@ -782,7 +782,9 @@ export const translations = {
     sizeSuggestorLabel: 'Size Suggestor IA',
     returnRateReduction: 'Réduction taux de retour (points %)',
     sizeSuggestorTooltip: 'Size Suggestor IA',
-    counterOffer: 'Faire une contre-offre'
+    counterOffer: 'Faire une contre-offre',
+    offerAcceptedMessage: 'Nous vous enverrons le contrat à signer très prochainement.',
+    offerRejectedMessage: 'Merci de nous avoir considérés. Nous restons disponibles si les conditions changent.'
   },
   de: {
     title: "Price & Smile :)",
