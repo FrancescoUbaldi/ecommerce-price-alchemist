@@ -40,9 +40,10 @@ interface ShareModalProps {
   };
   sizeSuggestorEnabled?: boolean;
   sizeSuggestorReduction?: number;
+  counterOfferEnabled?: boolean;
 }
 
-const ShareModal = ({ clientData, customScenario, language, clientName: initialClientName = '', showUpfrontDiscount = false, absorbTransactionFee = false, offerExpirationDate, customFeatures = [], extraServices = { reverProtect: false, sizeSuggestions: false }, sizeSuggestorEnabled = false, sizeSuggestorReduction = 3 }: ShareModalProps) => {
+const ShareModal = ({ clientData, customScenario, language, clientName: initialClientName = '', showUpfrontDiscount = false, absorbTransactionFee = false, offerExpirationDate, customFeatures = [], extraServices = { reverProtect: false, sizeSuggestions: false }, sizeSuggestorEnabled = false, sizeSuggestorReduction = 3, counterOfferEnabled = false }: ShareModalProps) => {
   const [clientName, setClientName] = useState(initialClientName);
   const [isOpen, setIsOpen] = useState(false);
   const [generatedLink, setGeneratedLink] = useState('');
@@ -63,7 +64,8 @@ const ShareModal = ({ clientData, customScenario, language, clientName: initialC
           features: customFeatures,
           extraServices,
           sizeSuggestorEnabled,
-          sizeSuggestorReduction
+          sizeSuggestorReduction,
+          counterOfferEnabled
         },
         business_case_data: clientData
       };

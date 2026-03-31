@@ -61,6 +61,7 @@ const Index = () => {
   const [absorbTransactionFee, setAbsorbTransactionFee] = useState<boolean>(false);
   const [sizeSuggestorEnabled, setSizeSuggestorEnabled] = useState(true);
   const [sizeSuggestorReduction, setSizeSuggestorReduction] = useState(3);
+  const [counterOfferEnabled, setCounterOfferEnabled] = useState(false);
   const [offerExpirationDate, setOfferExpirationDate] = useState<Date | undefined>();
   const [lastSelectedPredefinedScenario, setLastSelectedPredefinedScenario] = useState<PricingData | null>(null);
   
@@ -1238,6 +1239,7 @@ const Index = () => {
                       extraServices={extraServices}
                       sizeSuggestorEnabled={sizeSuggestorEnabled}
                       sizeSuggestorReduction={sizeSuggestorReduction}
+                      counterOfferEnabled={counterOfferEnabled}
                     />
                   )}
                 </div>
@@ -1674,6 +1676,16 @@ const Index = () => {
                                       />
                                     </div>
                                   )}
+                                  <div className="flex items-center justify-between p-3 border rounded-md">
+                                    <div className="flex-1">
+                                      <div className="font-medium text-sm text-gray-800">Abilita controfferta</div>
+                                    </div>
+                                    <Switch
+                                      id="counter-offer-toggle"
+                                      checked={counterOfferEnabled}
+                                      onCheckedChange={setCounterOfferEnabled}
+                                    />
+                                  </div>
                                 </CollapsibleContent>
                               </Collapsible>
                             </div>
