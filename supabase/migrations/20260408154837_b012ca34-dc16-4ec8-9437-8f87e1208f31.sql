@@ -1,0 +1,1 @@
+ALTER TABLE public.client_shares ADD COLUMN created_by uuid REFERENCES auth.users(id) ON DELETE SET NULL;

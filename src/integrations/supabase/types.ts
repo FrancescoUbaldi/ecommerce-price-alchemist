@@ -20,6 +20,7 @@ export type Database = {
           client_response: string | null
           client_response_at: string | null
           created_at: string
+          created_by: string | null
           id: string
           language: string
           name: string | null
@@ -30,6 +31,7 @@ export type Database = {
           client_response?: string | null
           client_response_at?: string | null
           created_at?: string
+          created_by?: string | null
           id?: string
           language?: string
           name?: string | null
@@ -40,6 +42,7 @@ export type Database = {
           client_response?: string | null
           client_response_at?: string | null
           created_at?: string
+          created_by?: string | null
           id?: string
           language?: string
           name?: string | null
