@@ -5,6 +5,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { getTranslation } from "@/utils/translations";
+
+const detectBrowserLanguage = (): string => {
+  const browserLang = navigator.language || (navigator as any).userLanguage || 'en';
+  const langMap: Record<string, string> = {
+    'it': 'it',
+    'es': 'es',
+    'fr': 'fr',
+    'de': 'de',
+    'nl': 'nl',
+    'pl': 'pl',
+    'en-GB': 'en-GB',
+    'en-US': 'usa',
+    'en': 'en',
+  };
+  // Try exact match first
+  if (langMap[browserLang]) return langMap[browserLang];
+  // Try base language
+  const base = browserLang.split('-')[0];
+  if (langMap[base]) return langMap[base];
+  return 'en';
+};
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +34,9 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
+  const [language] = useState(() => {
+    return localStorage.getItem('preferredLanguage') || detectBrowserLanguage();
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,7 +65,7 @@ const Login = () => {
     const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
 
     if (authError) {
-      setError("Email o password non corretti");
+      setError(getTranslation(language, 'loginError'));
       setLoading(false);
     } else {
       navigate("/my-proposals", { replace: true });
@@ -50,7 +75,7 @@ const Login = () => {
   if (checkingSession) return null;
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-6">
+    <div className="min-h-screen bg-background flex items-center justify-center p-6">
       <Card className="w-full max-w-sm border border-border shadow-sm">
         <CardHeader className="text-center pb-2">
           <img
@@ -61,12 +86,12 @@ const Login = () => {
               (e.target as HTMLImageElement).style.display = 'none';
             }}
           />
-          <h1 className="text-lg font-semibold text-foreground">Login</h1>
+          <h1 className="text-lg font-semibold text-foreground">{getTranslation(language, 'loginTitle')}</h1>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{getTranslation(language, 'loginEmail')}</Label>
               <Input
                 id="email"
                 type="email"
@@ -77,7 +102,7 @@ const Login = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{getTranslation(language, 'loginPassword')}</Label>
               <Input
                 id="password"
                 type="password"
@@ -94,9 +119,12 @@ const Login = () => {
               className="w-full"
               style={{ backgroundColor: "#1790FF" }}
             >
-              {loading ? "Accesso..." : "Accedi"}
+              {loading ? getTranslation(language, 'loginLoading') : getTranslation(language, 'loginButton')}
             </Button>
           </form>
+          <p className="text-xs text-muted-foreground text-center mt-4">
+            {getTranslation(language, 'loginNoAccount')}
+          </p>
         </CardContent>
       </Card>
     </div>
