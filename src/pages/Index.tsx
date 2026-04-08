@@ -937,8 +937,15 @@ const Index = () => {
             </div>
             <p className="text-gray-600 text-center -mt-6 leading-tight relative z-10">{getTranslation(language, 'subtitle')}</p>
           </div>
-          <div className="flex-1 flex justify-end">
+          <div className="flex-1 flex items-center justify-end gap-2">
             <LanguageSelector language={language} setLanguage={setLanguage} />
+            <button
+              onClick={() => navigate('/my-proposals')}
+              className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
+            >
+              <User className="h-4 w-4" />
+              My Profile
+            </button>
           </div>
         </div>
 
