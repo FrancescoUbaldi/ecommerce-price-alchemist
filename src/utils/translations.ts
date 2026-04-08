@@ -1430,7 +1430,31 @@ export const translations = {
     sizeSuggestorTooltip: 'Size Suggestor AI',
     counterOffer: 'Złóż kontrofertę',
     offerAcceptedMessage: 'Wkrótce wyślemy Ci umowę do podpisania.',
-    offerRejectedMessage: 'Dziękujemy za rozważenie naszej oferty. Pozostajemy do dyspozycji, jeśli warunki się zmienią.'
+    offerRejectedMessage: 'Dziękujemy za rozważenie naszej oferty. Pozostajemy do dyspozycji, jeśli warunki się zmienią.',
+    loginTitle: 'Zaloguj się',
+    loginEmail: 'Email',
+    loginPassword: 'Password',
+    loginButton: 'Zaloguj się',
+    loginError: 'Nieprawidłowy email lub hasło',
+    loginNoAccount: 'Brak konta? Skontaktuj się z administratorem',
+    myProfileTitle: 'Moje propozycje',
+    myProfileLogout: 'Wyloguj się',
+    myProfileButton: 'Mój profil',
+    backToSimulator: 'Powrót do symulatora',
+    statsTotal: 'Łącznie',
+    statsAccepted: 'Zaakceptowane',
+    statsRejected: 'Odrzucone',
+    statsPending: 'Oczekujące',
+    tableClient: 'Klient',
+    tableLanguage: 'Język',
+    tableSentDate: 'Data wysłania',
+    tableExpiration: 'Wygasa',
+    tableStatus: 'Status',
+    tableActions: 'Akcje',
+    tableView: 'Zobacz',
+    noProposals: 'Brak wysłanych propozycji.',
+    loading: 'Ładowanie...',
+    loginLoading: 'Logowanie...'
   }
 };
 
