@@ -75,9 +75,6 @@ const BusinessCase = ({
   const [fieldOverrides, setFieldOverrides] = useState<FieldOverrides>({});
   const [sizeSuggestorActive, setSizeSuggestorActive] = useState(false);
 
-  useEffect(() => {
-    setSizeSuggestorActive(sizeSuggestorEnabled);
-  }, [sizeSuggestorEnabled]);
 
   // Editable Value Component
   interface EditableValueProps {
