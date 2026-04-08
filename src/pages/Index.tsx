@@ -1,7 +1,9 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
-import { CalendarIcon, ChevronDown } from 'lucide-react';
+import { CalendarIcon, ChevronDown, User } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -50,7 +52,19 @@ interface AppState {
 }
 
 const Index = () => {
+  const navigate = useNavigate();
+  const [authChecked, setAuthChecked] = useState(false);
   const [language, setLanguage] = useState<string>('it');
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        navigate('/login', { replace: true });
+      } else {
+        setAuthChecked(true);
+      }
+    });
+  }, [navigate]);
   const [showScenarioNotification, setShowScenarioNotification] = useState(false);
   const [showResetConfirmation, setShowResetConfirmation] = useState(false);
   const [showUndoButton, setShowUndoButton] = useState(false);
@@ -907,6 +921,8 @@ const Index = () => {
     return hasRequiredClientData && hasRequiredScenarioData;
   };
 
+  if (!authChecked) return null;
+
   return (
     <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -923,8 +939,15 @@ const Index = () => {
             </div>
             <p className="text-gray-600 text-center -mt-6 leading-tight relative z-10">{getTranslation(language, 'subtitle')}</p>
           </div>
-          <div className="flex-1 flex justify-end">
+          <div className="flex-1 flex items-center justify-end gap-2">
             <LanguageSelector language={language} setLanguage={setLanguage} />
+            <button
+              onClick={() => navigate('/my-proposals')}
+              className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
+            >
+              <User className="h-4 w-4" />
+              My Profile
+            </button>
           </div>
         </div>
 
