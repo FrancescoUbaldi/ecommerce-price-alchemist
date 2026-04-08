@@ -52,7 +52,19 @@ interface AppState {
 }
 
 const Index = () => {
+  const navigate = useNavigate();
+  const [authChecked, setAuthChecked] = useState(false);
   const [language, setLanguage] = useState<string>('it');
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        navigate('/login', { replace: true });
+      } else {
+        setAuthChecked(true);
+      }
+    });
+  }, [navigate]);
   const [showScenarioNotification, setShowScenarioNotification] = useState(false);
   const [showResetConfirmation, setShowResetConfirmation] = useState(false);
   const [showUndoButton, setShowUndoButton] = useState(false);
