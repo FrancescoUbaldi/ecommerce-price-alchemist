@@ -544,7 +544,17 @@ export const translations = {
     sizeSuggestorTooltip: 'Size Suggestor AI',
     counterOffer: 'Make a counteroffer',
     offerAcceptedMessage: 'We will send you the contract to sign shortly.',
-    offerRejectedMessage: 'Thank you for considering us. We remain available if the conditions change.'
+    offerRejectedMessage: 'Thank you for considering us. We remain available if the conditions change.',
+    loginTitle: 'Login',
+    loginEmail: 'Email',
+    loginPassword: 'Password',
+    loginButton: 'Login',
+    loginError: 'Invalid email or password',
+    loginNoAccount: 'No account? Contact your administrator',
+    myProfileTitle: 'My Proposals',
+    myProfileLogout: 'Logout',
+    myProfileButton: 'My Profile',
+    backToSimulator: 'Back to simulator'
   },
   es: {
     title: "Price & Smile :)",
