@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import ClientView from "./pages/ClientView";
 import Admin from "./pages/Admin";
+import Login from "./pages/Login";
+import MyProposals from "./pages/MyProposals";
 import NotFound from "./pages/NotFound";
 import HideLovableBadge from "./components/HideLovableBadge";
 

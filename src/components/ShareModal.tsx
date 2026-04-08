@@ -53,9 +53,11 @@ const ShareModal = ({ clientData, customScenario, language, clientName: initialC
   const generateLink = async () => {
     setIsGenerating(true);
     try {
-      const shareData = {
+      const { data: { user } } = await supabase.auth.getUser();
+      const shareData: any = {
         name: clientName || null,
         language,
+        created_by: user?.id || null,
         scenario_data: {
           ...customScenario,
           showUpfrontDiscount,
