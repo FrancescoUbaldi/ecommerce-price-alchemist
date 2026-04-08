@@ -921,6 +921,8 @@ const Index = () => {
     return hasRequiredClientData && hasRequiredScenarioData;
   };
 
+  if (!authChecked) return null;
+
   return (
     <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto space-y-6">
