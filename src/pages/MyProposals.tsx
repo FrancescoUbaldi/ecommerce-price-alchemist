@@ -441,6 +441,7 @@ const MyProposals = () => {
                   <TableRow>
                     <TableHead>{getTranslation(language, 'tableClient')}</TableHead>
                     <TableHead>{getTranslation(language, 'tableGtv')}</TableHead>
+                    <TableHead>ACV</TableHead>
                     <TableHead>{getTranslation(language, 'tableTakeRate')}</TableHead>
                     <TableHead>{getTranslation(language, 'tableExpiration')}</TableHead>
                     <TableHead>{getTranslation(language, 'tableStatus')}</TableHead>
