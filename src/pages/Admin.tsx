@@ -130,8 +130,8 @@ const Admin = () => {
     return profileMap[createdBy]?.display_name || profileMap[createdBy]?.email || "—";
   };
 
-  // Non-test shares for stats
-  const nonTest = useMemo(() => shares.filter(s => !s.is_test), [shares]);
+  // Non-test, non-orphan shares for stats
+  const nonTest = useMemo(() => shares.filter(s => !s.is_test && s.created_by != null), [shares]);
 
   // Period-filtered non-test shares
   const periodFiltered = useMemo(() => {
