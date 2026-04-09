@@ -529,6 +529,27 @@ const MyProposals = () => {
             )}
           </CardContent>
         </Card>
+
+        <Dialog open={!!extendingExpiryId} onOpenChange={(open) => { if (!open) setExtendingExpiryId(null); }}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Extend expiry date</DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              <input
+                type="date"
+                value={extendDateStr}
+                min={tomorrowStr}
+                onChange={(e) => setExtendDateStr(e.target.value)}
+                className="w-full border rounded-md px-3 py-2 text-sm bg-background text-foreground"
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="ghost" onClick={() => setExtendingExpiryId(null)}>Cancel</Button>
+              <Button onClick={handleExtendExpiry} disabled={!extendDateStr || extendDateStr < tomorrowStr}>Save</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
