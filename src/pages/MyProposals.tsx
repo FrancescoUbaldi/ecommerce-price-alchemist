@@ -314,26 +314,27 @@ const MyProposals = () => {
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold">{statsFiltered.length}</p>
-              <p className="text-xs text-muted-foreground">{getTranslation(language, 'currentMonth')}</p>
+              <p className="text-xs text-muted-foreground">{getTranslation(language, periodChips.find(c => c.key === period)?.labelKey || 'currentMonth')}</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{getTranslation(language, 'totalGtvSent')}</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">GTV</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold">{formatCurrency(totalGtv, language)}</p>
+              <p className="text-xs text-muted-foreground">{getTranslation(language, 'accepted')}: {formatCurrency(acceptedGtv, language)}</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{getTranslation(language, 'acceptedGtv')}</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">ACV</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold" style={{ color: COLORS.accepted }}>{formatCurrency(acceptedGtv, language)}</p>
-              <p className="text-xs text-muted-foreground">{getTranslation(language, 'conversion')} {conversionPct}%</p>
+              <p className="text-2xl font-bold" style={{ color: '#534AB7' }}>{formatCurrency(totalAcv, language)}</p>
+              <p className="text-xs text-muted-foreground">{getTranslation(language, 'accepted')}: {formatCurrency(acceptedAcv, language)}</p>
             </CardContent>
           </Card>
 
@@ -342,13 +343,13 @@ const MyProposals = () => {
               <CardTitle className="text-sm font-medium text-muted-foreground">{getTranslation(language, 'avgTakeRate')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold" style={{ color: COLORS.takeRate }}>{avgTakeRate.toFixed(1)}%</p>
+              <p className="text-2xl font-bold" style={{ color: '#534AB7' }}>{avgTakeRate.toFixed(1)}%</p>
               {prevFiltered.length > 0 && (
                 <div className="flex items-center gap-1 text-xs mt-1">
                   {takeRateDelta >= 0 ? (
-                    <><TrendingUp className="h-3 w-3" style={{ color: COLORS.accepted }} /><span style={{ color: COLORS.accepted }}>+{takeRateDelta.toFixed(1)}%</span></>
+                    <><TrendingUp className="h-3 w-3" style={{ color: '#1D9E75' }} /><span style={{ color: '#1D9E75' }}>+{takeRateDelta.toFixed(1)}%</span></>
                   ) : (
-                    <><TrendingDown className="h-3 w-3" style={{ color: COLORS.rejected }} /><span style={{ color: COLORS.rejected }}>{takeRateDelta.toFixed(1)}%</span></>
+                    <><TrendingDown className="h-3 w-3" style={{ color: '#E24B4A' }} /><span style={{ color: '#E24B4A' }}>{takeRateDelta.toFixed(1)}%</span></>
                   )}
                   <span className="text-muted-foreground">{getTranslation(language, 'vsPrevMonth')}</span>
                 </div>
