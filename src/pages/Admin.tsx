@@ -4,10 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Clock, CheckCircle2, XCircle, Eye, ArrowLeft, Archive, Users } from "lucide-react";
+import { Clock, CheckCircle2, XCircle, Eye, ArrowLeft, Archive, Users, TrendingUp, TrendingDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 interface ShareRow {
   id: string;
@@ -33,6 +34,15 @@ type PeriodFilter = "current_month" | "12_months";
 
 const ADMIN_PASSWORD = "ubirever26";
 
+const COLORS = {
+  accepted: "#1D9E75",
+  pending: "#EF9F27",
+  rejected: "#E24B4A",
+  countered: "#7F77DD",
+  takeRate: "#534AB7",
+  bar: "#B5D4F4",
+};
+
 function getGtv(share: ShareRow): number {
   const bd = share.business_case_data;
   if (!bd) return 0;
@@ -46,7 +56,6 @@ function getAcv(share: ShareRow): number {
   if (!sd || !bd) return 0;
   const annualReturns = (bd.resiAnnuali || 0) > 0 ? bd.resiAnnuali : (bd.resiMensili || 0) * 12;
   const resiMensili = annualReturns / 12;
-
   const monthlySaaS = sd.saasFee || 0;
   const monthlyTransaction = (sd.transactionFeeFixed || 0) * resiMensili;
   const rdvAnnuali = annualReturns * ((sd.rdvConversionRate ?? 35) / 100);
@@ -55,7 +64,6 @@ function getAcv(share: ShareRow): number {
   const upsellingResi = annualReturns * ((sd.upsellingConversionRate ?? 3.78) / 100);
   const upsellingAOV = (bd.carrelloMedio || 0) * 1.2;
   const monthlyUpselling = ((upsellingResi * upsellingAOV) * (sd.upsellingPercentage || 0)) / 100 / 12;
-
   return (monthlySaaS + monthlyTransaction + monthlyRdv + monthlyUpselling) * 12;
 }
 
@@ -73,6 +81,20 @@ function getFilterDate(filter: PeriodFilter): Date {
   const now = new Date();
   if (filter === "current_month") return new Date(now.getFullYear(), now.getMonth(), 1);
   return new Date(now.getTime() - 365 * 86400000);
+}
+
+function getPrevPeriodRange(filter: PeriodFilter): [Date, Date] {
+  const now = new Date();
+  if (filter === "current_month") {
+    const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const end = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
+    return [start, end];
+  }
+  return [new Date(now.getTime() - 730 * 86400000), new Date(now.getTime() - 365 * 86400000)];
+}
+
+function getWeekLabel(date: Date): string {
+  return `${date.getDate()}/${date.getMonth() + 1}`;
 }
 
 const getStatusBadge = (response: string | null) => {
@@ -97,12 +119,8 @@ const Admin = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (passwordInput === ADMIN_PASSWORD) {
-      setAuthenticated(true);
-      setPasswordError(false);
-    } else {
-      setPasswordError(true);
-    }
+    if (passwordInput === ADMIN_PASSWORD) { setAuthenticated(true); setPasswordError(false); }
+    else setPasswordError(true);
   };
 
   useEffect(() => {
@@ -139,7 +157,7 @@ const Admin = () => {
     return nonTest.filter(s => new Date(s.created_at) >= cutoff);
   }, [nonTest, periodFilter]);
 
-  // Global KPIs (all time, non-test)
+  // Global KPIs
   const globalStats = useMemo(() => {
     const totalGtv = nonTest.reduce((sum, s) => sum + getGtv(s), 0);
     const acceptedAcv = nonTest.filter(s => s.client_response === "accepted").reduce((sum, s) => sum + getAcv(s), 0);
@@ -148,7 +166,7 @@ const Admin = () => {
     return { total: nonTest.length, totalGtv, acceptedAcv, avgTakeRate };
   }, [nonTest]);
 
-  // AE rankings (period-filtered)
+  // AE rankings
   const aeRankings = useMemo(() => {
     const map: Record<string, { aeId: string; gtvSent: number; gtvAccepted: number; acvSent: number; acvAccepted: number }> = {};
     periodFiltered.forEach(s => {
@@ -185,28 +203,91 @@ const Admin = () => {
   const activeShares = shares.filter(s => !isArchived(s));
   const archivedShares = shares.filter(s => isArchived(s));
 
-  // Selected AE proposals
-  const selectedAeProposals = useMemo(() => {
+  // ========== AE VIEW (STATE 2) ==========
+  const aeAllProposals = useMemo(() => {
     if (!selectedAeId) return [];
-    const cutoff = getFilterDate(periodFilter);
-    return shares.filter(s => s.created_by === selectedAeId && new Date(s.created_at) >= cutoff);
-  }, [selectedAeId, shares, periodFilter]);
+    return shares.filter(s => s.created_by === selectedAeId);
+  }, [selectedAeId, shares]);
 
+  const aeStatsFiltered = useMemo(() => {
+    if (!selectedAeId) return [];
+    return nonTest.filter(s => s.created_by === selectedAeId);
+  }, [selectedAeId, nonTest]);
+
+  const aePrevFiltered = useMemo(() => {
+    if (!selectedAeId) return [];
+    const [start, end] = getPrevPeriodRange(periodFilter);
+    return nonTest.filter(s => {
+      const d = new Date(s.created_at);
+      return s.created_by === selectedAeId && d >= start && d <= end;
+    });
+  }, [selectedAeId, nonTest, periodFilter]);
+
+  const aeKpis = useMemo(() => {
+    const sent = aeStatsFiltered;
+    const accepted = sent.filter(s => s.client_response === "accepted");
+    const gtvSent = sent.reduce((sum, s) => sum + getGtv(s), 0);
+    const gtvAccepted = accepted.reduce((sum, s) => sum + getGtv(s), 0);
+    const acvSent = sent.reduce((sum, s) => sum + getAcv(s), 0);
+    const acvAccepted = accepted.reduce((sum, s) => sum + getAcv(s), 0);
+    const rates = sent.map(getTakeRate).filter(r => r > 0);
+    const avgTakeRate = rates.length > 0 ? rates.reduce((a, b) => a + b, 0) / rates.length : 0;
+    const prevRates = aePrevFiltered.map(getTakeRate).filter(r => r > 0);
+    const prevAvg = prevRates.length > 0 ? prevRates.reduce((a, b) => a + b, 0) / prevRates.length : 0;
+    const takeRateDelta = avgTakeRate - prevAvg;
+    return { count: sent.length, gtvSent, gtvAccepted, acvSent, acvAccepted, avgTakeRate, takeRateDelta, hasPrev: aePrevFiltered.length > 0 };
+  }, [aeStatsFiltered, aePrevFiltered]);
+
+  const aeStatusCounts = useMemo(() => {
+    const acc = { accepted: 0, pending: 0, rejected: 0, countered: 0 };
+    aeStatsFiltered.forEach(s => {
+      if (s.client_response === "accepted") acc.accepted++;
+      else if (s.client_response === "rejected") acc.rejected++;
+      else if (s.client_response === "countered") acc.countered++;
+      else acc.pending++;
+    });
+    return acc;
+  }, [aeStatsFiltered]);
+
+  const aeDonutData = useMemo(() => [
+    { name: "Accepted", value: aeStatusCounts.accepted, color: COLORS.accepted },
+    { name: "Pending", value: aeStatusCounts.pending, color: COLORS.pending },
+    { name: "Rejected", value: aeStatusCounts.rejected, color: COLORS.rejected },
+    { name: "Countered", value: aeStatusCounts.countered, color: COLORS.countered },
+  ].filter(d => d.value > 0), [aeStatusCounts]);
+
+  const aeTotalDonut = aeStatusCounts.accepted + aeStatusCounts.pending + aeStatusCounts.rejected + aeStatusCounts.countered;
+  const aeAcceptedPct = aeTotalDonut > 0 ? Math.round((aeStatusCounts.accepted / aeTotalDonut) * 100) : 0;
+
+  const aeWeeklyData = useMemo(() => {
+    const cutoff = getFilterDate(periodFilter);
+    const now = new Date();
+    const weeks: { label: string; count: number }[] = [];
+    let weekStart = new Date(cutoff);
+    const dayOfWeek = weekStart.getDay();
+    weekStart.setDate(weekStart.getDate() - ((dayOfWeek + 6) % 7));
+    while (weekStart < now) {
+      const weekEnd = new Date(weekStart.getTime() + 7 * 86400000);
+      const count = aeStatsFiltered.filter(s => {
+        const d = new Date(s.created_at);
+        return d >= weekStart && d < weekEnd;
+      }).length;
+      weeks.push({ label: getWeekLabel(weekStart), count });
+      weekStart = weekEnd;
+    }
+    return weeks;
+  }, [aeStatsFiltered, periodFilter]);
+
+  // ========== LOGIN SCREEN ==========
   if (!authenticated) {
     return (
       <div className="min-h-screen bg-muted/30 flex items-center justify-center p-6">
         <Card className="w-full max-w-sm">
-          <CardHeader>
-            <CardTitle className="text-center">Admin Panel</CardTitle>
-          </CardHeader>
+          <CardHeader><CardTitle className="text-center">Admin Panel</CardTitle></CardHeader>
           <CardContent className="space-y-4">
-            <Input
-              type="password"
-              placeholder="Password"
-              value={passwordInput}
+            <Input type="password" placeholder="Password" value={passwordInput}
               onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false); }}
-              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-            />
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()} />
             {passwordError && <p className="text-sm text-destructive">Password errata</p>}
             <Button className="w-full" onClick={handleLogin}>Accedi</Button>
           </CardContent>
@@ -215,6 +296,7 @@ const Admin = () => {
     );
   }
 
+  // ========== RENDER GLOBAL PROPOSALS TABLE ==========
   const renderAllProposalsTable = (rows: ShareRow[]) => (
     <Table>
       <TableHeader>
@@ -233,30 +315,198 @@ const Admin = () => {
         {rows.map((share) => {
           const isOrphan = share.created_by == null;
           return (
-          <TableRow key={share.id} className={share.is_test || isOrphan ? "opacity-40" : ""}>
-            <TableCell className="font-medium">{share.name || "—"}</TableCell>
-            <TableCell>{getAeName(share.created_by)}</TableCell>
-            <TableCell className="text-right">{formatEur(getGtv(share))}</TableCell>
-            <TableCell className="text-right">{formatEur(getAcv(share))}</TableCell>
-            <TableCell className="text-right" style={{ color: "#534AB7" }}>{getTakeRate(share).toFixed(2)}%</TableCell>
-            <TableCell>{share.scenario_data?.offerExpirationDate || "—"}</TableCell>
-            <TableCell className="flex items-center gap-1">
-              {isOrphan && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Orphan</Badge>}
-              {share.is_test && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Test</Badge>}
-              {getStatusBadge(share.client_response)}
-            </TableCell>
-            <TableCell className="text-right">
-              <Button variant="ghost" size="sm" onClick={() => window.open(`/view/${share.id}`, "_blank")} className="gap-1">
-                <Eye className="h-4 w-4" /> View
-              </Button>
-            </TableCell>
-          </TableRow>
+            <TableRow key={share.id} className={share.is_test || isOrphan ? "opacity-40" : ""}>
+              <TableCell className="font-medium">{share.name || "—"}</TableCell>
+              <TableCell>{getAeName(share.created_by)}</TableCell>
+              <TableCell className="text-right">{formatEur(getGtv(share))}</TableCell>
+              <TableCell className="text-right">{formatEur(getAcv(share))}</TableCell>
+              <TableCell className="text-right" style={{ color: COLORS.takeRate }}>{getTakeRate(share).toFixed(2)}%</TableCell>
+              <TableCell>{share.scenario_data?.offerExpirationDate || "—"}</TableCell>
+              <TableCell>
+                <div className="flex items-center gap-1">
+                  {isOrphan && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Orphan</Badge>}
+                  {share.is_test && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Test</Badge>}
+                  {getStatusBadge(share.client_response)}
+                </div>
+              </TableCell>
+              <TableCell className="text-right">
+                <Button variant="ghost" size="sm" onClick={() => window.open(`/view/${share.id}`, "_blank")} className="gap-1">
+                  <Eye className="h-4 w-4" /> View
+                </Button>
+              </TableCell>
+            </TableRow>
           );
         })}
       </TableBody>
     </Table>
   );
 
+  // ========== STATE 2: AE VIEW ==========
+  if (selectedAeId) {
+    return (
+      <div className="min-h-screen bg-muted/30 p-6 md:p-10">
+        <div className="max-w-7xl mx-auto space-y-6">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-bold tracking-tight">{getAeName(selectedAeId)}</h1>
+              <Badge variant="secondary">Admin view</Badge>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => setSelectedAeId(null)} className="gap-2">
+              <ArrowLeft className="h-4 w-4" /> Back to rankings
+            </Button>
+          </div>
+
+          <p className="text-sm text-muted-foreground">Test proposals are visible but excluded from stats</p>
+
+          {/* 4 KPI Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Proposals sent</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">{aeKpis.count}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">GTV sent</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">{formatEur(aeKpis.gtvSent)}</p>
+                <p className="text-xs text-muted-foreground">Accepted: {formatEur(aeKpis.gtvAccepted)}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">ACV sent</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">{formatEur(aeKpis.acvSent)}</p>
+                <p className="text-xs text-muted-foreground">Accepted: {formatEur(aeKpis.acvAccepted)}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Avg take rate</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold" style={{ color: COLORS.takeRate }}>{aeKpis.avgTakeRate.toFixed(1)}%</p>
+                {aeKpis.hasPrev && (
+                  <div className="flex items-center gap-1 text-xs mt-1">
+                    {aeKpis.takeRateDelta >= 0 ? (
+                      <><TrendingUp className="h-3 w-3" style={{ color: COLORS.accepted }} /><span style={{ color: COLORS.accepted }}>+{aeKpis.takeRateDelta.toFixed(1)}%</span></>
+                    ) : (
+                      <><TrendingDown className="h-3 w-3" style={{ color: COLORS.rejected }} /><span style={{ color: COLORS.rejected }}>{aeKpis.takeRateDelta.toFixed(1)}%</span></>
+                    )}
+                    <span className="text-muted-foreground">vs prev period</span>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Charts */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Donut */}
+            <Card>
+              <CardHeader><CardTitle className="text-base">Conversion rate</CardTitle></CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-4 mb-4">
+                  {([
+                    { key: "accepted" as const, label: "Accepted", color: COLORS.accepted },
+                    { key: "pending" as const, label: "Pending", color: COLORS.pending },
+                    { key: "rejected" as const, label: "Rejected", color: COLORS.rejected },
+                    { key: "countered" as const, label: "Countered", color: COLORS.countered },
+                  ]).map(item => (
+                    <div key={item.key} className="flex items-center gap-1.5 text-sm">
+                      <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
+                      <span className="text-muted-foreground">{item.label}</span>
+                      <span className="font-medium">{aeTotalDonut > 0 ? Math.round((aeStatusCounts[item.key] / aeTotalDonut) * 100) : 0}%</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-center">
+                  <div className="relative" style={{ width: 220, height: 220 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie data={aeDonutData} dataKey="value" innerRadius={70} outerRadius={100} paddingAngle={2} strokeWidth={0}>
+                          {aeDonutData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                        </Pie>
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className="font-bold" style={{ fontSize: 28, color: COLORS.accepted }}>{aeAcceptedPct}%</span>
+                      <span className="text-xs text-muted-foreground">accepted</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Bar chart */}
+            <Card>
+              <CardHeader><CardTitle className="text-base">Weekly activity</CardTitle></CardHeader>
+              <CardContent>
+                <div style={{ height: 280 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={aeWeeklyData}>
+                      <XAxis dataKey="label" tick={{ fontSize: 11 }} />
+                      <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
+                      <Tooltip formatter={(value: number) => [value, "Proposals"]} />
+                      <Bar dataKey="count" fill={COLORS.bar} radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* AE Proposals table */}
+          <Card>
+            <CardContent className="pt-6">
+              {aeAllProposals.length === 0 ? (
+                <p className="text-muted-foreground text-center py-8">No proposals</p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Client</TableHead>
+                      <TableHead className="text-right">GTV</TableHead>
+                      <TableHead className="text-right">ACV</TableHead>
+                      <TableHead className="text-right">Take rate</TableHead>
+                      <TableHead>Expiry</TableHead>
+                      <TableHead>Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {aeAllProposals.map(share => (
+                      <TableRow key={share.id} className={share.is_test ? "opacity-40" : ""}>
+                        <TableCell className="font-medium">{share.name || "—"}</TableCell>
+                        <TableCell className="text-right">{formatEur(getGtv(share))}</TableCell>
+                        <TableCell className="text-right">{formatEur(getAcv(share))}</TableCell>
+                        <TableCell className="text-right" style={{ color: COLORS.takeRate }}>{getTakeRate(share).toFixed(2)}%</TableCell>
+                        <TableCell>{share.scenario_data?.offerExpirationDate || "—"}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1">
+                            {share.is_test && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Test</Badge>}
+                            {getStatusBadge(share.client_response)}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ========== STATE 1: MAIN VIEW ==========
   return (
     <div className="min-h-screen bg-muted/30 p-6 md:p-10">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -271,11 +521,11 @@ const Admin = () => {
           </Button>
         </div>
 
-        {/* Global KPI Row */}
         {loading ? (
           <p className="text-muted-foreground text-center py-8">Loading...</p>
         ) : (
           <>
+            {/* Global KPI Row */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Card>
                 <CardContent className="pt-6 text-center">
@@ -306,57 +556,40 @@ const Admin = () => {
             {/* Period Filter */}
             <div className="flex gap-2">
               {(["current_month", "12_months"] as PeriodFilter[]).map(f => (
-                <Button
-                  key={f}
-                  variant={periodFilter === f ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => { setPeriodFilter(f); setSelectedAeId(null); }}
-                >
+                <Button key={f} variant={periodFilter === f ? "default" : "outline"} size="sm"
+                  onClick={() => setPeriodFilter(f)}>
                   {f === "current_month" ? "Current month" : "12 months"}
                 </Button>
               ))}
             </div>
 
-            {/* AE Rankings or AE Detail */}
-            {selectedAeId ? (
+            {/* Rankings */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="text-lg">{getAeName(selectedAeId)} — Proposals</CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">Admin view — test proposals are visible but excluded from stats</p>
-                    </div>
-                    <Button variant="outline" size="sm" onClick={() => setSelectedAeId(null)} className="gap-2">
-                      <ArrowLeft className="h-4 w-4" /> Back to rankings
-                    </Button>
-                  </div>
-                </CardHeader>
+                <CardHeader><CardTitle className="text-lg">Ranking by GTV</CardTitle></CardHeader>
                 <CardContent>
-                  {selectedAeProposals.length === 0 ? (
-                    <p className="text-muted-foreground text-center py-8">No proposals in this period</p>
-                  ) : (
+                  {rankByGtv.length === 0 ? <p className="text-muted-foreground text-center py-4">No data</p> : (
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Client</TableHead>
-                          <TableHead className="text-right">GTV</TableHead>
-                          <TableHead className="text-right">ACV</TableHead>
-                          <TableHead className="text-right">Take rate</TableHead>
-                          <TableHead>Expiry</TableHead>
-                          <TableHead>Status</TableHead>
+                          <TableHead className="w-12">#</TableHead>
+                          <TableHead>AE</TableHead>
+                          <TableHead className="text-right">GTV sent</TableHead>
+                          <TableHead className="text-right">GTV accepted</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {selectedAeProposals.map(share => (
-                          <TableRow key={share.id} className={share.is_test ? "opacity-40" : ""}>
-                            <TableCell className="font-medium">{share.name || "—"}</TableCell>
-                            <TableCell className="text-right">{formatEur(getGtv(share))}</TableCell>
-                            <TableCell className="text-right">{formatEur(getAcv(share))}</TableCell>
-                            <TableCell className="text-right" style={{ color: "#534AB7" }}>{getTakeRate(share).toFixed(2)}%</TableCell>
-                            <TableCell>{share.scenario_data?.offerExpirationDate || "—"}</TableCell>
-                            <TableCell className="flex items-center gap-1">
-                              {share.is_test && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Test</Badge>}
-                              {getStatusBadge(share.client_response)}
+                        {rankByGtv.map((ae, i) => (
+                          <TableRow key={ae.aeId}>
+                            <TableCell className={rankColor(i)}>{i + 1}</TableCell>
+                            <TableCell className="font-medium">{getAeName(ae.aeId)}</TableCell>
+                            <TableCell className="text-right">{formatEur(ae.gtvSent)}</TableCell>
+                            <TableCell className="text-right">{formatEur(ae.gtvAccepted)}</TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="ghost" size="sm" onClick={() => setSelectedAeId(ae.aeId)} className="gap-1">
+                                <Eye className="h-4 w-4" /> View
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -365,130 +598,85 @@ const Admin = () => {
                   )}
                 </CardContent>
               </Card>
-            ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {/* Ranking by GTV */}
-                <Card>
-                  <CardHeader><CardTitle className="text-lg">Ranking by GTV</CardTitle></CardHeader>
-                  <CardContent>
-                    {rankByGtv.length === 0 ? (
-                      <p className="text-muted-foreground text-center py-4">No data</p>
-                    ) : (
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead className="w-12">#</TableHead>
-                            <TableHead>AE</TableHead>
-                            <TableHead className="text-right">GTV sent</TableHead>
-                            <TableHead className="text-right">GTV accepted</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {rankByGtv.map((ae, i) => (
-                            <TableRow key={ae.aeId}>
-                              <TableCell className={rankColor(i)}>{i + 1}</TableCell>
-                              <TableCell className="font-medium">{getAeName(ae.aeId)}</TableCell>
-                              <TableCell className="text-right">{formatEur(ae.gtvSent)}</TableCell>
-                              <TableCell className="text-right">{formatEur(ae.gtvAccepted)}</TableCell>
-                              <TableCell className="text-right">
-                                <Button variant="ghost" size="sm" onClick={() => setSelectedAeId(ae.aeId)} className="gap-1">
-                                  <Eye className="h-4 w-4" /> View
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    )}
-                  </CardContent>
-                </Card>
 
-                {/* Ranking by ACV */}
-                <Card>
-                  <CardHeader><CardTitle className="text-lg">Ranking by ACV</CardTitle></CardHeader>
-                  <CardContent>
-                    {rankByAcv.length === 0 ? (
-                      <p className="text-muted-foreground text-center py-4">No data</p>
-                    ) : (
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead className="w-12">#</TableHead>
-                            <TableHead>AE</TableHead>
-                            <TableHead className="text-right">ACV sent</TableHead>
-                            <TableHead className="text-right">ACV accepted</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {rankByAcv.map((ae, i) => (
-                            <TableRow key={ae.aeId}>
-                              <TableCell className={rankColor(i)}>{i + 1}</TableCell>
-                              <TableCell className="font-medium">{getAeName(ae.aeId)}</TableCell>
-                              <TableCell className="text-right">{formatEur(ae.acvSent)}</TableCell>
-                              <TableCell className="text-right">{formatEur(ae.acvAccepted)}</TableCell>
-                              <TableCell className="text-right">
-                                <Button variant="ghost" size="sm" onClick={() => setSelectedAeId(ae.aeId)} className="gap-1">
-                                  <Eye className="h-4 w-4" /> View
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-            )}
-
-            {/* AE Team Section */}
-            {!selectedAeId && (
               <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2"><Users className="h-5 w-5" /> AE Team</CardTitle>
-                </CardHeader>
+                <CardHeader><CardTitle className="text-lg">Ranking by ACV</CardTitle></CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {profiles.map(ae => {
-                      const aeProposals = nonTest.filter(s => s.created_by === ae.id);
-                      const proposalCount = aeProposals.length;
-                      const gtvAccepted = aeProposals.filter(s => s.client_response === "accepted").reduce((sum, s) => sum + getGtv(s), 0);
-                      const acvAccepted = aeProposals.filter(s => s.client_response === "accepted").reduce((sum, s) => sum + getAcv(s), 0);
-                      const rates = aeProposals.map(getTakeRate).filter(r => r > 0);
-                      const avgRate = rates.length > 0 ? rates.reduce((a, b) => a + b, 0) / rates.length : 0;
-                      const lastActivity = aeProposals.length > 0 ? aeProposals.reduce((max, s) => s.created_at > max ? s.created_at : max, aeProposals[0].created_at) : null;
-
-                      return (
-                        <Card key={ae.id} className="border">
-                          <CardContent className="pt-5 space-y-3">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="font-semibold">{ae.display_name || ae.email}</p>
-                                <p className="text-xs text-muted-foreground">{ae.email}</p>
-                              </div>
-                              <Button variant="ghost" size="sm" onClick={() => setSelectedAeId(ae.id)} className="gap-1">
+                  {rankByAcv.length === 0 ? <p className="text-muted-foreground text-center py-4">No data</p> : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-12">#</TableHead>
+                          <TableHead>AE</TableHead>
+                          <TableHead className="text-right">ACV sent</TableHead>
+                          <TableHead className="text-right">ACV accepted</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {rankByAcv.map((ae, i) => (
+                          <TableRow key={ae.aeId}>
+                            <TableCell className={rankColor(i)}>{i + 1}</TableCell>
+                            <TableCell className="font-medium">{getAeName(ae.aeId)}</TableCell>
+                            <TableCell className="text-right">{formatEur(ae.acvSent)}</TableCell>
+                            <TableCell className="text-right">{formatEur(ae.acvAccepted)}</TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="ghost" size="sm" onClick={() => setSelectedAeId(ae.aeId)} className="gap-1">
                                 <Eye className="h-4 w-4" /> View
                               </Button>
-                            </div>
-                            <div className="grid grid-cols-2 gap-2 text-sm">
-                              <div><span className="text-muted-foreground">Proposals:</span> <span className="font-medium">{proposalCount}</span></div>
-                              <div><span className="text-muted-foreground">GTV acc:</span> <span className="font-medium">{formatEur(gtvAccepted)}</span></div>
-                              <div><span className="text-muted-foreground">ACV acc:</span> <span className="font-medium">{formatEur(acvAccepted)}</span></div>
-                              <div><span className="text-muted-foreground">Avg rate:</span> <span className="font-medium">{avgRate.toFixed(2)}%</span></div>
-                            </div>
-                            <p className="text-xs text-muted-foreground">
-                              Last activity: {lastActivity ? new Date(lastActivity).toLocaleDateString("it-IT") : "—"}
-                            </p>
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
-                  </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  )}
                 </CardContent>
               </Card>
-            )}
+            </div>
+
+            {/* AE Team Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2"><Users className="h-5 w-5" /> AE Team</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {profiles.map(ae => {
+                    const aeProposals = nonTest.filter(s => s.created_by === ae.id);
+                    const proposalCount = aeProposals.length;
+                    const gtvAccepted = aeProposals.filter(s => s.client_response === "accepted").reduce((sum, s) => sum + getGtv(s), 0);
+                    const acvAccepted = aeProposals.filter(s => s.client_response === "accepted").reduce((sum, s) => sum + getAcv(s), 0);
+                    const rates = aeProposals.map(getTakeRate).filter(r => r > 0);
+                    const avgRate = rates.length > 0 ? rates.reduce((a, b) => a + b, 0) / rates.length : 0;
+                    const lastActivity = aeProposals.length > 0 ? aeProposals.reduce((max, s) => s.created_at > max ? s.created_at : max, aeProposals[0].created_at) : null;
+                    return (
+                      <Card key={ae.id} className="border">
+                        <CardContent className="pt-5 space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-semibold">{ae.display_name || ae.email}</p>
+                              <p className="text-xs text-muted-foreground">{ae.email}</p>
+                            </div>
+                            <Button variant="ghost" size="sm" onClick={() => setSelectedAeId(ae.id)} className="gap-1">
+                              <Eye className="h-4 w-4" /> View
+                            </Button>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2 text-sm">
+                            <div><span className="text-muted-foreground">Proposals:</span> <span className="font-medium">{proposalCount}</span></div>
+                            <div><span className="text-muted-foreground">GTV acc:</span> <span className="font-medium">{formatEur(gtvAccepted)}</span></div>
+                            <div><span className="text-muted-foreground">ACV acc:</span> <span className="font-medium">{formatEur(acvAccepted)}</span></div>
+                            <div><span className="text-muted-foreground">Avg rate:</span> <span className="font-medium">{avgRate.toFixed(2)}%</span></div>
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            Last activity: {lastActivity ? new Date(lastActivity).toLocaleDateString("it-IT") : "—"}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
 
             {/* All Proposals Table */}
             <Card>
@@ -501,14 +689,10 @@ const Admin = () => {
                     </TabsTrigger>
                   </TabsList>
                   <TabsContent value="proposte">
-                    {activeShares.length === 0 ? (
-                      <p className="text-muted-foreground text-center py-8">No active proposals</p>
-                    ) : renderAllProposalsTable(activeShares)}
+                    {activeShares.length === 0 ? <p className="text-muted-foreground text-center py-8">No active proposals</p> : renderAllProposalsTable(activeShares)}
                   </TabsContent>
                   <TabsContent value="archiviate">
-                    {archivedShares.length === 0 ? (
-                      <p className="text-muted-foreground text-center py-8">No archived proposals</p>
-                    ) : renderAllProposalsTable(archivedShares)}
+                    {archivedShares.length === 0 ? <p className="text-muted-foreground text-center py-8">No archived proposals</p> : renderAllProposalsTable(archivedShares)}
                   </TabsContent>
                 </Tabs>
               </CardContent>
