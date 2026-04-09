@@ -229,13 +229,9 @@ const MyProposals = () => {
   }, [statsFiltered, period]);
 
   const formatDate = (dateStr: string) => {
-    const localeMap: Record<string, string> = {
-      it: 'it-IT', en: 'en-GB', 'en-GB': 'en-GB', usa: 'en-US',
-      es: 'es-ES', fr: 'fr-FR', de: 'de-DE', nl: 'nl-NL', pl: 'pl-PL'
-    };
-    return new Date(dateStr).toLocaleDateString(localeMap[language] || 'it-IT', {
-      day: "2-digit", month: "2-digit", year: "numeric",
-    });
+    if (!dateStr) return '—';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
   };
 
   const getExpirationDate = (share: ShareRow) => {
