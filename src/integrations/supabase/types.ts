@@ -46,6 +46,7 @@ export type Database = {
           is_test: boolean
           language: string
           name: string | null
+          rejection_reason: string | null
           scenario_data: Json
           status: string | null
         }
@@ -59,6 +60,7 @@ export type Database = {
           is_test?: boolean
           language?: string
           name?: string | null
+          rejection_reason?: string | null
           scenario_data: Json
           status?: string | null
         }
@@ -72,6 +74,7 @@ export type Database = {
           is_test?: boolean
           language?: string
           name?: string | null
+          rejection_reason?: string | null
           scenario_data?: Json
           status?: string | null
         }

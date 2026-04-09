@@ -1,0 +1,1 @@
+ALTER TABLE public.client_shares ADD COLUMN rejection_reason text;
