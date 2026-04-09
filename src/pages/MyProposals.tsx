@@ -204,12 +204,11 @@ const MyProposals = () => {
     const now = new Date();
     const weeks: { label: string; count: number }[] = [];
     let weekStart = new Date(cutoff);
-    // Align to Monday
     const dayOfWeek = weekStart.getDay();
     weekStart.setDate(weekStart.getDate() - ((dayOfWeek + 6) % 7));
     while (weekStart < now) {
       const weekEnd = new Date(weekStart.getTime() + 7 * 86400000);
-      const count = filtered.filter(s => {
+      const count = statsFiltered.filter(s => {
         const d = new Date(s.created_at);
         return d >= weekStart && d < weekEnd;
       }).length;
@@ -217,7 +216,7 @@ const MyProposals = () => {
       weekStart = weekEnd;
     }
     return weeks;
-  }, [filtered, period]);
+  }, [statsFiltered, period]);
 
   const formatDate = (dateStr: string) => {
     const localeMap: Record<string, string> = {
