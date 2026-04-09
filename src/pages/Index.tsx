@@ -54,7 +54,20 @@ interface AppState {
 const Index = () => {
   const navigate = useNavigate();
   const [authChecked, setAuthChecked] = useState(false);
-  const [language, setLanguage] = useState<string>('it');
+  const [language, setLanguageState] = useState<string>(() => {
+    const saved = localStorage.getItem('preferredLanguage');
+    if (saved) return saved;
+    const browserLang = navigator.language || 'en';
+    const langMap: Record<string, string> = { 'it': 'it', 'es': 'es', 'fr': 'fr', 'de': 'de', 'nl': 'nl', 'pl': 'pl', 'en-GB': 'en-GB', 'en-US': 'usa', 'en': 'en' };
+    if (langMap[browserLang]) return langMap[browserLang];
+    const base = browserLang.split('-')[0];
+    if (langMap[base]) return langMap[base];
+    return 'en';
+  });
+  const setLanguage = (lang: string) => {
+    setLanguageState(lang);
+    localStorage.setItem('preferredLanguage', lang);
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {

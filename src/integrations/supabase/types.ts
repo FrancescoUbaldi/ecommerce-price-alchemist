@@ -25,6 +25,7 @@ export type Database = {
           language: string
           name: string | null
           scenario_data: Json
+          status: string | null
         }
         Insert: {
           business_case_data: Json
@@ -36,6 +37,7 @@ export type Database = {
           language?: string
           name?: string | null
           scenario_data: Json
+          status?: string | null
         }
         Update: {
           business_case_data?: Json
@@ -47,6 +49,7 @@ export type Database = {
           language?: string
           name?: string | null
           scenario_data?: Json
+          status?: string | null
         }
         Relationships: []
       }
