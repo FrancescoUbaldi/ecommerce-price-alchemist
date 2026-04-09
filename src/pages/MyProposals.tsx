@@ -5,9 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, LogOut, Eye, TrendingUp, TrendingDown, MoreHorizontal, FlaskConical, FlaskConicalOff } from "lucide-react";
+import { ArrowLeft, LogOut, Eye, TrendingUp, TrendingDown, MoreHorizontal, FlaskConical, FlaskConicalOff, CalendarDays } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import LanguageSelector from "@/components/LanguageSelector";
 import { getTranslation, formatCurrency } from "@/utils/translations";
 
