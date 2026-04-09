@@ -143,6 +143,12 @@ const MyProposals = () => {
   const handleLogout = async () => { await supabase.auth.signOut(); navigate("/login", { replace: true }); };
 
   // Filtered shares
+  const handleToggleTest = async (id: string, currentIsTest: boolean) => {
+    const newVal = !currentIsTest;
+    await supabase.from("client_shares").update({ is_test: newVal } as any).eq("id", id);
+    setShares(prev => prev.map(s => s.id === id ? { ...s, is_test: newVal } : s));
+  };
+
   // All shares in period (for table display)
   const filtered = useMemo(() => {
     const cutoff = getFilterDate(period);
