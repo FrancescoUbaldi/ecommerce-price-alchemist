@@ -166,8 +166,8 @@ const Admin = () => {
     return Object.values(map);
   }, [periodFiltered]);
 
-  const rankByGtv = useMemo(() => [...aeRankings].sort((a, b) => b.gtvSent - a.gtvSent), [aeRankings]);
-  const rankByAcv = useMemo(() => [...aeRankings].sort((a, b) => b.acvSent - a.acvSent), [aeRankings]);
+  const rankByGtv = useMemo(() => [...aeRankings].sort((a, b) => (b.gtvAccepted - a.gtvAccepted) || (b.gtvSent - a.gtvSent)), [aeRankings]);
+  const rankByAcv = useMemo(() => [...aeRankings].sort((a, b) => (b.acvAccepted - a.acvAccepted) || (b.acvSent - a.acvSent)), [aeRankings]);
 
   const rankColor = (i: number) => {
     if (i === 0) return "text-yellow-500 font-bold";
