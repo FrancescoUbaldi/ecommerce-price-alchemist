@@ -453,6 +453,7 @@ const MyProposals = () => {
                     <TableRow key={share.id} className={share.is_test ? "opacity-40" : ""}>
                       <TableCell className="font-medium">{share.name || "—"}</TableCell>
                       <TableCell>{formatCurrency(getGtv(share), language)}</TableCell>
+                      <TableCell style={{ color: COLORS.takeRate }} className="font-medium">{formatCurrency(getAcv(share), language)}</TableCell>
                       <TableCell style={{ color: COLORS.takeRate }} className="font-medium">{getTakeRate(share).toFixed(1)}%</TableCell>
                       <TableCell>{getExpirationDate(share)}</TableCell>
                       <TableCell>
