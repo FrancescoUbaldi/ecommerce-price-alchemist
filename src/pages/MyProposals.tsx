@@ -5,8 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, LogOut, Eye, TrendingUp, TrendingDown } from "lucide-react";
+import { ArrowLeft, LogOut, Eye, TrendingUp, TrendingDown, MoreHorizontal, FlaskConical, FlaskConicalOff } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import LanguageSelector from "@/components/LanguageSelector";
 import { getTranslation, formatCurrency } from "@/utils/translations";
 
@@ -19,6 +20,7 @@ interface ShareRow {
   client_response_at: string | null;
   scenario_data: any;
   business_case_data: any;
+  is_test: boolean;
 }
 
 type PeriodFilter = "current_month" | "90_days" | "6_months" | "12_months";
@@ -129,10 +131,10 @@ const MyProposals = () => {
     const fetchShares = async () => {
       const { data, error } = await supabase
         .from("client_shares")
-        .select("id, name, created_at, language, client_response, client_response_at, scenario_data, business_case_data")
+        .select("id, name, created_at, language, client_response, client_response_at, scenario_data, business_case_data, is_test")
         .eq("created_by", userId)
         .order("created_at", { ascending: false });
-      if (!error && data) setShares(data);
+      if (!error && data) setShares(data as ShareRow[]);
       setLoading(false);
     };
     fetchShares();
@@ -141,30 +143,40 @@ const MyProposals = () => {
   const handleLogout = async () => { await supabase.auth.signOut(); navigate("/login", { replace: true }); };
 
   // Filtered shares
+  const handleToggleTest = async (id: string, currentIsTest: boolean) => {
+    const newVal = !currentIsTest;
+    await supabase.from("client_shares").update({ is_test: newVal } as any).eq("id", id);
+    setShares(prev => prev.map(s => s.id === id ? { ...s, is_test: newVal } : s));
+  };
+
+  // All shares in period (for table display)
   const filtered = useMemo(() => {
     const cutoff = getFilterDate(period);
     return shares.filter(s => new Date(s.created_at) >= cutoff);
   }, [shares, period]);
 
+  // Non-test shares for stats
+  const statsFiltered = useMemo(() => filtered.filter(s => !s.is_test), [filtered]);
+
   const prevFiltered = useMemo(() => {
     const [start, end] = getPrevPeriodRange(period);
     return shares.filter(s => {
       const d = new Date(s.created_at);
-      return d >= start && d <= end;
+      return d >= start && d <= end && !s.is_test;
     });
   }, [shares, period]);
 
   // KPI calculations
-  const totalGtv = useMemo(() => filtered.reduce((sum, s) => sum + getGtv(s), 0), [filtered]);
-  const acceptedShares = useMemo(() => filtered.filter(s => s.client_response === "accepted"), [filtered]);
+  const totalGtv = useMemo(() => statsFiltered.reduce((sum, s) => sum + getGtv(s), 0), [statsFiltered]);
+  const acceptedShares = useMemo(() => statsFiltered.filter(s => s.client_response === "accepted"), [statsFiltered]);
   const acceptedGtv = useMemo(() => acceptedShares.reduce((sum, s) => sum + getGtv(s), 0), [acceptedShares]);
-  const conversionPct = filtered.length > 0 ? Math.round((acceptedShares.length / filtered.length) * 100) : 0;
+  const conversionPct = statsFiltered.length > 0 ? Math.round((acceptedShares.length / statsFiltered.length) * 100) : 0;
 
   const avgTakeRate = useMemo(() => {
-    if (filtered.length === 0) return 0;
-    const sum = filtered.reduce((acc, s) => acc + getTakeRate(s), 0);
-    return sum / filtered.length;
-  }, [filtered]);
+    if (statsFiltered.length === 0) return 0;
+    const sum = statsFiltered.reduce((acc, s) => acc + getTakeRate(s), 0);
+    return sum / statsFiltered.length;
+  }, [statsFiltered]);
 
   const prevAvgTakeRate = useMemo(() => {
     if (prevFiltered.length === 0) return 0;
@@ -177,14 +189,14 @@ const MyProposals = () => {
   // Chart data
   const statusCounts = useMemo(() => {
     const acc = { accepted: 0, pending: 0, rejected: 0, countered: 0 };
-    filtered.forEach(s => {
+    statsFiltered.forEach(s => {
       if (s.client_response === "accepted") acc.accepted++;
       else if (s.client_response === "rejected") acc.rejected++;
       else if (s.client_response === "countered") acc.countered++;
       else acc.pending++;
     });
     return acc;
-  }, [filtered]);
+  }, [statsFiltered]);
 
   const donutData = useMemo(() => [
     { name: "accepted", value: statusCounts.accepted, color: COLORS.accepted },
@@ -198,12 +210,11 @@ const MyProposals = () => {
     const now = new Date();
     const weeks: { label: string; count: number }[] = [];
     let weekStart = new Date(cutoff);
-    // Align to Monday
     const dayOfWeek = weekStart.getDay();
     weekStart.setDate(weekStart.getDate() - ((dayOfWeek + 6) % 7));
     while (weekStart < now) {
       const weekEnd = new Date(weekStart.getTime() + 7 * 86400000);
-      const count = filtered.filter(s => {
+      const count = statsFiltered.filter(s => {
         const d = new Date(s.created_at);
         return d >= weekStart && d < weekEnd;
       }).length;
@@ -211,7 +222,7 @@ const MyProposals = () => {
       weekStart = weekEnd;
     }
     return weeks;
-  }, [filtered, period]);
+  }, [statsFiltered, period]);
 
   const formatDate = (dateStr: string) => {
     const localeMap: Record<string, string> = {
@@ -298,7 +309,7 @@ const MyProposals = () => {
               <CardTitle className="text-sm font-medium text-muted-foreground">{getTranslation(language, 'proposalsSent')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">{filtered.length}</p>
+              <p className="text-2xl font-bold">{statsFiltered.length}</p>
               <p className="text-xs text-muted-foreground">{getTranslation(language, 'currentMonth')}</p>
             </CardContent>
           </Card>
@@ -433,16 +444,37 @@ const MyProposals = () => {
                 </TableHeader>
                 <TableBody>
                   {filtered.map(share => (
-                    <TableRow key={share.id}>
+                    <TableRow key={share.id} className={share.is_test ? "opacity-40" : ""}>
                       <TableCell className="font-medium">{share.name || "—"}</TableCell>
                       <TableCell>{formatCurrency(getGtv(share), language)}</TableCell>
                       <TableCell style={{ color: COLORS.takeRate }} className="font-medium">{getTakeRate(share).toFixed(1)}%</TableCell>
                       <TableCell>{getExpirationDate(share)}</TableCell>
-                      <TableCell>{getStatusBadge(share.client_response)}</TableCell>
                       <TableCell>
-                        <Button variant="ghost" size="sm" onClick={() => window.open(`/view/${share.id}`, "_blank")} className="gap-1">
-                          <Eye className="h-4 w-4" /> {getTranslation(language, 'tableView')}
-                        </Button>
+                        <div className="flex items-center gap-1.5">
+                          {getStatusBadge(share.client_response)}
+                          {share.is_test && <Badge variant="secondary" className="bg-gray-200 text-gray-600 hover:bg-gray-200">{getTranslation(language, 'testBadge')}</Badge>}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => window.open(`/view/${share.id}`, "_blank")} className="gap-2 cursor-pointer">
+                              <Eye className="h-4 w-4" /> {getTranslation(language, 'tableView')}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleToggleTest(share.id, share.is_test)} className="gap-2 cursor-pointer">
+                              {share.is_test ? (
+                                <><FlaskConicalOff className="h-4 w-4" /> {getTranslation(language, 'removeTestMark')}</>
+                              ) : (
+                                <><FlaskConical className="h-4 w-4" /> {getTranslation(language, 'markAsTest')}</>
+                              )}
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </TableCell>
                     </TableRow>
                   ))}

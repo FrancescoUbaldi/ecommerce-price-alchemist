@@ -22,6 +22,7 @@ export type Database = {
           created_at: string
           created_by: string | null
           id: string
+          is_test: boolean
           language: string
           name: string | null
           scenario_data: Json
@@ -34,6 +35,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          is_test?: boolean
           language?: string
           name?: string | null
           scenario_data: Json
@@ -46,6 +48,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          is_test?: boolean
           language?: string
           name?: string | null
           scenario_data?: Json

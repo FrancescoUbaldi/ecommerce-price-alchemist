@@ -1,0 +1,1 @@
+ALTER TABLE public.client_shares ADD COLUMN is_test boolean NOT NULL DEFAULT false;
