@@ -295,6 +295,64 @@ const ClientView = () => {
                       );
                     }
 
+                    // Show rejection reason form
+                    if (showRejectionForm) {
+                      return (
+                        <div className="flex flex-col gap-3 w-full max-w-md ml-auto">
+                          <div>
+                            <h4 className="text-sm font-semibold text-gray-800">{getTranslation(lang, 'rejectionReason')}</h4>
+                            <p className="text-xs text-gray-500">{getTranslation(lang, 'rejectionReasonOptional')}</p>
+                          </div>
+                          <Select value={rejectionReason} onValueChange={setRejectionReason}>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="—" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="priceTooHigh">{getTranslation(lang, 'priceTooHigh')}</SelectItem>
+                              <SelectItem value="evaluatingCompetitors">{getTranslation(lang, 'evaluatingCompetitors')}</SelectItem>
+                              <SelectItem value="notRightTiming">{getTranslation(lang, 'notRightTiming')}</SelectItem>
+                              <SelectItem value="doesNotMeetNeeds">{getTranslation(lang, 'doesNotMeetNeeds')}</SelectItem>
+                              <SelectItem value="other">{getTranslation(lang, 'other')}</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {rejectionReason === 'other' && (
+                            <Input
+                              value={rejectionOtherText}
+                              onChange={(e) => setRejectionOtherText(e.target.value)}
+                              placeholder={getTranslation(lang, 'rejectionReasonOptional')}
+                              className="w-full"
+                            />
+                          )}
+                          <div className="flex gap-2 justify-end">
+                            <Button
+                              onClick={() => {
+                                const reason = rejectionReason === 'other'
+                                  ? (rejectionOtherText || getTranslation(lang, 'other'))
+                                  : rejectionReason
+                                    ? getTranslation(lang, rejectionReason)
+                                    : null;
+                                handleResponse('rejected', reason);
+                              }}
+                              disabled={isSubmitting}
+                              className="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-xl h-auto"
+                              size="sm"
+                            >
+                              {getTranslation(lang, 'confirmRejection')}
+                            </Button>
+                            <Button
+                              onClick={() => handleResponse('rejected', null)}
+                              disabled={isSubmitting}
+                              variant="ghost"
+                              className="text-gray-500 text-sm px-4 py-2 rounded-xl h-auto"
+                              size="sm"
+                            >
+                              {getTranslation(lang, 'skipAndReject')}
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    }
+
                     return (
                       <div className="flex items-center gap-3">
                         {countdown && (
@@ -337,67 +395,7 @@ const ClientView = () => {
                         )}
                       </div>
                     );
-                  }
-
-                  // Show rejection reason form
-                  if (showRejectionForm) {
-                    return (
-                      <div className="flex flex-col gap-3 w-full max-w-md ml-auto">
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-800">{getTranslation(lang, 'rejectionReason')}</h4>
-                          <p className="text-xs text-gray-500">{getTranslation(lang, 'rejectionReasonOptional')}</p>
-                        </div>
-                        <Select value={rejectionReason} onValueChange={setRejectionReason}>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="—" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="priceTooHigh">{getTranslation(lang, 'priceTooHigh')}</SelectItem>
-                            <SelectItem value="evaluatingCompetitors">{getTranslation(lang, 'evaluatingCompetitors')}</SelectItem>
-                            <SelectItem value="notRightTiming">{getTranslation(lang, 'notRightTiming')}</SelectItem>
-                            <SelectItem value="doesNotMeetNeeds">{getTranslation(lang, 'doesNotMeetNeeds')}</SelectItem>
-                            <SelectItem value="other">{getTranslation(lang, 'other')}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        {rejectionReason === 'other' && (
-                          <Input
-                            value={rejectionOtherText}
-                            onChange={(e) => setRejectionOtherText(e.target.value)}
-                            placeholder={getTranslation(lang, 'rejectionReasonOptional')}
-                            className="w-full"
-                          />
-                        )}
-                        <div className="flex gap-2 justify-end">
-                          <Button
-                            onClick={() => {
-                              const reason = rejectionReason === 'other'
-                                ? (rejectionOtherText || getTranslation(lang, 'other'))
-                                : rejectionReason
-                                  ? getTranslation(lang, rejectionReason)
-                                  : null;
-                              handleResponse('rejected', reason);
-                            }}
-                            disabled={isSubmitting}
-                            className="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-xl h-auto"
-                            size="sm"
-                          >
-                            {getTranslation(lang, 'confirmRejection')}
-                          </Button>
-                          <Button
-                            onClick={() => handleResponse('rejected', null)}
-                            disabled={isSubmitting}
-                            variant="ghost"
-                            className="text-gray-500 text-sm px-4 py-2 rounded-xl h-auto"
-                            size="sm"
-                          >
-                            {getTranslation(lang, 'skipAndReject')}
-                          </Button>
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  return null;
+                  })()}
                 </div>
               </CardHeader>
               <CardContent>
