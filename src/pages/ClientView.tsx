@@ -4,6 +4,8 @@ import { Check, Clock, CheckCircle2, XCircle, X, MessageSquare } from 'lucide-re
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
 import { getTranslation, formatCurrency as formatCurrencyUtil } from '@/utils/translations';
 import BusinessCase from '@/components/BusinessCase';
@@ -50,6 +52,9 @@ const ClientView = () => {
   const [error, setError] = useState<string | null>(null);
   const [clientResponse, setClientResponse] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showRejectionForm, setShowRejectionForm] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState<string>('');
+  const [rejectionOtherText, setRejectionOtherText] = useState('');
 
   useEffect(() => {
     const fetchShareData = async () => {
@@ -137,19 +142,24 @@ const ClientView = () => {
     return formatCurrencyUtil(value, shareData?.language || 'it');
   };
 
-  const handleResponse = async (response: 'accepted' | 'rejected') => {
+  const handleResponse = async (response: 'accepted' | 'rejected', reason?: string | null) => {
     if (!id || isSubmitting) return;
     setIsSubmitting(true);
     try {
+      const updateData: any = {
+        client_response: response,
+        client_response_at: new Date().toISOString(),
+      };
+      if (response === 'rejected') {
+        updateData.rejection_reason = reason || null;
+      }
       const { error } = await supabase
         .from('client_shares')
-        .update({
-          client_response: response,
-          client_response_at: new Date().toISOString(),
-        } as any)
+        .update(updateData)
         .eq('id', id);
       if (error) throw error;
       setClientResponse(response);
+      setShowRejectionForm(false);
     } catch (err) {
       console.error('Error saving response:', err);
     } finally {
@@ -285,6 +295,64 @@ const ClientView = () => {
                       );
                     }
 
+                    // Show rejection reason form
+                    if (showRejectionForm) {
+                      return (
+                        <div className="flex flex-col gap-3 w-full max-w-md ml-auto">
+                          <div>
+                            <h4 className="text-sm font-semibold text-gray-800">{getTranslation(lang, 'rejectionReason')}</h4>
+                            <p className="text-xs text-gray-500">{getTranslation(lang, 'rejectionReasonOptional')}</p>
+                          </div>
+                          <Select value={rejectionReason} onValueChange={setRejectionReason}>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="—" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="priceTooHigh">{getTranslation(lang, 'priceTooHigh')}</SelectItem>
+                              <SelectItem value="evaluatingCompetitors">{getTranslation(lang, 'evaluatingCompetitors')}</SelectItem>
+                              <SelectItem value="notRightTiming">{getTranslation(lang, 'notRightTiming')}</SelectItem>
+                              <SelectItem value="doesNotMeetNeeds">{getTranslation(lang, 'doesNotMeetNeeds')}</SelectItem>
+                              <SelectItem value="other">{getTranslation(lang, 'other')}</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {rejectionReason === 'other' && (
+                            <Input
+                              value={rejectionOtherText}
+                              onChange={(e) => setRejectionOtherText(e.target.value)}
+                              placeholder={getTranslation(lang, 'rejectionReasonOptional')}
+                              className="w-full"
+                            />
+                          )}
+                          <div className="flex gap-2 justify-end">
+                            <Button
+                              onClick={() => {
+                                const reason = rejectionReason === 'other'
+                                  ? (rejectionOtherText || getTranslation(lang, 'other'))
+                                  : rejectionReason
+                                    ? getTranslation(lang, rejectionReason)
+                                    : null;
+                                handleResponse('rejected', reason);
+                              }}
+                              disabled={isSubmitting}
+                              className="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-xl h-auto"
+                              size="sm"
+                            >
+                              {getTranslation(lang, 'confirmRejection')}
+                            </Button>
+                            <Button
+                              onClick={() => handleResponse('rejected', null)}
+                              disabled={isSubmitting}
+                              variant="ghost"
+                              className="text-gray-500 text-sm px-4 py-2 rounded-xl h-auto"
+                              size="sm"
+                            >
+                              {getTranslation(lang, 'skipAndReject')}
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    }
+
                     return (
                       <div className="flex items-center gap-3">
                         {countdown && (
@@ -305,7 +373,7 @@ const ClientView = () => {
                           {getTranslation(lang, 'acceptOffer')}
                         </Button>
                         <Button
-                          onClick={() => handleResponse('rejected')}
+                          onClick={() => setShowRejectionForm(true)}
                           disabled={isSubmitting || (countdown?.isExpired ?? false)}
                           variant="outline"
                           className="border-red-400 text-red-500 hover:bg-red-50 bg-white text-sm px-4 py-2 rounded-xl h-auto"

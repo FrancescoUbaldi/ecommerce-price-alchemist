@@ -195,7 +195,16 @@ export const translations = {
     countered: 'Controproposta',
     proposals: 'proposte',
     tableGtv: 'GTV',
-    tableTakeRate: 'Take Rate'
+    tableTakeRate: 'Take Rate',
+    rejectionReason: 'Motivo del rifiuto',
+    rejectionReasonOptional: 'Facoltativo — aiutaci a capire meglio',
+    priceTooHigh: 'Il prezzo è troppo alto',
+    evaluatingCompetitors: 'Stiamo valutando altri fornitori',
+    notRightTiming: 'Non è il momento giusto',
+    doesNotMeetNeeds: 'Non soddisfa le nostre esigenze',
+    other: 'Altro',
+    confirmRejection: 'Conferma rifiuto',
+    skipAndReject: 'Salta e rifiuta'
   },
   en: {
     title: "Price & Smile :)",
@@ -393,7 +402,16 @@ export const translations = {
     countered: 'Countered',
     proposals: 'proposals',
     tableGtv: 'GTV',
-    tableTakeRate: 'Take Rate'
+    tableTakeRate: 'Take Rate',
+    rejectionReason: 'Reason for rejection',
+    rejectionReasonOptional: 'Optional — help us understand better',
+    priceTooHigh: 'Price is too high',
+    evaluatingCompetitors: 'Evaluating other providers',
+    notRightTiming: 'Not the right timing',
+    doesNotMeetNeeds: 'Does not meet our needs',
+    other: 'Other',
+    confirmRejection: 'Confirm rejection',
+    skipAndReject: 'Skip and reject'
   },
   usa: {
     title: "Price & Smile :)",
@@ -585,7 +603,16 @@ export const translations = {
     countered: 'Countered',
     proposals: 'proposals',
     tableGtv: 'GTV',
-    tableTakeRate: 'Take Rate'
+    tableTakeRate: 'Take Rate',
+    rejectionReason: 'Reason for rejection',
+    rejectionReasonOptional: 'Optional — help us understand better',
+    priceTooHigh: 'Price is too high',
+    evaluatingCompetitors: 'Evaluating other providers',
+    notRightTiming: 'Not the right timing',
+    doesNotMeetNeeds: 'Does not meet our needs',
+    other: 'Other',
+    confirmRejection: 'Confirm rejection',
+    skipAndReject: 'Skip and reject'
   },
   'en-GB': {
     averageCart: "Average Basket (£)",
@@ -802,7 +829,16 @@ export const translations = {
     countered: 'Contraoferta',
     proposals: 'propuestas',
     tableGtv: 'GTV',
-    tableTakeRate: 'Take Rate'
+    tableTakeRate: 'Take Rate',
+    rejectionReason: 'Motivo del rechazo',
+    rejectionReasonOptional: 'Opcional — ayúdanos a entender mejor',
+    priceTooHigh: 'El precio es demasiado alto',
+    evaluatingCompetitors: 'Estamos evaluando otros proveedores',
+    notRightTiming: 'No es el momento adecuado',
+    doesNotMeetNeeds: 'No satisface nuestras necesidades',
+    other: 'Otro',
+    confirmRejection: 'Confirmar rechazo',
+    skipAndReject: 'Saltar y rechazar'
   },
   fr: {
     title: "Price & Smile :)",
@@ -1000,7 +1036,16 @@ export const translations = {
     countered: 'Contre-offre',
     proposals: 'propositions',
     tableGtv: 'GTV',
-    tableTakeRate: 'Take Rate'
+    tableTakeRate: 'Take Rate',
+    rejectionReason: 'Motif du refus',
+    rejectionReasonOptional: 'Facultatif — aidez-nous à mieux comprendre',
+    priceTooHigh: 'Le prix est trop élevé',
+    evaluatingCompetitors: 'Nous évaluons d\'autres fournisseurs',
+    notRightTiming: 'Ce n\'est pas le bon moment',
+    doesNotMeetNeeds: 'Ne répond pas à nos besoins',
+    other: 'Autre',
+    confirmRejection: 'Confirmer le refus',
+    skipAndReject: 'Passer et refuser'
   },
   de: {
     title: "Price & Smile :)",
@@ -1198,7 +1243,16 @@ export const translations = {
     countered: 'Gegenangebot',
     proposals: 'Angebote',
     tableGtv: 'GTV',
-    tableTakeRate: 'Take Rate'
+    tableTakeRate: 'Take Rate',
+    rejectionReason: 'Ablehnungsgrund',
+    rejectionReasonOptional: 'Optional — helfen Sie uns, besser zu verstehen',
+    priceTooHigh: 'Der Preis ist zu hoch',
+    evaluatingCompetitors: 'Wir bewerten andere Anbieter',
+    notRightTiming: 'Es ist nicht der richtige Zeitpunkt',
+    doesNotMeetNeeds: 'Entspricht nicht unseren Anforderungen',
+    other: 'Sonstiges',
+    confirmRejection: 'Ablehnung bestätigen',
+    skipAndReject: 'Überspringen und ablehnen'
   },
   nl: {
     title: "Price & Smile :)",
@@ -1396,7 +1450,16 @@ export const translations = {
     countered: 'Tegenbod',
     proposals: 'voorstellen',
     tableGtv: 'GTV',
-    tableTakeRate: 'Take Rate'
+    tableTakeRate: 'Take Rate',
+    rejectionReason: 'Reden voor afwijzing',
+    rejectionReasonOptional: 'Optioneel — help ons beter te begrijpen',
+    priceTooHigh: 'De prijs is te hoog',
+    evaluatingCompetitors: 'We evalueren andere aanbieders',
+    notRightTiming: 'Het is niet het juiste moment',
+    doesNotMeetNeeds: 'Voldoet niet aan onze behoeften',
+    other: 'Anders',
+    confirmRejection: 'Afwijzing bevestigen',
+    skipAndReject: 'Overslaan en afwijzen'
   },
   pl: {
     title: "Price & Smile :)",
@@ -1594,7 +1657,16 @@ export const translations = {
     countered: 'Kontroferta',
     proposals: 'propozycje',
     tableGtv: 'GTV',
-    tableTakeRate: 'Take Rate'
+    tableTakeRate: 'Take Rate',
+    rejectionReason: 'Powód odrzucenia',
+    rejectionReasonOptional: 'Opcjonalnie — pomóż nam lepiej zrozumieć',
+    priceTooHigh: 'Cena jest za wysoka',
+    evaluatingCompetitors: 'Oceniamy innych dostawców',
+    notRightTiming: 'To nie jest odpowiedni moment',
+    doesNotMeetNeeds: 'Nie spełnia naszych potrzeb',
+    other: 'Inne',
+    confirmRejection: 'Potwierdź odrzucenie',
+    skipAndReject: 'Pomiń i odrzuć'
   }
 };
 
