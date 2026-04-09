@@ -170,8 +170,10 @@ const MyProposals = () => {
 
   // KPI calculations
   const totalGtv = useMemo(() => statsFiltered.reduce((sum, s) => sum + getGtv(s), 0), [statsFiltered]);
+  const totalAcv = useMemo(() => statsFiltered.reduce((sum, s) => sum + getAcv(s), 0), [statsFiltered]);
   const acceptedShares = useMemo(() => statsFiltered.filter(s => s.client_response === "accepted"), [statsFiltered]);
   const acceptedGtv = useMemo(() => acceptedShares.reduce((sum, s) => sum + getGtv(s), 0), [acceptedShares]);
+  const acceptedAcv = useMemo(() => acceptedShares.reduce((sum, s) => sum + getAcv(s), 0), [acceptedShares]);
   const conversionPct = statsFiltered.length > 0 ? Math.round((acceptedShares.length / statsFiltered.length) * 100) : 0;
 
   const avgTakeRate = useMemo(() => {
