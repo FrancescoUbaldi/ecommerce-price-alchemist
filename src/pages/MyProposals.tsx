@@ -488,20 +488,48 @@ const MyProposals = () => {
 
           {/* Weekly activity */}
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-base">{getTranslation(language, 'weeklyActivity')}</CardTitle>
+              <div className="flex gap-1.5">
+                {(["3weeks", "6months"] as const).map(mode => (
+                  <button
+                    key={mode}
+                    onClick={() => setActivityChartMode(mode)}
+                    className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                      activityChartMode === mode
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    }`}
+                  >
+                    {mode === "3weeks" ? "3 weeks" : "6 months"}
+                  </button>
+                ))}
+              </div>
             </CardHeader>
             <CardContent>
               <div style={{ height: 280 }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={weeklyData}>
+                  <AreaChart data={activityData}>
+                    <defs>
+                      <linearGradient id="activityFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#B5D4F4" stopOpacity={0.3} />
+                        <stop offset="100%" stopColor="#B5D4F4" stopOpacity={0.05} />
+                      </linearGradient>
+                    </defs>
                     <XAxis dataKey="label" tick={{ fontSize: 11 }} />
                     <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
                     <Tooltip
                       formatter={(value: number) => [value, getTranslation(language, 'proposals')]}
                     />
-                    <Bar dataKey="count" fill={COLORS.bar} radius={[4, 4, 0, 0]} />
-                  </BarChart>
+                    <Area
+                      type="monotone"
+                      dataKey="count"
+                      stroke="#378ADD"
+                      strokeWidth={2}
+                      fill="url(#activityFill)"
+                      dot={false}
+                    />
+                  </AreaChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>
