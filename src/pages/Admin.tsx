@@ -22,6 +22,7 @@ interface ShareRow {
   business_case_data: any;
   created_by: string | null;
   is_test: boolean;
+  rejection_reason: string | null;
   status: string | null;
 }
 
@@ -333,10 +334,15 @@ const Admin = () => {
               <TableCell className="text-right" style={{ color: COLORS.takeRate }}>{getTakeRate(share).toFixed(2)}%</TableCell>
                <TableCell>{share.scenario_data?.offerExpirationDate ? formatDate(share.scenario_data.offerExpirationDate) : "—"}</TableCell>
               <TableCell>
-                <div className="flex items-center gap-1">
-                  {isOrphan && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Orphan</Badge>}
-                  {share.is_test && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Test</Badge>}
-                  {getStatusBadge(share.client_response)}
+                <div>
+                  <div className="flex items-center gap-1">
+                    {isOrphan && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Orphan</Badge>}
+                    {share.is_test && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Test</Badge>}
+                    {getStatusBadge(share.client_response)}
+                  </div>
+                  {share.client_response === "rejected" && share.rejection_reason && (
+                    <p className="text-xs text-muted-foreground mt-1">"{share.rejection_reason}"</p>
+                  )}
                 </div>
               </TableCell>
               <TableCell className="text-right">
@@ -500,9 +506,14 @@ const Admin = () => {
                         <TableCell className="text-right" style={{ color: COLORS.takeRate }}>{getTakeRate(share).toFixed(2)}%</TableCell>
                         <TableCell>{share.scenario_data?.offerExpirationDate ? formatDate(share.scenario_data.offerExpirationDate) : "—"}</TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-1">
-                            {share.is_test && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Test</Badge>}
-                            {getStatusBadge(share.client_response)}
+                          <div>
+                            <div className="flex items-center gap-1">
+                              {share.is_test && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Test</Badge>}
+                              {getStatusBadge(share.client_response)}
+                            </div>
+                            {share.client_response === "rejected" && share.rejection_reason && (
+                              <p className="text-xs text-muted-foreground mt-1">"{share.rejection_reason}"</p>
+                            )}
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
