@@ -303,7 +303,7 @@ const MyProposals = () => {
               <CardTitle className="text-sm font-medium text-muted-foreground">{getTranslation(language, 'proposalsSent')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">{filtered.length}</p>
+              <p className="text-2xl font-bold">{statsFiltered.length}</p>
               <p className="text-xs text-muted-foreground">{getTranslation(language, 'currentMonth')}</p>
             </CardContent>
           </Card>
