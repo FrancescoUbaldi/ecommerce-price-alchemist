@@ -105,8 +105,11 @@ const getStatusBadge = (response: string | null) => {
   return <Badge variant="destructive" className="gap-1"><XCircle className="h-3 w-3" />Rejected</Badge>;
 };
 
-const formatDate = (dateStr: string) =>
-  new Date(dateStr).toLocaleDateString("it-IT", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return '—';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+};
 
 const Admin = () => {
   const [shares, setShares] = useState<ShareRow[]>([]);
@@ -328,7 +331,7 @@ const Admin = () => {
               <TableCell className="text-right">{formatEur(getGtv(share))}</TableCell>
               <TableCell className="text-right">{formatEur(getAcv(share))}</TableCell>
               <TableCell className="text-right" style={{ color: COLORS.takeRate }}>{getTakeRate(share).toFixed(2)}%</TableCell>
-              <TableCell>{share.scenario_data?.offerExpirationDate || "—"}</TableCell>
+               <TableCell>{share.scenario_data?.offerExpirationDate ? formatDate(share.scenario_data.offerExpirationDate) : "—"}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-1">
                   {isOrphan && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Orphan</Badge>}
@@ -495,7 +498,7 @@ const Admin = () => {
                         <TableCell className="text-right">{formatEur(getGtv(share))}</TableCell>
                         <TableCell className="text-right">{formatEur(getAcv(share))}</TableCell>
                         <TableCell className="text-right" style={{ color: COLORS.takeRate }}>{getTakeRate(share).toFixed(2)}%</TableCell>
-                        <TableCell>{share.scenario_data?.offerExpirationDate || "—"}</TableCell>
+                        <TableCell>{share.scenario_data?.offerExpirationDate ? formatDate(share.scenario_data.offerExpirationDate) : "—"}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-1">
                             {share.is_test && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Test</Badge>}
@@ -693,7 +696,7 @@ const Admin = () => {
                             <div><span className="text-muted-foreground">Avg rate:</span> <span className="font-medium">{avgRate.toFixed(2)}%</span></div>
                           </div>
                           <p className="text-xs text-muted-foreground">
-                            Last activity: {lastActivity ? new Date(lastActivity).toLocaleDateString("it-IT") : "—"}
+                            Last activity: {lastActivity ? formatDate(lastActivity) : "—"}
                           </p>
                         </CardContent>
                       </Card>
