@@ -444,16 +444,37 @@ const MyProposals = () => {
                 </TableHeader>
                 <TableBody>
                   {filtered.map(share => (
-                    <TableRow key={share.id}>
+                    <TableRow key={share.id} className={share.is_test ? "opacity-40" : ""}>
                       <TableCell className="font-medium">{share.name || "—"}</TableCell>
                       <TableCell>{formatCurrency(getGtv(share), language)}</TableCell>
                       <TableCell style={{ color: COLORS.takeRate }} className="font-medium">{getTakeRate(share).toFixed(1)}%</TableCell>
                       <TableCell>{getExpirationDate(share)}</TableCell>
-                      <TableCell>{getStatusBadge(share.client_response)}</TableCell>
                       <TableCell>
-                        <Button variant="ghost" size="sm" onClick={() => window.open(`/view/${share.id}`, "_blank")} className="gap-1">
-                          <Eye className="h-4 w-4" /> {getTranslation(language, 'tableView')}
-                        </Button>
+                        <div className="flex items-center gap-1.5">
+                          {getStatusBadge(share.client_response)}
+                          {share.is_test && <Badge variant="secondary" className="bg-gray-200 text-gray-600 hover:bg-gray-200">{getTranslation(language, 'testBadge')}</Badge>}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => window.open(`/view/${share.id}`, "_blank")} className="gap-2 cursor-pointer">
+                              <Eye className="h-4 w-4" /> {getTranslation(language, 'tableView')}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleToggleTest(share.id, share.is_test)} className="gap-2 cursor-pointer">
+                              {share.is_test ? (
+                                <><FlaskConicalOff className="h-4 w-4" /> {getTranslation(language, 'removeTestMark')}</>
+                              ) : (
+                                <><FlaskConical className="h-4 w-4" /> {getTranslation(language, 'markAsTest')}</>
+                              )}
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </TableCell>
                     </TableRow>
                   ))}
