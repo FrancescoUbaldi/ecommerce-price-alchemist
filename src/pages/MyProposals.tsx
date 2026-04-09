@@ -131,10 +131,10 @@ const MyProposals = () => {
     const fetchShares = async () => {
       const { data, error } = await supabase
         .from("client_shares")
-        .select("id, name, created_at, language, client_response, client_response_at, scenario_data, business_case_data")
+        .select("id, name, created_at, language, client_response, client_response_at, scenario_data, business_case_data, is_test")
         .eq("created_by", userId)
         .order("created_at", { ascending: false });
-      if (!error && data) setShares(data);
+      if (!error && data) setShares(data as ShareRow[]);
       setLoading(false);
     };
     fetchShares();
