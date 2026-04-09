@@ -143,10 +143,14 @@ const MyProposals = () => {
   const handleLogout = async () => { await supabase.auth.signOut(); navigate("/login", { replace: true }); };
 
   // Filtered shares
+  // All shares in period (for table display)
   const filtered = useMemo(() => {
     const cutoff = getFilterDate(period);
     return shares.filter(s => new Date(s.created_at) >= cutoff);
   }, [shares, period]);
+
+  // Non-test shares for stats
+  const statsFiltered = useMemo(() => filtered.filter(s => !s.is_test), [filtered]);
 
   const prevFiltered = useMemo(() => {
     const [start, end] = getPrevPeriodRange(period);
