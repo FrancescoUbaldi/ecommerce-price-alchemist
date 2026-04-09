@@ -115,6 +115,7 @@ const MyProposals = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [language, setLanguage] = useState(() => localStorage.getItem('preferredLanguage') || 'it');
   const [period, setPeriod] = useState<PeriodFilter>("current_month");
+  const [faqOpen, setFaqOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => { localStorage.setItem('preferredLanguage', language); }, [language]);
