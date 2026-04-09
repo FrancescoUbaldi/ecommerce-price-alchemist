@@ -154,6 +154,26 @@ const MyProposals = () => {
     setShares(prev => prev.map(s => s.id === id ? { ...s, is_test: newVal } : s));
   };
 
+  const [extendingExpiryId, setExtendingExpiryId] = useState<string | null>(null);
+  const [extendDate, setExtendDate] = useState<Date | undefined>(undefined);
+
+  const openExtendExpiry = (share: ShareRow) => {
+    const scenario = share.scenario_data as any;
+    const current = scenario?.offerExpirationDate || scenario?.offerValidUntil;
+    setExtendDate(current ? new Date(current) : new Date());
+    setExtendingExpiryId(share.id);
+  };
+
+  const handleExtendExpiry = async () => {
+    if (!extendingExpiryId || !extendDate) return;
+    const share = shares.find(s => s.id === extendingExpiryId);
+    if (!share) return;
+    const newScenario = { ...(share.scenario_data as any), offerExpirationDate: extendDate.toISOString(), offerValidUntil: extendDate.toISOString() };
+    await supabase.from("client_shares").update({ scenario_data: newScenario } as any).eq("id", extendingExpiryId);
+    setShares(prev => prev.map(s => s.id === extendingExpiryId ? { ...s, scenario_data: newScenario } : s));
+    setExtendingExpiryId(null);
+  };
+
   // All shares in period (for table display)
   const filtered = useMemo(() => {
     const cutoff = getFilterDate(period);
