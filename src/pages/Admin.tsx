@@ -22,6 +22,7 @@ interface ShareRow {
   business_case_data: any;
   created_by: string | null;
   is_test: boolean;
+  rejection_reason: string | null;
   status: string | null;
 }
 

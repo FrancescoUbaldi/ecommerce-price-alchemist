@@ -21,6 +21,7 @@ interface ShareRow {
   scenario_data: any;
   business_case_data: any;
   is_test: boolean;
+  rejection_reason: string | null;
 }
 
 type PeriodFilter = "current_month" | "90_days" | "6_months" | "12_months";
