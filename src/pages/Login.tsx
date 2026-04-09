@@ -33,8 +33,14 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session) {
+        const email = session.user.email || '';
+        const displayName = email.split('@')[0];
+        await supabase.from('ae_profiles').upsert(
+          { id: session.user.id, email, display_name: displayName },
+          { onConflict: 'id', ignoreDuplicates: true }
+        );
         navigate("/my-proposals", { replace: true });
       }
       setCheckingSession(false);

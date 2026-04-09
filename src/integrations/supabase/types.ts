@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      ae_profiles: {
+        Row: {
+          created_at: string | null
+          display_name: string | null
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          display_name?: string | null
+          email: string
+          id: string
+        }
+        Update: {
+          created_at?: string | null
+          display_name?: string | null
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
       client_shares: {
         Row: {
           business_case_data: Json
