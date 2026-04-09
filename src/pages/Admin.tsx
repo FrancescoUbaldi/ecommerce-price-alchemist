@@ -124,18 +124,24 @@ const Admin = () => {
     else setPasswordError(true);
   };
 
+  const refreshData = async () => {
+    const [sharesRes, profilesRes] = await Promise.all([
+      supabase.from("client_shares").select("*").order("created_at", { ascending: false }),
+      supabase.from("ae_profiles").select("*"),
+    ]);
+    if (sharesRes.data) setShares(sharesRes.data as ShareRow[]);
+    if (profilesRes.data) setProfiles(profilesRes.data as AeProfile[]);
+    setLoading(false);
+  };
+
+  const toggleTestMark = async (shareId: string, currentIsTest: boolean) => {
+    await supabase.from("client_shares").update({ is_test: !currentIsTest }).eq("id", shareId);
+    await refreshData();
+  };
+
   useEffect(() => {
     if (!authenticated) return;
-    const fetchData = async () => {
-      const [sharesRes, profilesRes] = await Promise.all([
-        supabase.from("client_shares").select("*").order("created_at", { ascending: false }),
-        supabase.from("ae_profiles").select("*"),
-      ]);
-      if (sharesRes.data) setShares(sharesRes.data as ShareRow[]);
-      if (profilesRes.data) setProfiles(profilesRes.data as AeProfile[]);
-      setLoading(false);
-    };
-    fetchData();
+    refreshData();
   }, [authenticated]);
 
   const profileMap = useMemo(() => {
