@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, LogOut, Eye, TrendingUp, TrendingDown, MoreHorizontal, FlaskConical, FlaskConicalOff, CalendarDays, HelpCircle } from "lucide-react";
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -116,6 +116,7 @@ const MyProposals = () => {
   const [language, setLanguage] = useState(() => localStorage.getItem('preferredLanguage') || 'it');
   const [period, setPeriod] = useState<PeriodFilter>("current_month");
   const [faqOpen, setFaqOpen] = useState(false);
+  const [activityChartMode, setActivityChartMode] = useState<"3weeks" | "6months">("3weeks");
   const navigate = useNavigate();
 
   useEffect(() => { localStorage.setItem('preferredLanguage', language); }, [language]);
@@ -244,24 +245,46 @@ const MyProposals = () => {
     { name: "countered", value: statusCounts.countered, color: COLORS.countered },
   ].filter(d => d.value > 0), [statusCounts]);
 
-  const weeklyData = useMemo(() => {
-    const cutoff = getFilterDate(period);
+  const activityData = useMemo(() => {
     const now = new Date();
-    const weeks: { label: string; count: number }[] = [];
-    let weekStart = new Date(cutoff);
-    const dayOfWeek = weekStart.getDay();
-    weekStart.setDate(weekStart.getDate() - ((dayOfWeek + 6) % 7));
-    while (weekStart < now) {
-      const weekEnd = new Date(weekStart.getTime() + 7 * 86400000);
-      const count = statsFiltered.filter(s => {
-        const d = new Date(s.created_at);
-        return d >= weekStart && d < weekEnd;
-      }).length;
-      weeks.push({ label: getWeekLabel(weekStart), count });
-      weekStart = weekEnd;
+    const nonTestShares = shares.filter(s => !s.is_test);
+
+    if (activityChartMode === "3weeks") {
+      // Current week + 2 previous weeks
+      const today = new Date(now);
+      const dayOfWeek = today.getDay();
+      const currentWeekStart = new Date(today);
+      currentWeekStart.setDate(today.getDate() - ((dayOfWeek + 6) % 7));
+      currentWeekStart.setHours(0, 0, 0, 0);
+
+      const weeks: { label: string; count: number }[] = [];
+      for (let i = 2; i >= 0; i--) {
+        const weekStart = new Date(currentWeekStart);
+        weekStart.setDate(currentWeekStart.getDate() - i * 7);
+        const weekEnd = new Date(weekStart.getTime() + 7 * 86400000);
+        const count = nonTestShares.filter(s => {
+          const d = new Date(s.created_at);
+          return d >= weekStart && d < weekEnd;
+        }).length;
+        weeks.push({ label: getWeekLabel(weekStart), count });
+      }
+      return weeks;
+    } else {
+      // Last 6 months
+      const months: { label: string; count: number }[] = [];
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59);
+        const count = nonTestShares.filter(s => {
+          const sd = new Date(s.created_at);
+          return sd >= d && sd <= monthEnd;
+        }).length;
+        months.push({ label: monthNames[d.getMonth()], count });
+      }
+      return months;
     }
-    return weeks;
-  }, [statsFiltered, period]);
+  }, [shares, activityChartMode]);
 
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '—';
@@ -465,20 +488,48 @@ const MyProposals = () => {
 
           {/* Weekly activity */}
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-base">{getTranslation(language, 'weeklyActivity')}</CardTitle>
+              <div className="flex gap-1.5">
+                {(["3weeks", "6months"] as const).map(mode => (
+                  <button
+                    key={mode}
+                    onClick={() => setActivityChartMode(mode)}
+                    className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                      activityChartMode === mode
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    }`}
+                  >
+                    {mode === "3weeks" ? "3 weeks" : "6 months"}
+                  </button>
+                ))}
+              </div>
             </CardHeader>
             <CardContent>
               <div style={{ height: 280 }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={weeklyData}>
+                  <AreaChart data={activityData}>
+                    <defs>
+                      <linearGradient id="activityFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#B5D4F4" stopOpacity={0.3} />
+                        <stop offset="100%" stopColor="#B5D4F4" stopOpacity={0.05} />
+                      </linearGradient>
+                    </defs>
                     <XAxis dataKey="label" tick={{ fontSize: 11 }} />
                     <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
                     <Tooltip
                       formatter={(value: number) => [value, getTranslation(language, 'proposals')]}
                     />
-                    <Bar dataKey="count" fill={COLORS.bar} radius={[4, 4, 0, 0]} />
-                  </BarChart>
+                    <Area
+                      type="monotone"
+                      dataKey="count"
+                      stroke="#378ADD"
+                      strokeWidth={2}
+                      fill="url(#activityFill)"
+                      dot={false}
+                    />
+                  </AreaChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>
