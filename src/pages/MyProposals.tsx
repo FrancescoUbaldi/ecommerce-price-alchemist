@@ -35,7 +35,8 @@ const COLORS = {
 function getGtv(share: ShareRow): number {
   const bd = share.business_case_data;
   if (!bd) return 0;
-  return (bd.resiAnnuali || 0) * (bd.carrelloMedio || 0);
+  const annualReturns = (bd.resiAnnuali || 0) > 0 ? bd.resiAnnuali : (bd.resiMensili || 0) * 12;
+  return annualReturns * (bd.carrelloMedio || 0);
 }
 
 function getTakeRate(share: ShareRow): number {
@@ -44,13 +45,22 @@ function getTakeRate(share: ShareRow): number {
   if (!sd || !bd) return 0;
   const gtv = getGtv(share);
   if (gtv <= 0) return 0;
-  const monthly = (bd.resiMensili || 0);
-  const annualSaaS = (sd.saasFee || 0) * 12;
-  const annualTransaction = (sd.transactionFeeFixed || 0) * monthly * 12;
-  const annualRdv = ((sd.rdvPercentage || 0) / 100) * (bd.carrelloMedio || 0) * monthly * 12;
-  const annualUpselling = ((sd.upsellingPercentage || 0) / 100) * (bd.carrelloMedio || 0) * monthly * 12;
-  const totalFees = annualSaaS + annualTransaction + annualRdv + annualUpselling;
-  return (totalFees / gtv) * 100;
+  const annualReturns = (bd.resiAnnuali || 0) > 0 ? bd.resiAnnuali : (bd.resiMensili || 0) * 12;
+  const resiMensili = annualReturns / 12;
+
+  // Monthly fees
+  const monthlySaaS = sd.saasFee || 0;
+  const monthlyTransaction = (sd.transactionFeeFixed || 0) * resiMensili;
+  const rdvAnnuali = annualReturns * ((sd.rdvConversionRate ?? 35) / 100);
+  const rdvMensili = rdvAnnuali / 12;
+  const monthlyRdv = (rdvMensili * (bd.carrelloMedio || 0) * (sd.rdvPercentage || 0)) / 100;
+  const upsellingResi = annualReturns * ((sd.upsellingConversionRate ?? 3.78) / 100);
+  const upsellingAOV = (bd.carrelloMedio || 0) * 1.2;
+  const monthlyUpselling = ((upsellingResi * upsellingAOV) * (sd.upsellingPercentage || 0)) / 100 / 12;
+
+  // ACV = monthly total × 12
+  const acv = (monthlySaaS + monthlyTransaction + monthlyRdv + monthlyUpselling) * 12;
+  return (acv / gtv) * 100;
 }
 
 function getFilterDate(filter: PeriodFilter): Date {
