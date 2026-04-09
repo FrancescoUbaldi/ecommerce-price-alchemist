@@ -130,8 +130,8 @@ const Admin = () => {
     return profileMap[createdBy]?.display_name || profileMap[createdBy]?.email || "—";
   };
 
-  // Non-test shares for stats
-  const nonTest = useMemo(() => shares.filter(s => !s.is_test), [shares]);
+  // Non-test, non-orphan shares for stats
+  const nonTest = useMemo(() => shares.filter(s => !s.is_test && s.created_by != null), [shares]);
 
   // Period-filtered non-test shares
   const periodFiltered = useMemo(() => {
@@ -230,8 +230,10 @@ const Admin = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {rows.map((share) => (
-          <TableRow key={share.id} className={share.is_test ? "opacity-40" : ""}>
+        {rows.map((share) => {
+          const isOrphan = share.created_by == null;
+          return (
+          <TableRow key={share.id} className={share.is_test || isOrphan ? "opacity-40" : ""}>
             <TableCell className="font-medium">{share.name || "—"}</TableCell>
             <TableCell>{getAeName(share.created_by)}</TableCell>
             <TableCell className="text-right">{formatEur(getGtv(share))}</TableCell>
@@ -239,6 +241,7 @@ const Admin = () => {
             <TableCell className="text-right" style={{ color: "#534AB7" }}>{getTakeRate(share).toFixed(2)}%</TableCell>
             <TableCell>{share.scenario_data?.offerExpirationDate || "—"}</TableCell>
             <TableCell className="flex items-center gap-1">
+              {isOrphan && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Orphan</Badge>}
               {share.is_test && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Test</Badge>}
               {getStatusBadge(share.client_response)}
             </TableCell>
@@ -248,7 +251,8 @@ const Admin = () => {
               </Button>
             </TableCell>
           </TableRow>
-        ))}
+          );
+        })}
       </TableBody>
     </Table>
   );
