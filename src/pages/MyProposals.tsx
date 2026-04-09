@@ -245,24 +245,46 @@ const MyProposals = () => {
     { name: "countered", value: statusCounts.countered, color: COLORS.countered },
   ].filter(d => d.value > 0), [statusCounts]);
 
-  const weeklyData = useMemo(() => {
-    const cutoff = getFilterDate(period);
+  const activityData = useMemo(() => {
     const now = new Date();
-    const weeks: { label: string; count: number }[] = [];
-    let weekStart = new Date(cutoff);
-    const dayOfWeek = weekStart.getDay();
-    weekStart.setDate(weekStart.getDate() - ((dayOfWeek + 6) % 7));
-    while (weekStart < now) {
-      const weekEnd = new Date(weekStart.getTime() + 7 * 86400000);
-      const count = statsFiltered.filter(s => {
-        const d = new Date(s.created_at);
-        return d >= weekStart && d < weekEnd;
-      }).length;
-      weeks.push({ label: getWeekLabel(weekStart), count });
-      weekStart = weekEnd;
+    const nonTestShares = shares.filter(s => !s.is_test);
+
+    if (activityChartMode === "3weeks") {
+      // Current week + 2 previous weeks
+      const today = new Date(now);
+      const dayOfWeek = today.getDay();
+      const currentWeekStart = new Date(today);
+      currentWeekStart.setDate(today.getDate() - ((dayOfWeek + 6) % 7));
+      currentWeekStart.setHours(0, 0, 0, 0);
+
+      const weeks: { label: string; count: number }[] = [];
+      for (let i = 2; i >= 0; i--) {
+        const weekStart = new Date(currentWeekStart);
+        weekStart.setDate(currentWeekStart.getDate() - i * 7);
+        const weekEnd = new Date(weekStart.getTime() + 7 * 86400000);
+        const count = nonTestShares.filter(s => {
+          const d = new Date(s.created_at);
+          return d >= weekStart && d < weekEnd;
+        }).length;
+        weeks.push({ label: getWeekLabel(weekStart), count });
+      }
+      return weeks;
+    } else {
+      // Last 6 months
+      const months: { label: string; count: number }[] = [];
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59);
+        const count = nonTestShares.filter(s => {
+          const sd = new Date(s.created_at);
+          return sd >= d && sd <= monthEnd;
+        }).length;
+        months.push({ label: monthNames[d.getMonth()], count });
+      }
+      return months;
     }
-    return weeks;
-  }, [statsFiltered, period]);
+  }, [shares, activityChartMode]);
 
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '—';
