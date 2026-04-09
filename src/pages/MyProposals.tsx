@@ -311,6 +311,13 @@ const MyProposals = () => {
           </Button>
           <div className="flex items-center gap-3">
             <LanguageSelector language={language} setLanguage={setLanguage} />
+            <button
+              onClick={() => setFaqOpen(true)}
+              className="inline-flex items-center justify-center rounded-full border border-muted bg-secondary text-muted-foreground hover:bg-muted"
+              style={{ width: 22, height: 22, fontSize: 12 }}
+            >
+              <HelpCircle className="h-3.5 w-3.5" />
+            </button>
             <span className="text-sm text-muted-foreground">{userEmail}</span>
             <Button variant="outline" size="sm" onClick={handleLogout} className="gap-1">
               <LogOut className="h-4 w-4" /> {getTranslation(language, 'myProfileLogout')}
@@ -318,16 +325,7 @@ const MyProposals = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold text-foreground">{getTranslation(language, 'myProfileTitle')}</h1>
-          <button
-            onClick={() => setFaqOpen(true)}
-            className="inline-flex items-center justify-center rounded-full border border-muted bg-secondary text-muted-foreground hover:bg-muted"
-            style={{ width: 22, height: 22, fontSize: 12 }}
-          >
-            <HelpCircle className="h-3.5 w-3.5" />
-          </button>
-        </div>
+        <h1 className="text-2xl font-bold text-foreground">{getTranslation(language, 'myProfileTitle')}</h1>
 
         {/* FAQ Dialog */}
         <Dialog open={faqOpen} onOpenChange={setFaqOpen}>
