@@ -52,6 +52,9 @@ const ClientView = () => {
   const [error, setError] = useState<string | null>(null);
   const [clientResponse, setClientResponse] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showRejectionForm, setShowRejectionForm] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState<string>('');
+  const [rejectionOtherText, setRejectionOtherText] = useState('');
 
   useEffect(() => {
     const fetchShareData = async () => {
