@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Clock, CheckCircle2, XCircle, Eye, ArrowLeft, Archive, Users, TrendingUp, TrendingDown } from "lucide-react";
+import { Clock, CheckCircle2, XCircle, Eye, ArrowLeft, Archive, Users, TrendingUp, TrendingDown, MoreHorizontal, FlaskConical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
@@ -123,18 +124,24 @@ const Admin = () => {
     else setPasswordError(true);
   };
 
+  const refreshData = async () => {
+    const [sharesRes, profilesRes] = await Promise.all([
+      supabase.from("client_shares").select("*").order("created_at", { ascending: false }),
+      supabase.from("ae_profiles").select("*"),
+    ]);
+    if (sharesRes.data) setShares(sharesRes.data as ShareRow[]);
+    if (profilesRes.data) setProfiles(profilesRes.data as AeProfile[]);
+    setLoading(false);
+  };
+
+  const toggleTestMark = async (shareId: string, currentIsTest: boolean) => {
+    await supabase.from("client_shares").update({ is_test: !currentIsTest }).eq("id", shareId);
+    await refreshData();
+  };
+
   useEffect(() => {
     if (!authenticated) return;
-    const fetchData = async () => {
-      const [sharesRes, profilesRes] = await Promise.all([
-        supabase.from("client_shares").select("*").order("created_at", { ascending: false }),
-        supabase.from("ae_profiles").select("*"),
-      ]);
-      if (sharesRes.data) setShares(sharesRes.data as ShareRow[]);
-      if (profilesRes.data) setProfiles(profilesRes.data as AeProfile[]);
-      setLoading(false);
-    };
-    fetchData();
+    refreshData();
   }, [authenticated]);
 
   const profileMap = useMemo(() => {
@@ -472,12 +479,13 @@ const Admin = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Client</TableHead>
+                     <TableHead>Client</TableHead>
                       <TableHead className="text-right">GTV</TableHead>
                       <TableHead className="text-right">ACV</TableHead>
                       <TableHead className="text-right">Take rate</TableHead>
                       <TableHead>Expiry</TableHead>
                       <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -493,6 +501,23 @@ const Admin = () => {
                             {share.is_test && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Test</Badge>}
                             {getStatusBadge(share.client_response)}
                           </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => window.open(`/view/${share.id}`, "_blank")} className="gap-2">
+                                <Eye className="h-4 w-4" /> View
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => toggleTestMark(share.id, share.is_test)} className="gap-2">
+                                <FlaskConical className="h-4 w-4" /> {share.is_test ? "Remove test mark" : "Mark as test"}
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </TableCell>
                       </TableRow>
                     ))}
