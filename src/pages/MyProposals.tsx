@@ -133,7 +133,7 @@ const MyProposals = () => {
     const fetchShares = async () => {
       const { data, error } = await supabase
         .from("client_shares")
-        .select("id, name, created_at, language, client_response, client_response_at, scenario_data, business_case_data, is_test")
+        .select("id, name, created_at, language, client_response, client_response_at, scenario_data, business_case_data, is_test, rejection_reason")
         .eq("created_by", userId)
         .order("created_at", { ascending: false });
       if (!error && data) setShares(data as ShareRow[]);
@@ -452,10 +452,15 @@ const MyProposals = () => {
                       <TableCell style={{ color: COLORS.takeRate }} className="font-medium">{formatCurrency(getAcv(share), language)}</TableCell>
                       <TableCell style={{ color: COLORS.takeRate }} className="font-medium">{getTakeRate(share).toFixed(1)}%</TableCell>
                       <TableCell>{getExpirationDate(share)}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1.5">
-                          {getStatusBadge(share.client_response)}
-                          {share.is_test && <Badge variant="secondary" className="bg-gray-200 text-gray-600 hover:bg-gray-200">{getTranslation(language, 'testBadge')}</Badge>}
+                       <TableCell>
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            {getStatusBadge(share.client_response)}
+                            {share.is_test && <Badge variant="secondary" className="bg-gray-200 text-gray-600 hover:bg-gray-200">{getTranslation(language, 'testBadge')}</Badge>}
+                          </div>
+                          {share.client_response === "rejected" && share.rejection_reason && (
+                            <p className="text-xs text-muted-foreground mt-1">"{share.rejection_reason}"</p>
+                          )}
                         </div>
                       </TableCell>
                       <TableCell>
