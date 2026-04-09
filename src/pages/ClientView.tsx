@@ -142,19 +142,24 @@ const ClientView = () => {
     return formatCurrencyUtil(value, shareData?.language || 'it');
   };
 
-  const handleResponse = async (response: 'accepted' | 'rejected') => {
+  const handleResponse = async (response: 'accepted' | 'rejected', reason?: string | null) => {
     if (!id || isSubmitting) return;
     setIsSubmitting(true);
     try {
+      const updateData: any = {
+        client_response: response,
+        client_response_at: new Date().toISOString(),
+      };
+      if (response === 'rejected') {
+        updateData.rejection_reason = reason || null;
+      }
       const { error } = await supabase
         .from('client_shares')
-        .update({
-          client_response: response,
-          client_response_at: new Date().toISOString(),
-        } as any)
+        .update(updateData)
         .eq('id', id);
       if (error) throw error;
       setClientResponse(response);
+      setShowRejectionForm(false);
     } catch (err) {
       console.error('Error saving response:', err);
     } finally {
