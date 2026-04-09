@@ -441,6 +441,7 @@ const MyProposals = () => {
                   <TableRow>
                     <TableHead>{getTranslation(language, 'tableClient')}</TableHead>
                     <TableHead>{getTranslation(language, 'tableGtv')}</TableHead>
+                    <TableHead>ACV</TableHead>
                     <TableHead>{getTranslation(language, 'tableTakeRate')}</TableHead>
                     <TableHead>{getTranslation(language, 'tableExpiration')}</TableHead>
                     <TableHead>{getTranslation(language, 'tableStatus')}</TableHead>
@@ -452,6 +453,7 @@ const MyProposals = () => {
                     <TableRow key={share.id} className={share.is_test ? "opacity-40" : ""}>
                       <TableCell className="font-medium">{share.name || "—"}</TableCell>
                       <TableCell>{formatCurrency(getGtv(share), language)}</TableCell>
+                      <TableCell style={{ color: COLORS.takeRate }} className="font-medium">{formatCurrency(getAcv(share), language)}</TableCell>
                       <TableCell style={{ color: COLORS.takeRate }} className="font-medium">{getTakeRate(share).toFixed(1)}%</TableCell>
                       <TableCell>{getExpirationDate(share)}</TableCell>
                       <TableCell>
