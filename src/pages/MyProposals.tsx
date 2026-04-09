@@ -5,10 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, LogOut, Eye, TrendingUp, TrendingDown, MoreHorizontal, FlaskConical, FlaskConicalOff, CalendarDays } from "lucide-react";
+import { ArrowLeft, LogOut, Eye, TrendingUp, TrendingDown, MoreHorizontal, FlaskConical, FlaskConicalOff, CalendarDays, HelpCircle } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import LanguageSelector from "@/components/LanguageSelector";
 import { getTranslation, formatCurrency } from "@/utils/translations";
 
@@ -114,6 +115,7 @@ const MyProposals = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [language, setLanguage] = useState(() => localStorage.getItem('preferredLanguage') || 'it');
   const [period, setPeriod] = useState<PeriodFilter>("current_month");
+  const [faqOpen, setFaqOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => { localStorage.setItem('preferredLanguage', language); }, [language]);
@@ -316,7 +318,33 @@ const MyProposals = () => {
           </div>
         </div>
 
-        <h1 className="text-2xl font-bold text-foreground">{getTranslation(language, 'myProfileTitle')}</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground">{getTranslation(language, 'myProfileTitle')}</h1>
+          <button
+            onClick={() => setFaqOpen(true)}
+            className="inline-flex items-center justify-center rounded-full border border-muted bg-secondary text-muted-foreground hover:bg-muted"
+            style={{ width: 22, height: 22, fontSize: 12 }}
+          >
+            <HelpCircle className="h-3.5 w-3.5" />
+          </button>
+        </div>
+
+        {/* FAQ Dialog */}
+        <Dialog open={faqOpen} onOpenChange={setFaqOpen}>
+          <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{getTranslation(language, 'faqTitle')}</DialogTitle>
+            </DialogHeader>
+            <Accordion type="single" collapsible className="w-full">
+              {[1,2,3,4,5,6,7,8,9].map(n => (
+                <AccordionItem key={n} value={`q${n}`}>
+                  <AccordionTrigger className="text-sm text-left">{getTranslation(language, `faqQ${n}` as any)}</AccordionTrigger>
+                  <AccordionContent className="text-sm text-muted-foreground">{getTranslation(language, `faqA${n}` as any)}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </DialogContent>
+        </Dialog>
 
         {/* Period filter */}
         <div className="flex gap-2">
