@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Clock, CheckCircle2, XCircle, Eye, ArrowLeft, Archive, Users, TrendingUp, TrendingDown } from "lucide-react";
+import { Clock, CheckCircle2, XCircle, Eye, ArrowLeft, Archive, Users, TrendingUp, TrendingDown, MoreHorizontal, FlaskConical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
