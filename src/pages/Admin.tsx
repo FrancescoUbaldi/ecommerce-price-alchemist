@@ -479,12 +479,13 @@ const Admin = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Client</TableHead>
+                     <TableHead>Client</TableHead>
                       <TableHead className="text-right">GTV</TableHead>
                       <TableHead className="text-right">ACV</TableHead>
                       <TableHead className="text-right">Take rate</TableHead>
                       <TableHead>Expiry</TableHead>
                       <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -500,6 +501,23 @@ const Admin = () => {
                             {share.is_test && <Badge variant="outline" className="text-muted-foreground border-muted-foreground/40">Test</Badge>}
                             {getStatusBadge(share.client_response)}
                           </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => window.open(`/view/${share.id}`, "_blank")} className="gap-2">
+                                <Eye className="h-4 w-4" /> View
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => toggleTestMark(share.id, share.is_test)} className="gap-2">
+                                <FlaskConical className="h-4 w-4" /> {share.is_test ? "Remove test mark" : "Mark as test"}
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </TableCell>
                       </TableRow>
                     ))}
