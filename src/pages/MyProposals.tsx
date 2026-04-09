@@ -487,25 +487,51 @@ const MyProposals = () => {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => window.open(`/view/${share.id}`, "_blank")} className="gap-2 cursor-pointer">
-                              <Eye className="h-4 w-4" /> {getTranslation(language, 'tableView')}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleToggleTest(share.id, share.is_test)} className="gap-2 cursor-pointer">
-                              {share.is_test ? (
-                                <><FlaskConicalOff className="h-4 w-4" /> {getTranslation(language, 'removeTestMark')}</>
-                              ) : (
-                                <><FlaskConical className="h-4 w-4" /> {getTranslation(language, 'markAsTest')}</>
-                              )}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <div className="flex items-center gap-1">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => window.open(`/view/${share.id}`, "_blank")} className="gap-2 cursor-pointer">
+                                <Eye className="h-4 w-4" /> {getTranslation(language, 'tableView')}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleToggleTest(share.id, share.is_test)} className="gap-2 cursor-pointer">
+                                {share.is_test ? (
+                                  <><FlaskConicalOff className="h-4 w-4" /> {getTranslation(language, 'removeTestMark')}</>
+                                ) : (
+                                  <><FlaskConical className="h-4 w-4" /> {getTranslation(language, 'markAsTest')}</>
+                                )}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => openExtendExpiry(share)} className="gap-2 cursor-pointer">
+                                <CalendarDays className="h-4 w-4" /> Extend expiry
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                          {extendingExpiryId === share.id && (
+                            <Popover open onOpenChange={(open) => { if (!open) setExtendingExpiryId(null); }}>
+                              <PopoverTrigger asChild>
+                                <span />
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0" align="end">
+                                <Calendar
+                                  mode="single"
+                                  selected={extendDate}
+                                  onSelect={setExtendDate}
+                                  disabled={(date) => date < new Date()}
+                                  initialFocus
+                                  className="p-3 pointer-events-auto"
+                                />
+                                <div className="flex justify-end gap-2 p-3 pt-0">
+                                  <Button variant="ghost" size="sm" onClick={() => setExtendingExpiryId(null)}>Cancel</Button>
+                                  <Button size="sm" onClick={handleExtendExpiry} disabled={!extendDate || extendDate < new Date()}>Confirm</Button>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                          )}
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
