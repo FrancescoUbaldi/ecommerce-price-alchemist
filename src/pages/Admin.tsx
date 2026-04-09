@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Clock, CheckCircle2, XCircle, Eye, ArrowLeft, Archive } from "lucide-react";
+import { Clock, CheckCircle2, XCircle, Eye, ArrowLeft, Archive, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
@@ -441,6 +441,53 @@ const Admin = () => {
                   </CardContent>
                 </Card>
               </div>
+            )}
+
+            {/* AE Team Section */}
+            {!selectedAeId && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2"><Users className="h-5 w-5" /> AE Team</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {profiles.map(ae => {
+                      const aeProposals = nonTest.filter(s => s.created_by === ae.id);
+                      const proposalCount = aeProposals.length;
+                      const gtvAccepted = aeProposals.filter(s => s.client_response === "accepted").reduce((sum, s) => sum + getGtv(s), 0);
+                      const acvAccepted = aeProposals.filter(s => s.client_response === "accepted").reduce((sum, s) => sum + getAcv(s), 0);
+                      const rates = aeProposals.map(getTakeRate).filter(r => r > 0);
+                      const avgRate = rates.length > 0 ? rates.reduce((a, b) => a + b, 0) / rates.length : 0;
+                      const lastActivity = aeProposals.length > 0 ? aeProposals.reduce((max, s) => s.created_at > max ? s.created_at : max, aeProposals[0].created_at) : null;
+
+                      return (
+                        <Card key={ae.id} className="border">
+                          <CardContent className="pt-5 space-y-3">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="font-semibold">{ae.display_name || ae.email}</p>
+                                <p className="text-xs text-muted-foreground">{ae.email}</p>
+                              </div>
+                              <Button variant="ghost" size="sm" onClick={() => setSelectedAeId(ae.id)} className="gap-1">
+                                <Eye className="h-4 w-4" /> View
+                              </Button>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 text-sm">
+                              <div><span className="text-muted-foreground">Proposals:</span> <span className="font-medium">{proposalCount}</span></div>
+                              <div><span className="text-muted-foreground">GTV acc:</span> <span className="font-medium">{formatEur(gtvAccepted)}</span></div>
+                              <div><span className="text-muted-foreground">ACV acc:</span> <span className="font-medium">{formatEur(acvAccepted)}</span></div>
+                              <div><span className="text-muted-foreground">Avg rate:</span> <span className="font-medium">{avgRate.toFixed(2)}%</span></div>
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                              Last activity: {lastActivity ? new Date(lastActivity).toLocaleDateString("it-IT") : "—"}
+                            </p>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
             )}
 
             {/* All Proposals Table */}
