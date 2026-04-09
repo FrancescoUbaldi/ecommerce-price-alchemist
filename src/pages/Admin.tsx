@@ -251,7 +251,8 @@ const Admin = () => {
               </Button>
             </TableCell>
           </TableRow>
-        ))}
+          );
+        })}
       </TableBody>
     </Table>
   );
