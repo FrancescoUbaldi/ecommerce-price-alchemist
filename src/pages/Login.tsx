@@ -27,7 +27,8 @@ const detectBrowserLanguage = (): string => {
 const Login = () => {
   const [checkingSession, setCheckingSession] = useState(true);
   const [language] = useState(() => {
-    return localStorage.getItem('preferredLanguage') || detectBrowserLanguage();
+    const saved = localStorage.getItem('preferredLanguage');
+    return saved || detectBrowserLanguage();
   });
   const navigate = useNavigate();
 
