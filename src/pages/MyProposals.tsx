@@ -183,14 +183,14 @@ const MyProposals = () => {
   // Chart data
   const statusCounts = useMemo(() => {
     const acc = { accepted: 0, pending: 0, rejected: 0, countered: 0 };
-    filtered.forEach(s => {
+    statsFiltered.forEach(s => {
       if (s.client_response === "accepted") acc.accepted++;
       else if (s.client_response === "rejected") acc.rejected++;
       else if (s.client_response === "countered") acc.countered++;
       else acc.pending++;
     });
     return acc;
-  }, [filtered]);
+  }, [statsFiltered]);
 
   const donutData = useMemo(() => [
     { name: "accepted", value: statusCounts.accepted, color: COLORS.accepted },
