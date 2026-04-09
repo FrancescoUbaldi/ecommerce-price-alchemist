@@ -8,8 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, LogOut, Eye, TrendingUp, TrendingDown, MoreHorizontal, FlaskConical, FlaskConicalOff, CalendarDays } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import LanguageSelector from "@/components/LanguageSelector";
 import { getTranslation, formatCurrency } from "@/utils/translations";
 
@@ -155,24 +154,35 @@ const MyProposals = () => {
   };
 
   const [extendingExpiryId, setExtendingExpiryId] = useState<string | null>(null);
-  const [extendDate, setExtendDate] = useState<Date | undefined>(undefined);
+  const [extendDateStr, setExtendDateStr] = useState("");
 
   const openExtendExpiry = (share: ShareRow) => {
     const scenario = share.scenario_data as any;
     const current = scenario?.offerExpirationDate || scenario?.offerValidUntil;
-    setExtendDate(current ? new Date(current) : new Date());
+    if (current) {
+      setExtendDateStr(new Date(current).toISOString().split("T")[0]);
+    } else {
+      setExtendDateStr("");
+    }
     setExtendingExpiryId(share.id);
   };
 
   const handleExtendExpiry = async () => {
-    if (!extendingExpiryId || !extendDate) return;
+    if (!extendingExpiryId || !extendDateStr) return;
     const share = shares.find(s => s.id === extendingExpiryId);
     if (!share) return;
-    const newScenario = { ...(share.scenario_data as any), offerExpirationDate: extendDate.toISOString(), offerValidUntil: extendDate.toISOString() };
+    const isoDate = `${extendDateStr}T00:00:00.000Z`;
+    const newScenario = { ...(share.scenario_data as any), offerExpirationDate: isoDate, offerValidUntil: isoDate };
     await supabase.from("client_shares").update({ scenario_data: newScenario } as any).eq("id", extendingExpiryId);
     setShares(prev => prev.map(s => s.id === extendingExpiryId ? { ...s, scenario_data: newScenario } : s));
     setExtendingExpiryId(null);
   };
+
+  const tomorrowStr = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().split("T")[0];
+  }, []);
 
   // All shares in period (for table display)
   const filtered = useMemo(() => {
@@ -510,27 +520,6 @@ const MyProposals = () => {
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
-                          {extendingExpiryId === share.id && (
-                            <Popover open onOpenChange={(open) => { if (!open) setExtendingExpiryId(null); }}>
-                              <PopoverTrigger asChild>
-                                <span />
-                              </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0" align="end">
-                                <Calendar
-                                  mode="single"
-                                  selected={extendDate}
-                                  onSelect={setExtendDate}
-                                  disabled={(date) => date < new Date()}
-                                  initialFocus
-                                  className="p-3 pointer-events-auto"
-                                />
-                                <div className="flex justify-end gap-2 p-3 pt-0">
-                                  <Button variant="ghost" size="sm" onClick={() => setExtendingExpiryId(null)}>Cancel</Button>
-                                  <Button size="sm" onClick={handleExtendExpiry} disabled={!extendDate || extendDate < new Date()}>Confirm</Button>
-                                </div>
-                              </PopoverContent>
-                            </Popover>
-                          )}
                         </div>
                       </TableCell>
                     </TableRow>
@@ -540,6 +529,27 @@ const MyProposals = () => {
             )}
           </CardContent>
         </Card>
+
+        <Dialog open={!!extendingExpiryId} onOpenChange={(open) => { if (!open) setExtendingExpiryId(null); }}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Extend expiry date</DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              <input
+                type="date"
+                value={extendDateStr}
+                min={tomorrowStr}
+                onChange={(e) => setExtendDateStr(e.target.value)}
+                className="w-full border rounded-md px-3 py-2 text-sm bg-background text-foreground"
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="ghost" onClick={() => setExtendingExpiryId(null)}>Cancel</Button>
+              <Button onClick={handleExtendExpiry} disabled={!extendDateStr || extendDateStr < tomorrowStr}>Save</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
