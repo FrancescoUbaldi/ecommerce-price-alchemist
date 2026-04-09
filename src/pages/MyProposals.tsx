@@ -41,16 +41,13 @@ function getGtv(share: ShareRow): number {
   return annualReturns * (bd.carrelloMedio || 0);
 }
 
-function getTakeRate(share: ShareRow): number {
+function getAcv(share: ShareRow): number {
   const sd = share.scenario_data;
   const bd = share.business_case_data;
   if (!sd || !bd) return 0;
-  const gtv = getGtv(share);
-  if (gtv <= 0) return 0;
   const annualReturns = (bd.resiAnnuali || 0) > 0 ? bd.resiAnnuali : (bd.resiMensili || 0) * 12;
   const resiMensili = annualReturns / 12;
 
-  // Monthly fees
   const monthlySaaS = sd.saasFee || 0;
   const monthlyTransaction = (sd.transactionFeeFixed || 0) * resiMensili;
   const rdvAnnuali = annualReturns * ((sd.rdvConversionRate ?? 35) / 100);
@@ -60,8 +57,13 @@ function getTakeRate(share: ShareRow): number {
   const upsellingAOV = (bd.carrelloMedio || 0) * 1.2;
   const monthlyUpselling = ((upsellingResi * upsellingAOV) * (sd.upsellingPercentage || 0)) / 100 / 12;
 
-  // ACV = monthly total × 12
-  const acv = (monthlySaaS + monthlyTransaction + monthlyRdv + monthlyUpselling) * 12;
+  return (monthlySaaS + monthlyTransaction + monthlyRdv + monthlyUpselling) * 12;
+}
+
+function getTakeRate(share: ShareRow): number {
+  const gtv = getGtv(share);
+  if (gtv <= 0) return 0;
+  const acv = getAcv(share);
   return (acv / gtv) * 100;
 }
 
