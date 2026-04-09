@@ -670,6 +670,7 @@ export const translations = {
     faqQ9: 'Can I send multiple scenarios to the same client?',
     faqA9: 'Yes, each share generates a unique link. They appear separately in your panel.'
   },
+  'en-GB': {
     averageCart: "Average Basket (£)",
     saasFee: "SaaS Fee (£/month)",
     transactionFee: "Transaction Fee (£/return)",
