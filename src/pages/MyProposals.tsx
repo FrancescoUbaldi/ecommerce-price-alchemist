@@ -156,21 +156,21 @@ const MyProposals = () => {
     const [start, end] = getPrevPeriodRange(period);
     return shares.filter(s => {
       const d = new Date(s.created_at);
-      return d >= start && d <= end;
+      return d >= start && d <= end && !s.is_test;
     });
   }, [shares, period]);
 
   // KPI calculations
-  const totalGtv = useMemo(() => filtered.reduce((sum, s) => sum + getGtv(s), 0), [filtered]);
-  const acceptedShares = useMemo(() => filtered.filter(s => s.client_response === "accepted"), [filtered]);
+  const totalGtv = useMemo(() => statsFiltered.reduce((sum, s) => sum + getGtv(s), 0), [statsFiltered]);
+  const acceptedShares = useMemo(() => statsFiltered.filter(s => s.client_response === "accepted"), [statsFiltered]);
   const acceptedGtv = useMemo(() => acceptedShares.reduce((sum, s) => sum + getGtv(s), 0), [acceptedShares]);
-  const conversionPct = filtered.length > 0 ? Math.round((acceptedShares.length / filtered.length) * 100) : 0;
+  const conversionPct = statsFiltered.length > 0 ? Math.round((acceptedShares.length / statsFiltered.length) * 100) : 0;
 
   const avgTakeRate = useMemo(() => {
-    if (filtered.length === 0) return 0;
-    const sum = filtered.reduce((acc, s) => acc + getTakeRate(s), 0);
-    return sum / filtered.length;
-  }, [filtered]);
+    if (statsFiltered.length === 0) return 0;
+    const sum = statsFiltered.reduce((acc, s) => acc + getTakeRate(s), 0);
+    return sum / statsFiltered.length;
+  }, [statsFiltered]);
 
   const prevAvgTakeRate = useMemo(() => {
     if (prevFiltered.length === 0) return 0;
