@@ -595,26 +595,47 @@ const BusinessCase = ({
               </TableRow>
               
               <TableRow className="border-b">
-                <TableCell className="font-medium">{getTranslation(language, 'reverPlatformCost')}</TableCell>
+                <TableCell className="font-medium">{getTranslation(language, 'reverPlatformCostFixed')}</TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
                 <TableCell className="text-center">
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <span className="cursor-help">{formatCurrency(totalPlatformCost)}</span>
+                      <span className="cursor-help">{formatCurrency(saasFeeAnnuale + transactionFeeAnnuale + integrationCostValue)}</span>
                     </TooltipTrigger>
                     <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
                       <div className="space-y-1 text-sm">
-                        <div>SaaS Fee: <EditableValue value={saasFeeAnnuale} format="currency" field="saasFee" /></div>
-                        <div>+ Transaction Fee: <EditableValue value={transactionFeeAnnuale} format="currency" field="transactionFeeFixed" /></div>
-                        <div>+ RDV Fee ({effectiveRdvPercentage}%): <EditableValue value={rdvFeeAnnuale} format="currency" field="rdvPercentage" /></div>
-                        <div>+ Upselling Fee ({effectiveUpsellingPercentage}%): <EditableValue value={upsellingFeeAnnuale} format="currency" field="upsellingPercentage" /></div>
+                        <div>SaaS Fee: {formatCurrency(saasFeeAnnuale)}</div>
+                        <div>+ Transaction Fee: {formatCurrency(transactionFeeAnnuale)}</div>
                         {integrationCostValue > 0 && (
                           <div>+ Integration Cost: {formatCurrency(integrationCostValue)}</div>
                         )}
                         <div className="border-t pt-1 mt-2 font-semibold">
-                          = {getTranslation(language, 'total')}: {formatCurrency(totalPlatformCost)}
+                          = Total Fixed: {formatCurrency(saasFeeAnnuale + transactionFeeAnnuale + integrationCostValue)}
+                        </div>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+
+              <TableRow className="border-b">
+                <TableCell className="font-medium">{getTranslation(language, 'reverPlatformCostVariable')}</TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell className="text-center">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="cursor-help">{formatCurrency(rdvFeeAnnuale + upsellingFeeAnnuale)}</span>
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-white border border-gray-200 p-4 rounded-lg shadow-lg">
+                      <div className="space-y-1 text-sm">
+                        <div>RDV Fee ({effectiveRdvPercentage}%): <EditableValue value={rdvFeeAnnuale} format="currency" field="rdvPercentage" /></div>
+                        <div>+ Upselling Fee ({effectiveUpsellingPercentage}%): <EditableValue value={upsellingFeeAnnuale} format="currency" field="upsellingPercentage" /></div>
+                        <div className="border-t pt-1 mt-2 font-semibold">
+                          = Total Variable: {formatCurrency(rdvFeeAnnuale + upsellingFeeAnnuale)}
                         </div>
                       </div>
                     </TooltipContent>
