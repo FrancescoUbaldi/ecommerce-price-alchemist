@@ -133,6 +133,10 @@ const BusinessCase = ({
     if (isEditing) {
       return (
         <Input
+          type="number"
+          step="0.01"
+          min="0"
+          inputMode="decimal"
           value={editValue}
           onChange={(e) => setEditValue(e.target.value)}
           onBlur={handleSave}

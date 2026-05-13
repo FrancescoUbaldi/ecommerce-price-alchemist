@@ -1143,6 +1143,7 @@ const Index = () => {
                             <Input
                               type="number"
                               step="0.01"
+                              inputMode="decimal"
                               value={scenario.rdvPercentage === 0 ? '0' : (scenario.rdvPercentage?.toString() || '')}
                               onChange={(e) => {
                                 const value = e.target.value;
@@ -1166,6 +1167,7 @@ const Index = () => {
                               type="number"
                               step="0.01"
                               min="0"
+                              inputMode="decimal"
                               value={scenario.upsellingPercentage === 0 ? '0' : (scenario.upsellingPercentage?.toString() || '')}
                               onChange={(e) => {
                                 const value = e.target.value;
@@ -1307,7 +1309,8 @@ const Index = () => {
                     <Input
                       id="customReturnRatePersonal"
                       type="number"
-                      step="0.1"
+                      step="0.01"
+                      inputMode="decimal"
                       value={clientData.returnRatePercentage || ''}
                       onChange={(e) => updateCustomScenarioField('returnRatePercentage', parseFloat(e.target.value) || 0)}
                       placeholder="23.9"
@@ -1379,11 +1382,13 @@ const Index = () => {
                     <Input
                       id="customRdvFee"
                       type="number"
-                      step="1"
+                      step="0.01"
+                      min="0"
+                      inputMode="decimal"
                       value={customScenario.rdvPercentage || ''}
                       onChange={(e) => setCustomScenario({
                         ...customScenario,
-                        rdvPercentage: Math.round(parseFloat(e.target.value)) || 0
+                        rdvPercentage: parseFloat(e.target.value) || 0
                       })}
                       placeholder="0"
                     />
@@ -1394,14 +1399,15 @@ const Index = () => {
                      <Input
                        id="customUpsellingFee"
                        type="number"
-                       step="1"
+                       step="0.01"
                        min="0"
+                       inputMode="decimal"
                        value={customScenario.upsellingPercentage ?? ''}
                        onChange={(e) => {
                          const value = e.target.value;
                          setCustomScenario({
                            ...customScenario,
-                           upsellingPercentage: value === '' ? 0 : Math.round(parseFloat(value)) || 0
+                           upsellingPercentage: value === '' ? 0 : (parseFloat(value) || 0)
                          });
                        }}
                        placeholder="0"
@@ -1814,9 +1820,11 @@ const Index = () => {
                         <Label>{getTranslation(language, 'rdvFee')}</Label>
                          <Input
                            type="number"
-                           step="1"
+                           step="0.01"
+                           min="0"
+                           inputMode="decimal"
                            value={scenario.rdvPercentage || ''}
-                           onChange={(e) => updateDuplicatedScenario(index, 'rdvPercentage', Math.round(parseFloat(e.target.value)) || 0)}
+                           onChange={(e) => updateDuplicatedScenario(index, 'rdvPercentage', parseFloat(e.target.value) || 0)}
                           placeholder="0"
                         />
                       </div>
@@ -1824,12 +1832,13 @@ const Index = () => {
                         <Label>{getTranslation(language, 'upsellingFee')}</Label>
                          <Input
                            type="number"
-                           step="1"
+                           step="0.01"
                            min="0"
+                           inputMode="decimal"
                            value={scenario.upsellingPercentage ?? ''}
                            onChange={(e) => {
                              const value = e.target.value;
-                             updateDuplicatedScenario(index, 'upsellingPercentage', value === '' ? 0 : Math.round(parseFloat(value)) || 0);
+                             updateDuplicatedScenario(index, 'upsellingPercentage', value === '' ? 0 : (parseFloat(value) || 0));
                            }}
                           placeholder="0"
                         />
