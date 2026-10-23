@@ -523,7 +523,7 @@ const ClientView = () => {
                           <h4 className="font-semibold mb-3 text-gray-800">{getTranslation(shareData.language, 'upfrontDiscount')}:</h4>
                           <div className="space-y-2 text-sm">
                             <div className="flex justify-between items-center">
-                              <span>{getTranslation(shareData.language, 'sixMonthsDiscount')}:</span>
+                              <span>{getTranslation(shareData.language, 'twelveMonthsDiscount')}:</span>
                               <div className="text-right">
                                 <span className="line-through text-red-500 mr-2">{formatCurrency(calculation.saasFee)}</span>
                                 <span className="font-semibold text-green-600">
@@ -538,7 +538,7 @@ const ClientView = () => {
                               {getTranslation(shareData.language, 'totalAnnual')}: {formatCurrency((calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.9)) * 12)}
                             </div>
                             <div className="flex justify-between items-center">
-                              <span>{getTranslation(shareData.language, 'twelveMonthsDiscount')}:</span>
+                              <span>{getTranslation(shareData.language, 'twentyFourMonthsDiscount')}:</span>
                               <div className="text-right">
                                 <span className="line-through text-red-500 mr-2">{formatCurrency(calculation.saasFee)}</span>
                                 <span className="font-semibold text-green-600">
