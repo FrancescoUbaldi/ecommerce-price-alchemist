@@ -1503,7 +1503,7 @@ const Index = () => {
                               <h4 className="font-semibold mb-3 text-gray-800">{getTranslation(language, 'upfrontDiscount')}:</h4>
                               <div className="space-y-2 text-sm">
                                 <div className="flex items-center justify-between">
-                                  <span>{getTranslation(language, 'sixMonthsDiscount')}:</span>
+                                  <span>{getTranslation(language, 'twelveMonthsDiscount')}:</span>
                                   <div className="text-right">
                                     <span className="line-through text-red-500">{formatCurrency(calculation.saasFee)}</span>
                                     <span className="ml-2 font-medium">➜ {formatCurrency(calculation.saasFee * 0.9)}</span>
@@ -1516,7 +1516,7 @@ const Index = () => {
                                   {getTranslation(language, 'totalAnnual')}: {formatCurrency((calculation.totalMensile - calculation.saasFee + (calculation.saasFee * 0.9)) * 12)}
                                 </div>
                                 <div className="flex items-center justify-between">
-                                  <span>{getTranslation(language, 'twelveMonthsDiscount')}:</span>
+                                  <span>{getTranslation(language, 'twentyFourMonthsDiscount')}:</span>
                                   <div className="text-right">
                                     <span className="line-through text-red-500">{formatCurrency(calculation.saasFee)}</span>
                                     <span className="ml-2 font-medium">➜ {formatCurrency(calculation.saasFee * 0.85)}</span>
