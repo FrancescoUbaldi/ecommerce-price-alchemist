@@ -1859,7 +1859,41 @@ export const translations = {
   }
 };
 
+// Display-only currency override (no value conversion). null = follow language default.
+export const CURRENCY_OPTIONS: { code: string; symbol: string }[] = [
+  { code: 'EUR', symbol: '€' },
+  { code: 'USD', symbol: '$' },
+  { code: 'GBP', symbol: '£' },
+  { code: 'CAD', symbol: 'CA$' },
+  { code: 'PLN', symbol: 'zł' },
+  { code: 'CHF', symbol: 'CHF' },
+  { code: 'AUD', symbol: 'A$' },
+];
+let activeCurrency: string | null = null;
+export const setActiveCurrency = (code: string | null | undefined) => {
+  activeCurrency = code && CURRENCY_OPTIONS.some(c => c.code === code) ? code : null;
+};
+export const getDefaultCurrencyForLanguage = (language: string): string => {
+  if (language === 'usa') return 'USD';
+  if (language === 'pl') return 'PLN';
+  if (language === 'en-GB') return 'GBP';
+  return 'EUR';
+};
+const getEffectiveCurrency = (language: string) => activeCurrency ?? getDefaultCurrencyForLanguage(language);
+
+const applyCurrencyToLabel = (text: string, language: string): string => {
+  if (!text || !activeCurrency) return text;
+  const from = CURRENCY_OPTIONS.find(c => c.code === getDefaultCurrencyForLanguage(language))!.symbol;
+  const to = CURRENCY_OPTIONS.find(c => c.code === activeCurrency)!.symbol;
+  if (from === to) return text;
+  return text.split(`(${from}`).join(`(${to}`);
+};
+
 export const getTranslation = (language: string, key: string): string => {
+  return applyCurrencyToLabel(getTranslationRaw(language, key), language);
+};
+
+const getTranslationRaw = (language: string, key: string): string => {
   const translation = translations[language as keyof typeof translations]?.[key as keyof typeof translations['it']];
   if (translation) return translation;
   
@@ -1870,10 +1904,8 @@ export const getTranslation = (language: string, key: string): string => {
 
 // Currency formatting utility
 export const getCurrencySymbol = (language: string): string => {
-  if (language === 'usa') return '$';
-  if (language === 'pl') return 'zł';
-  if (language === 'en-GB') return '£';
-  return '€';
+  const code = getEffectiveCurrency(language);
+  return CURRENCY_OPTIONS.find(c => c.code === code)?.symbol ?? '€';
 };
 
 export const formatCurrency = (value: number, language: string, forceDecimals: boolean = false): string => {
@@ -1893,6 +1925,7 @@ export const formatCurrency = (value: number, language: string, forceDecimals: b
     locale = 'it-IT';
     currency = 'EUR';
   }
+  currency = getEffectiveCurrency(language);
   
   // Show decimals for small values (< 100) or if explicitly requested, or if value has meaningful decimals
   const hasDecimals = value % 1 !== 0;

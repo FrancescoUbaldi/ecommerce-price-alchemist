@@ -22,7 +22,8 @@ import LanguageSelector from '@/components/LanguageSelector';
 import ComboActions from '@/components/ComboActions';
 import ShareModal from '@/components/ShareModal';
 import ReadOnlyPayback from '@/components/ReadOnlyPayback';
-import { getTranslation, formatCurrency as formatCurrencyUtil } from '@/utils/translations';
+import { getTranslation, formatCurrency as formatCurrencyUtil, setActiveCurrency, getDefaultCurrencyForLanguage } from '@/utils/translations';
+import CurrencySelector from '@/components/CurrencySelector';
 
 interface PricingData {
   saasFee: number;
@@ -68,6 +69,15 @@ const Index = () => {
     setLanguageState(lang);
     localStorage.setItem('preferredLanguage', lang);
   };
+
+  // Display-only currency (null = follow language default)
+  const [currency, setCurrencyState] = useState<string | null>(() => localStorage.getItem('preferredCurrency'));
+  setActiveCurrency(currency);
+  const setCurrency = (code: string) => {
+    setCurrencyState(code);
+    localStorage.setItem('preferredCurrency', code);
+  };
+  const effectiveCurrency = currency ?? getDefaultCurrencyForLanguage(language);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -954,6 +964,7 @@ const Index = () => {
           </div>
           <div className="flex-1 flex items-center justify-end gap-2">
             <LanguageSelector language={language} setLanguage={setLanguage} />
+            <CurrencySelector currency={effectiveCurrency} setCurrency={setCurrency} />
             <button
               onClick={() => navigate('/my-proposals')}
               className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
@@ -1269,6 +1280,7 @@ const Index = () => {
                       clientData={clientData}
                       customScenario={customScenario}
                       language={language}
+                      currency={effectiveCurrency}
                       clientName={clientName}
                       showUpfrontDiscount={showUpfrontDiscount}
                       absorbTransactionFee={absorbTransactionFee}
