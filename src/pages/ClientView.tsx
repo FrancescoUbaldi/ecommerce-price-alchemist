@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
-import { getTranslation, formatCurrency as formatCurrencyUtil } from '@/utils/translations';
+import { getTranslation, formatCurrency as formatCurrencyUtil, setActiveCurrency } from '@/utils/translations';
 import BusinessCase from '@/components/BusinessCase';
 import ReadOnlyPayback from '@/components/ReadOnlyPayback';
 
@@ -137,6 +137,9 @@ const ClientView = () => {
       annualContractValue
     };
   };
+
+  // Read-only currency from the shared proposal; old links fall back to language default
+  setActiveCurrency((shareData?.scenario_data as any)?.currency ?? null);
 
   const formatCurrency = (value: number) => {
     return formatCurrencyUtil(value, shareData?.language || 'it');
